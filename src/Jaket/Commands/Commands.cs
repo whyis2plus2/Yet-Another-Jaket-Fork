@@ -147,5 +147,49 @@ public class Commands
             chat.Receive("0096FF", Chat.BOT_PREFIX + "xzxADIxzx", "Thank you all, I couldn't have done it alone ♡");
         });
         Handler.Register("support", "Support the author by buying him a coffee", args => Application.OpenURL("https://www.buymeacoffee.com/adidev"));
+
+        Handler.Register("difficulty", "\\[val]", "get/set the current difficulty", args => 
+        {
+            void Msg(string msg) => chat.Receive($"[14]{msg}[]");
+
+            void SetDifficulty(int val) => PrefsManager.Instance.SetInt("difficulty", val);
+            string GetDifficulty() => PrefsManager.Instance.GetInt("difficulty") switch
+            {
+                0 => "Harmless",
+                1 => "Lenient",
+                2 => "Standard",
+                3 => "Violent",
+                4 => "Brutal",
+                5 => "UKMD", // Not synced or able to be set, but still implemented for people with patched uk
+                _ => "???",
+            };
+
+            if (args.Length == 0)
+            {
+                string difficulty = GetDifficulty();
+                Msg($"Current difficulty is {difficulty}");
+                if (difficulty == "???" || difficulty == "UKMD")
+                {
+                    Msg($"[{UI.Pal.Yellow}]Congrats Mr. Hackerman, unfortunately for you, this doesn't sync.[]");
+                }
+            }
+            else if (int.TryParse(args[0], out int difficulty) && 0 <= difficulty && difficulty <= 4)
+            {
+                SetDifficulty(difficulty);
+                Msg($"Difficulty set to {GetDifficulty()}");
+            }
+            else
+            {
+                Msg($"[{UI.Pal.Red}]Val should either be left blank to get difficulty or should be an integer from 0-4 to set difficulty");
+            }
+        });
+
+        Handler.Register("clear", "Clear chat (locally)", args =>
+        {
+            for (int i = 0; i < Chat.MESSAGES_SHOWN; ++i)
+            {
+                chat.Receive("[1]\\ []");
+            }
+        });
     }
 }

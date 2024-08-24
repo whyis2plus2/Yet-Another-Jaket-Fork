@@ -8,6 +8,7 @@ public static class Pal
     public static string Green = "#32CD32";
     public static string Orange = "#FFA500";
     public static string Red = "#FF341C";
+    public static string Yellow = "#FFE600";
     public static string Blue = "#0080FF";
     public static string Pink = "#FF66CC";
     public static string Grey = "#BBBBBB";
@@ -21,6 +22,7 @@ public static class Pal
     public static Color green = new(.2f, .8f, .2f);
     public static Color orange = new(1f, .65f, 0f);
     public static Color red = new(1f, .2f, .11f);
+    public static Color yellow = new(1f, .9f, 0f);
     public static Color blue = new(0f, .5f, 1f);
     public static Color pink = new(1f, .4f, .8f);
     public static Color grey = new(.73f, .73f, .73f);
