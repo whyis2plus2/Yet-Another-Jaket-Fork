@@ -32,7 +32,7 @@ public class Movement : MonoSingleton<Movement>
     /// <summary> An array containing the length of all emotions in seconds. </summary>
     private readonly float[] emojiLength = { 2.458f, 4.708f, 1.833f, 2.875f, 0f, 9.083f, -1f, 11.022f, -1f, 3.292f, 0f, -1f };
     /// <summary> Whether the death must be fake on this level. </summary>
-    private static bool fakeDeath => nm.endlessMode || Tools.Scene == "Level 0-S";
+    private static bool fakeDeath => nm.endlessMode /* || Tools.Scene == "Level 0-S" */;
 
     /// <summary> Current emotion preview, can be null. </summary>
     public GameObject EmojiPreview;
@@ -74,11 +74,11 @@ public class Movement : MonoSingleton<Movement>
             Instance.StartEmoji(0xFF, false);
 
             // disable hook and jump at 0-S
-            if (Tools.Scene == "Level 0-S")
-            {
-                nm.modNoJump = LobbyController.Online;
-                HookArm.Instance.gameObject.SetActive(LobbyController.Offline);
-            }
+            // if (Tools.Scene == "Level 0-S")
+            // {
+            //     nm.modNoJump = LobbyController.Online;
+            //     HookArm.Instance.gameObject.SetActive(LobbyController.Offline);
+            // }
 
             if (fakeDeath)
             {
