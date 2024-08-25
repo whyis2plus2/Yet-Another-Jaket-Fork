@@ -19,13 +19,16 @@ public class PlayerList : CanvasSingleton<PlayerList>
             UIB.Text("#player-list.info", table, Btn(71f) with { Height = 46f }, size: 16);
 
             float x = -24f;
-            foreach (Team team in System.Enum.GetValues(typeof(Team))) UIB.TeamButton(team, table, new(x += 64f, -130f, 56f, 56f, new(0f, 1f)), () =>
+            foreach (Team team in System.Enum.GetValues(typeof(Team)))
             {
-                Networking.LocalPlayer.Team = team;
-                Events.OnTeamChanged.Fire();
+                if ((int)team <= (int)Team.Pink) UIB.TeamButton(team, table, new(x += 64f, -130f, 56f, 56f, new(0f, 1f)), () =>
+                {
+                    Networking.LocalPlayer.Team = team;
+                    Events.OnTeamChanged.Fire();
 
-                Rebuild();
-            });
+                    Rebuild();
+                });
+            }
         });
 
         Version.Label(transform);

@@ -11,6 +11,7 @@ using UnityEngine.Events;
 using Object = UnityEngine.Object;
 
 using Jaket.IO;
+using System.Linq;
 
 /// <summary> Set of different tools for simplifying life and systematization of code. </summary>
 public class Tools
@@ -26,6 +27,9 @@ public class Tools
     public static void CacheAccId() => AccId = Id.AccountId;
     /// <summary> Returns the name of the player with the given AccountId. </summary>
     public static string Name(uint id) => new Friend(id | 76561197960265728u).Name;
+
+    /// <summary> get the maximum value of an emum </summary>
+    public static int EnumMax<T>() where T: Enum => ((int[])Enum.GetValues(typeof(T))).Max();
 
     /// <summary> Shortcut needed in order to track statistics and errors. </summary>
     public static void Send(Connection? con, IntPtr data, int size)
