@@ -56,10 +56,10 @@ public class Chat : CanvasSingleton<Chat>
     /// <summary> Index of the current message in the list. </summary>
     private int messageIndex;
     /// <summary> Custom Player-Defined Message Prefix </summary>
-    private string msgPrefix => PrefsManager.Instance.GetString("YAJaketF.msgPrefix");
+    private string msgPrefix => PrefsManager.Instance.GetString("YetAnotherJaketFork.msgPrefix");
 
     /// <summary> Color of msgPrefix </summary>
-    private string msgPrefixCol => PrefsManager.Instance.GetString("YAJaketF.msgPrefixCol");
+    private string msgPrefixCol => PrefsManager.Instance.GetString("YetAnotherJaketFork.msgPrefixCol");
 
     private void Start()
     {

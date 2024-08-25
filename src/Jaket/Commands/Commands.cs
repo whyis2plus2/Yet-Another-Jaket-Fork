@@ -207,8 +207,8 @@ public class Commands
                 string color  = args[0];
                 string prefix = string.Join(" ", args.Skip(1));
                 
-                pm.SetString("YAJaketF.msgPrefixCol", color);
-                pm.SetString("YAJaketF.msgPrefix", prefix);
+                pm.SetString("YetAnotherJaketFork.msgPrefixCol", color);
+                pm.SetString("YetAnotherJaketFork.msgPrefix", prefix);
 
                 Msg($"Set prefix to [{color}]\\[{prefix}][]");
             }
