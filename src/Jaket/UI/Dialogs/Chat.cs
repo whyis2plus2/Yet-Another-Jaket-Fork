@@ -155,7 +155,7 @@ public class Chat : CanvasSingleton<Chat>
 
                 if (msgPrefix != null)
                 {
-                    usedPrefix = msgPrefix.Substring(0, MSG_PREFIX_MAX_LENGTH).Replace("[", "\\[");
+                    usedPrefix = Tools.TruncateStr(msgPrefix, MSG_PREFIX_MAX_LENGTH).Replace("[", "\\[");
                     usedPrefix = $"[{msgPrefixCol}]\\[{usedPrefix}][] ";
                 }
 

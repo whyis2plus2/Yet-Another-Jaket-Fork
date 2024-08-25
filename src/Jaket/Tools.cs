@@ -31,6 +31,13 @@ public class Tools
     /// <summary> get the maximum value of an emum </summary>
     public static int EnumMax<T>() where T: Enum => ((int[])Enum.GetValues(typeof(T))).Max();
 
+    /// <summary> truncate a string to have a length <= to the specified one </summary>
+    public static string TruncateStr(string s, int length)
+    {
+        if (string.IsNullOrEmpty(s)) return null;
+        return s.Substring(0, Math.Min(s.Length, length));
+    }
+
     /// <summary> Shortcut needed in order to track statistics and errors. </summary>
     public static void Send(Connection? con, IntPtr data, int size)
     {

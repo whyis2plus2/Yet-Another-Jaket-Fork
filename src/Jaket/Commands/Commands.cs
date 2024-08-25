@@ -204,7 +204,7 @@ public class Commands
             {
                 string color  = pm.GetString("YetAnotherJaketFork.msgPrefixCol");
                 string prefix = pm.GetString("YetAnotherJaketFork.msgPrefix");
-                prefix = prefix.Substring(0, Chat.MSG_PREFIX_MAX_LENGTH).Replace("[", "\\[");
+                prefix = Tools.TruncateStr(prefix, Chat.MSG_PREFIX_MAX_LENGTH).Replace("[", "\\[");
                 
                 if (prefix.IsNullOrWhiteSpace()) chat.Receive("No prefix has been set");
                 else chat.Receive($"Current prefix: [{color}]\\[{prefix}][]");
@@ -216,7 +216,7 @@ public class Commands
             else
             {
                 string color  = args[0];
-                string prefix = string.Join(" ", args.Skip(1)).Substring(0, Chat.MSG_PREFIX_MAX_LENGTH);
+                string prefix = Tools.TruncateStr(string.Join(" ", args.Skip(1)), Chat.MSG_PREFIX_MAX_LENGTH);
                 
                 pm.SetString("YetAnotherJaketFork.msgPrefixCol", color);
                 pm.SetString("YetAnotherJaketFork.msgPrefix", prefix);
