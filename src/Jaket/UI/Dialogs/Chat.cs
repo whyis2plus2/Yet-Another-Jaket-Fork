@@ -55,6 +55,11 @@ public class Chat : CanvasSingleton<Chat>
     private List<string> messages = new();
     /// <summary> Index of the current message in the list. </summary>
     private int messageIndex;
+    /// <summary> Custom Player-Defined Message Prefix </summary>
+    private string msgPrefix => PrefsManager.Instance.GetString("YAJaketF.msgPrefix");
+
+    /// <summary> Color of msgPrefix </summary>
+    private string msgPrefixCol => PrefsManager.Instance.GetString("YAJaketF.msgPrefixCol");
 
     private void Start()
     {
@@ -140,7 +145,12 @@ public class Chat : CanvasSingleton<Chat>
         // if the message is not empty, then send it to other players and remember it
         if (Bundle.CutColors(msg).Trim() != "")
         {
-            if (!Commands.Handler.Handle(msg)) LobbyController.Lobby?.SendChatString(AutoTTS ? "/tts " + msg : msg);
+            if (!Commands.Handler.Handle(msg))
+            {
+                string usedPrefix = (msgPrefix == null) ? "" : $"[{msgPrefixCol}]\\[{msgPrefix}][] ";
+                LobbyController.Lobby?.SendChatString(AutoTTS ? "/tts " + usedPrefix + msg : msg);
+            }
+
             messages.Insert(0, msg);
         }
 

@@ -7,6 +7,7 @@ using Jaket.Assets;
 using Jaket.Content;
 using Jaket.Net;
 using Jaket.UI.Dialogs;
+using System.Linq;
 
 /// <summary> List of chat commands used by the mod. </summary>
 public class Commands
@@ -161,14 +162,14 @@ public class Commands
                 3 => "Violent",
                 4 => "Brutal",
                 5 => "UKMD", // Not synced or able to be set, but still implemented for people with patched uk
-                _ => "???",
+                _ => null,
             };
 
             if (args.Length == 0)
             {
                 string difficulty = GetDifficulty();
                 Msg($"Current difficulty is {difficulty}");
-                if (difficulty == "???" || difficulty == "UKMD")
+                if (difficulty == null || difficulty == "UKMD")
                 {
                     Msg($"[{UI.Pal.Yellow}]Congrats Mr. Hackerman, unfortunately for you, this doesn't sync.[]");
                 }
@@ -189,6 +190,27 @@ public class Commands
             for (int i = 0; i < Chat.MESSAGES_SHOWN; ++i)
             {
                 chat.Receive("[1]\\ []");
+            }
+        });
+
+        Handler.Register("prefix", "<colour> <value>", "set message prefix", args =>
+        {
+            void Msg(string msg) => chat.Receive($"[14]{msg}[]");
+            PrefsManager pm = PrefsManager.Instance;
+ 
+            if (args.Length < 2)
+            {
+                Msg($"[{UI.Pal.Red}]Insufficient number of arguments.");
+            }
+            else
+            {
+                string color  = args[0];
+                string prefix = string.Join(" ", args.Skip(1));
+                
+                pm.SetString("YAJaketF.msgPrefixCol", color);
+                pm.SetString("YAJaketF.msgPrefix", prefix);
+
+                Msg($"Set prefix to [{color}]\\[{prefix}][]");
             }
         });
     }
