@@ -14,20 +14,31 @@ public class PlayerList : CanvasSingleton<PlayerList>
     private void Start()
     {
         UIB.Shadow(transform);
-        UIB.Table("Teams", "#player-list.team", transform, Tlw(16f + 166f / 2f, 166f), table =>
+        UIB.Table("Teams", "#player-list.team", transform, Tlw(16f + 230f / 2f, 230f), table =>
         {
             UIB.Text("#player-list.info", table, Btn(71f) with { Height = 46f }, size: 16);
 
-            float x = -24f;
+            float x = 8f;
             foreach (Team team in System.Enum.GetValues(typeof(Team)))
             {
-                if ((int)team <= (int)Team.Pink) UIB.TeamButton(team, table, new(x += 64f, -130f, 56f, 56f, new(0f, 1f)), () =>
+                if (team <= Team.Blue) UIB.TeamButton(team, table, new(x += 64f, -130f, 56f, 56f, new(0f, 1f)), () =>
                 {
                     Networking.LocalPlayer.Team = team;
                     Events.OnTeamChanged.Fire();
 
                     Rebuild();
                 });
+                else if (team <= (Team.Pink + 1)) 
+                {
+                    if (team == Team.Blue + 1) x = 72f;
+                    UIB.TeamButton(team, table, new(x += 64f, -194f, 56f, 56f, new(0f, 1f)), () =>
+                    {
+                        Networking.LocalPlayer.Team = (team > Team.Pink) ? Team.White : team;
+                        Events.OnTeamChanged.Fire();
+
+                        Rebuild();
+                    });
+                }
             }
         });
 
@@ -54,7 +65,7 @@ public class PlayerList : CanvasSingleton<PlayerList>
         if (LobbyController.Offline) return;
 
         float height = LobbyController.Lobby.Value.MemberCount * 48f + 48f;
-        UIB.Table("List", "#player-list.list", transform, Tlw(198f + height / 2f, height), table =>
+        UIB.Table("List", "#player-list.list", transform, Tlw(262f + height / 2f, height), table =>
         {
             float y = 20f;
             foreach (var member in LobbyController.Lobby?.Members)
