@@ -192,7 +192,7 @@ public class LobbyController
         "uk_construct" => "Sandbox",
         "Endless" => "Cyber Grind",
         "CreditsMuseum2" => "Museum",
-        _ => map.Substring("Level ".Length)
+        _ => map.StartsWith("Level ") ? map.Substring("Level ".Length) : map
     };
 
     #endregion
