@@ -24,7 +24,7 @@ public class Commands
         {
             Handler.Commands.ForEach(command =>
             {
-                chat.Receive($"[14]* /{command.Name}{(command.Args == null ? "" : $" [#BBBBBB]{command.Args}[]")} - {command.Desc}[]");
+                chat.Receive($"[14]/{command.Name}{(command.Args == null ? "" : $" [#BBBBBB]{command.Args}[]")} - {command.Desc}[]");
             });
         });
         Handler.Register("hello", "Resend the tips for new players", args => chat.Hello(true));
@@ -149,7 +149,7 @@ public class Commands
         });
         Handler.Register("support", "Support the author by buying him a coffee", args => Application.OpenURL("https://www.buymeacoffee.com/adidev"));
 
-        Handler.Register("difficulty", "\\[val]", "get/set the current difficulty", args => 
+        Handler.Register("difficulty", "\\[val]", "Get/Set the current difficulty (applies after level change/level restart)", args => 
         {
             void Msg(string msg) => chat.Receive($"[14]{msg}[]");
 
