@@ -196,7 +196,7 @@ public class Commands
             }
         });
 
-        Handler.Register("prefix", "\\[color] \\[value]", "set message prefix", args =>
+        Handler.Register("prefix", "\\[color] \\[value]", "set/get message prefix", args =>
         {
             PrefsManager pm = PrefsManager.Instance;
  

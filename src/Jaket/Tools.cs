@@ -34,7 +34,7 @@ public class Tools
     /// <summary> truncate a string to have a length <= to the specified one </summary>
     public static string TruncateStr(string s, int length)
     {
-        if (string.IsNullOrEmpty(s)) return s;
+        if (string.IsNullOrEmpty(s)) return null;
         return s.Substring(0, Math.Min(s.Length, length));
     }
 
