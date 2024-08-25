@@ -8,6 +8,7 @@ using Jaket.Content;
 using Jaket.Net;
 using Jaket.UI.Dialogs;
 using System.Linq;
+using BepInEx;
 
 /// <summary> List of chat commands used by the mod. </summary>
 public class Commands
@@ -195,18 +196,26 @@ public class Commands
             }
         });
 
-        Handler.Register("prefix", "<colour> <value>", "set message prefix", args =>
+        Handler.Register("prefix", "\\[color] \\[value]", "set message prefix", args =>
         {
             PrefsManager pm = PrefsManager.Instance;
  
-            if (args.Length < 2)
+            if (args.Length == 0)
+            {
+                string color  = pm.GetString("YetAnotherJaketFork.msgPrefixCol");
+                string prefix = pm.GetString("YetAnotherJaketFork.msgPrefix");
+                
+                if (prefix.IsNullOrWhiteSpace()) chat.Receive("No prefix has been set");
+                else chat.Receive($"Current prefix: [{color}]\\[{prefix}][]");
+            }
+            else if (args.Length < 2)
             {
                 chat.Receive($"[{UI.Pal.Red}]Insufficient number of arguments.");
             }
             else
             {
                 string color  = args[0];
-                string prefix = string.Join(" ", args.Skip(1));
+                string prefix = Tools.TruncateStr(string.Join(" ", args.Skip(1)), 16).Replace("[", "\\[");
                 
                 pm.SetString("YetAnotherJaketFork.msgPrefixCol", color);
                 pm.SetString("YetAnotherJaketFork.msgPrefix", prefix);
