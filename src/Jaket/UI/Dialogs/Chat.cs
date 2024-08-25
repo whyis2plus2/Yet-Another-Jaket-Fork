@@ -15,6 +15,7 @@ using Jaket.World;
 
 using static Pal;
 using static Rect;
+using BepInEx;
 
 /// <summary> Front end of the chat, back end implemented via Steamworks. </summary>
 public class Chat : CanvasSingleton<Chat>
@@ -25,7 +26,7 @@ public class Chat : CanvasSingleton<Chat>
     public const string TTS_PREFIX = "[#FF7F50][14]\\[TTS][][]";
 
     /// <summary> Maximum length of chat message. </summary>
-    public const int MAX_MESSAGE_LENGTH = 128;
+    public const int MAX_MESSAGE_LENGTH = 200;
     /// <summary> How many messages at a time will be shown. </summary>
     public const int MESSAGES_SHOWN = 14;
     /// <summary> Chat width in pixels. </summary>
@@ -55,6 +56,9 @@ public class Chat : CanvasSingleton<Chat>
     private List<string> messages = new();
     /// <summary> Index of the current message in the list. </summary>
     private int messageIndex;
+
+    /// <summary> Maximum length for message prefix </summary>
+    public const int MSG_PREFIX_MAX_LENGTH = 20;
     /// <summary> Custom Player-Defined Message Prefix </summary>
     private string msgPrefix => PrefsManager.Instance.GetString("YetAnotherJaketFork.msgPrefix");
 
@@ -147,7 +151,14 @@ public class Chat : CanvasSingleton<Chat>
         {
             if (!Commands.Handler.Handle(msg))
             {
-                string usedPrefix = (msgPrefix == null) ? "" : $"[{msgPrefixCol}]\\[{msgPrefix}][] ";
+                string usedPrefix = "";
+
+                if (msgPrefix != null)
+                {
+                    usedPrefix = Tools.TruncateStr(msgPrefix, MSG_PREFIX_MAX_LENGTH).Replace("[", "\\[");
+                    usedPrefix = $"[{msgPrefixCol}]\\[{usedPrefix}][] ";
+                }
+
                 LobbyController.Lobby?.SendChatString(AutoTTS ? "/tts " + usedPrefix + msg : msg);
             }
 
