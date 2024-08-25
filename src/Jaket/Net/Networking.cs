@@ -86,12 +86,19 @@ public class Networking
         SteamMatchmaking.OnLobbyMemberJoined += (lobby, member) =>
         {
             if (!Administration.Banned.Contains(member.Id.AccountId)) Bundle.Msg("player.joined", member.Name);
+            if (!LobbyController.IsOwner) return;
         };
 
         SteamMatchmaking.OnLobbyMemberLeave += (lobby, member) =>
         {
-            if (!Administration.Banned.Contains(member.Id.AccountId)) Bundle.Msg("player.left", member.Name);
+            if (!Administration.Banned.Contains(member.Id.AccountId) && !Administration.Kicked.Contains(member.Id.AccountId)) Bundle.Msg("player.left", member.Name);
             if (!LobbyController.IsOwner) return;
+
+            if (Administration.Kicked.Contains(member.Id.AccountId))
+            {
+                Administration.Kicked.Remove(member.Id.AccountId);
+                LobbyController.Lobby?.SetData("kicked", string.Join(" ", Administration.Kicked));
+            }
 
             // returning the exited player's entities back to the host owner & close the connection
             FindCon(member.Id.AccountId)?.Close();
@@ -104,6 +111,8 @@ public class Networking
         SteamMatchmaking.OnChatMessage += (lobby, member, message) =>
         {
             if (Administration.Banned.Contains(member.Id.AccountId)) return;
+            if (Administration.Kicked.Contains(member.Id.AccountId)) return;
+
             if (message.Length > Chat.MAX_MESSAGE_LENGTH + 8) message = message.Substring(0, Chat.MAX_MESSAGE_LENGTH);
 
             if (message == "#/d")

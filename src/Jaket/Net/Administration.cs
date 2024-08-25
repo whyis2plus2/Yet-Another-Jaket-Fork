@@ -22,6 +22,8 @@ public class Administration
 
     /// <summary> List of banned player ids. </summary>
     public static List<uint> Banned = new();
+    /// <summary> List of kicked player ids. </summary>
+    public static List<uint> Kicked = new();
     /// <summary> List of banned player sprays. </summary>
     public static List<uint> BannedSprays = new();
 
@@ -40,9 +42,15 @@ public class Administration
             if (LobbyController.IsOwner) return;
 
             Banned.Clear();
+            Kicked.Clear();
             LobbyController.Lobby?.GetData("banned").Split(' ').Do(sid =>
             {
                 if (uint.TryParse(sid, out var id)) Banned.Add(id);
+            });
+
+            LobbyController.Lobby?.GetData("kicked").Split(' ').Do(sid =>
+            {
+                if (uint.TryParse(sid, out var id)) Kicked.Add(id);
             });
         };
         Events.OnLobbyEntered += () => { Banned.Clear(); entityBullets.Clear(); entities.Clear(); plushies.Clear(); };
@@ -51,7 +59,7 @@ public class Administration
         Events.EveryDozen += warnings.Clear;
     }
 
-    /// <summary> Kicks the member from the lobby, or rather asks him to leave, because Valve hasn't added such functionality to their API. </summary>
+    /// <summary> Bans the member from the lobby, or rather asks him to leave and not come back, because Valve hasn't added such functionality to their API. </summary>
     public static void Ban(uint id)
     {
         // who does the client think he is?!
@@ -68,6 +76,25 @@ public class Administration
         Banned.Add(id);
         LobbyController.Lobby?.SendChatString("#/k" + id);
         LobbyController.Lobby?.SetData("banned", string.Join(" ", Banned));
+    }
+
+    /// <summary> Kicks the member from the lobby, or rather asks him to leave, because Valve hasn't added such functionality to their API. </summary>
+    public static void Kick(uint id)
+    {
+        // who does the client think he is?!
+        if (!LobbyController.IsOwner) return;
+        LobbyController.Lobby?.SendChatString($"[{UI.Pal.Red}]\\[Server] Kicked {Tools.Name(id)}[]");
+
+        Networking.Send(PacketType.Dummy, null, (data, size) =>
+        {
+            var con = Networking.FindCon(id);
+            Tools.Send(con, data, size);
+            con?.Flush();
+            Events.Post2(() => con?.Close());
+        });
+
+        Kicked.Add(id);
+        LobbyController.Lobby?.SetData("kicked", string.Join(" ", Kicked));
     }
 
     /// <summary> Whether the player is sending a large amount of data. </summary>

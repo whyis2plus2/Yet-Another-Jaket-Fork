@@ -30,9 +30,9 @@ public class LobbyController
     /// <summary> Whether PvP is allowed in this lobby. </summary>
     public static bool PvPAllowed => Lobby?.GetData("pvp") == "True";
     /// <summary> Whether cheats are allowed in this lobby. </summary>
-    public static bool CheatsAllowed => Lobby?.GetData("cheats") == "True";
+    public static bool CheatsAllowed => true; // Lobby?.GetData("cheats") == "True";
     /// <summary> Whether mods are allowed in this lobby. </summary>
-    public static bool ModsAllowed => Lobby?.GetData("mods") == "True";
+    public static bool ModsAllowed => true; // Lobby?.GetData("mods") == "True";
     /// <summary> Whether bosses must be healed after death in this lobby. </summary>
     public static bool HealBosses => Lobby?.GetData("heal-bosses") == "True";
     /// <summary> Number of percentages that will be added to the boss's health for each player. </summary>
@@ -92,7 +92,7 @@ public class LobbyController
         Log.Debug("Creating a lobby...");
 
         CreatingLobby = true;
-        SteamMatchmaking.CreateLobbyAsync(8).ContinueWith(task =>
+        SteamMatchmaking.CreateLobbyAsync(999).ContinueWith(task =>
         {
             CreatingLobby = false; IsOwner = true;
             Lobby = task.Result;
@@ -102,10 +102,10 @@ public class LobbyController
             Lobby?.SetData("jaket", "true");
             Lobby?.SetData("name", $"{SteamClient.Name}'s Lobby");
             Lobby?.SetData("level", MapMap(Tools.Scene));
-            Lobby?.SetData("pvp", "True");
+            Lobby?.SetData("pvp", "False");
             Lobby?.SetData("cheats", "False");
-            Lobby?.SetData("mods", "False");
-            Lobby?.SetData("heal-bosses", "True");
+            Lobby?.SetData("mods", "True");
+            Lobby?.SetData("heal-bosses", "False");
         });
     }
 
