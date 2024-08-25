@@ -102,11 +102,11 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
         // reset config
         if (LobbyController.Offline)
         {
-            lobbyAccessLevel = 0;
-            pvp.isOn = true;
+            lobbyAccessLevel = 1;
+            pvp.isOn = false;
             cheats.isOn = false;
-            mods.isOn = false;
-            bosses.isOn = true;
+            mods.isOn = true;
+            bosses.isOn = false;
         }
         else field.text = LobbyController.Lobby?.GetData("name");
 
