@@ -151,8 +151,6 @@ public class Commands
 
         Handler.Register("difficulty", "\\[val]", "Get/Set the current difficulty (applies after level change/level restart)", args => 
         {
-            void Msg(string msg) => chat.Receive($"[14]{msg}[]");
-
             void SetDifficulty(int val) => PrefsManager.Instance.SetInt("difficulty", val);
             string GetDifficulty() => PrefsManager.Instance.GetInt("difficulty") switch
             {
@@ -168,20 +166,24 @@ public class Commands
             if (args.Length == 0)
             {
                 string difficulty = GetDifficulty();
-                Msg($"Current difficulty is {difficulty}");
+                chat.Receive($"Current difficulty is {difficulty}");
                 if (difficulty == null || difficulty == "UKMD")
                 {
-                    Msg($"[{UI.Pal.Yellow}]Congrats Mr. Hackerman, unfortunately for you, this doesn't sync.[]");
+                    chat.Receive($"[{UI.Pal.Yellow}]Congrats Mr. Hackerman, unfortunately for you, this doesn't sync.[]");
                 }
             }
             else if (int.TryParse(args[0], out int difficulty) && 0 <= difficulty && difficulty <= 4)
             {
-                SetDifficulty(difficulty);
-                Msg($"Difficulty set to {GetDifficulty()}");
+                if (!LobbyController.IsOwner) chat.Receive($"[{UI.Pal.Red}]Only the lobby owner can set difficulty[]");
+                else
+                {
+                    SetDifficulty(difficulty);
+                    chat.Receive($"Difficulty set to {GetDifficulty()}");
+                }
             }
             else
             {
-                Msg($"[{UI.Pal.Red}]Val should either be left blank to get difficulty or should be an integer from 0-4 to set difficulty");
+                chat.Receive($"[{UI.Pal.Red}]Val should either be left blank to get difficulty or should be an integer from 0-4 to set difficulty");
             }
         });
 
@@ -195,12 +197,11 @@ public class Commands
 
         Handler.Register("prefix", "<colour> <value>", "set message prefix", args =>
         {
-            void Msg(string msg) => chat.Receive($"[14]{msg}[]");
             PrefsManager pm = PrefsManager.Instance;
  
             if (args.Length < 2)
             {
-                Msg($"[{UI.Pal.Red}]Insufficient number of arguments.");
+                chat.Receive($"[{UI.Pal.Red}]Insufficient number of arguments.");
             }
             else
             {
@@ -210,7 +211,7 @@ public class Commands
                 pm.SetString("YetAnotherJaketFork.msgPrefixCol", color);
                 pm.SetString("YetAnotherJaketFork.msgPrefix", prefix);
 
-                Msg($"Set prefix to [{color}]\\[{prefix}][]");
+                chat.Receive($"Set prefix to [{color}]\\[{prefix}][]");
             }
         });
     }
