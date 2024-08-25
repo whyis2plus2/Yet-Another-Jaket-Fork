@@ -215,7 +215,7 @@ public class Commands
             else
             {
                 string color  = args[0];
-                string prefix = Tools.TruncateStr(string.Join(" ", args.Skip(1)), 16).Replace("[", "\\[");
+                string prefix = Tools.TruncateStr(string.Join(" ", args.Skip(1)), 32).Replace("[", "\\[");
                 
                 pm.SetString("YetAnotherJaketFork.msgPrefixCol", color);
                 pm.SetString("YetAnotherJaketFork.msgPrefix", prefix);
