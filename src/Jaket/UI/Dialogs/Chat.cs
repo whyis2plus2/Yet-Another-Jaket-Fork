@@ -56,14 +56,13 @@ public class Chat : CanvasSingleton<Chat>
     private List<string> messages = new();
     /// <summary> Index of the current message in the list. </summary>
     private int messageIndex;
-
-    /// <summary> Maximum length for message prefix </summary>
-    public const int MSG_PREFIX_MAX_LENGTH = 20;
     /// <summary> Custom Player-Defined Message Prefix </summary>
-    private string msgPrefix => PrefsManager.Instance.GetString("YetAnotherJaketFork.msgPrefix");
+    private string MsgPrefix => PrefsManager.Instance.GetString("YetAnotherJaketFork.msgPrefix");
 
     /// <summary> Color of msgPrefix </summary>
-    private string msgPrefixCol => PrefsManager.Instance.GetString("YetAnotherJaketFork.msgPrefixCol");
+    private string MsgPrefixCol => PrefsManager.Instance.GetString("YetAnotherJaketFork.msgPrefixCol");
+        /// <summary> Maximum length for message prefix </summary>
+    public int MsgPrefixMaxLen => (MsgPrefixCol == null) ? int.MaxValue : 20;
 
     private void Start()
     {
@@ -153,10 +152,11 @@ public class Chat : CanvasSingleton<Chat>
             {
                 string usedPrefix = "";
 
-                if (msgPrefix != null)
+                if (MsgPrefix != null)
                 {
-                    usedPrefix = Tools.TruncateStr(msgPrefix, MSG_PREFIX_MAX_LENGTH).Replace("[", "\\[");
-                    usedPrefix = $"[{msgPrefixCol}]\\[{usedPrefix}][] ";
+                    usedPrefix = Tools.TruncateStr(MsgPrefix, MsgPrefixMaxLen);
+                    if (MsgPrefixCol == null) usedPrefix = $"{usedPrefix} ";
+                    else usedPrefix = $"[{MsgPrefixCol}]\\[{usedPrefix.Replace("[", "\\[")}][] ";
                 }
 
                 LobbyController.Lobby?.SendChatString(AutoTTS ? "/tts " + usedPrefix + msg : msg);

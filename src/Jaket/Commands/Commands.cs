@@ -204,7 +204,7 @@ public class Commands
             {
                 string color  = pm.GetString("YetAnotherJaketFork.msgPrefixCol");
                 string prefix = pm.GetString("YetAnotherJaketFork.msgPrefix");
-                prefix = Tools.TruncateStr(prefix, Chat.MSG_PREFIX_MAX_LENGTH).Replace("[", "\\[");
+                prefix = Tools.TruncateStr(prefix, chat.MsgPrefixMaxLen).Replace("[", "\\[");
                 
                 if (prefix.IsNullOrWhiteSpace()) chat.Receive("No prefix has been set");
                 else chat.Receive($"Current prefix: [{color}]\\[{prefix}][]");
@@ -215,13 +215,22 @@ public class Commands
             }
             else
             {
-                string color  = args[0];
-                string prefix = Tools.TruncateStr(string.Join(" ", args.Skip(1)), Chat.MSG_PREFIX_MAX_LENGTH);
+                string color  = (args[0] == "null") ? null : args[0];
+                string prefix = Tools.TruncateStr(string.Join(" ", args.Skip(1)), chat.MsgPrefixMaxLen);
                 
-                pm.SetString("YetAnotherJaketFork.msgPrefixCol", color);
                 pm.SetString("YetAnotherJaketFork.msgPrefix", prefix);
-
-                chat.Receive($"Set prefix to [{color}]\\[{prefix.Replace("[", "\\[")}][]");
+                
+                if (color == null)
+                {
+                    pm.DeleteKey("YetAnotherJaketFork.msgPrefixCol");
+                    chat.Receive($"Set prefix to {prefix}");
+                    chat.Receive($"[{UI.Pal.Yellow}]Warning: raw prefixes are unsafe! Use at your own risk!");
+                }
+                else
+                {
+                    pm.SetString("YetAnotherJaketFork.msgPrefixCol", color);
+                    chat.Receive($"Set prefix to [{color}]\\[{prefix.Replace("[", "\\[")}][]");
+                }
             }
         });
     }
