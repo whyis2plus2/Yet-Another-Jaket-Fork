@@ -38,9 +38,9 @@ public class Spray : MonoBehaviour
         UIB.WorldCanvas("Canvas", transform, Vector3.zero, build: canvas =>
         {
             image = UIB.Image("Image", canvas, new(0f, 0f, 256f, 256f), type: Image.Type.Filled);
-            pname = UIB.Text(Tools.Name(owner), canvas, new(72f, -112f, 4200f, 4200f), size: 320);
+            pname = UIB.Text(Tools.Name(owner), canvas, new(0f, -144f, 4200f, 4200f), size: 320);
 
-            pname.transform.localEulerAngles = new(0f, 0f, 7f);
+            pname.transform.localEulerAngles = new(0f, 0f, 0f);
             pname.transform.localScale /= 10f;
 
             UIB.Component<Outline>(pname.gameObject, outline =>
