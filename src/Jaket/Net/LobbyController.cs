@@ -32,7 +32,8 @@ public class LobbyController
     /// <summary> Whether cheats are allowed in this lobby. </summary>
     public static bool CheatsAllowed => Lobby?.GetData("cheats") == "True" ||
         // always allow cheats in these levels because they can softlock on jaket
-        Tools.Scene == "Level P-1" || Tools.Scene == "Level P-2" || Tools.Scene == "Level 7-1";
+        Tools.Scene == "Level P-1" || Tools.Scene == "Level P-2" ||
+        Tools.Scene == "Level 7-1" || Tools.Scene == "Level 7-3";
     /// <summary> Whether mods are allowed in this lobby. </summary>
     public static bool ModsAllowed => true; // Lobby?.GetData("mods") == "True";
     /// <summary> Whether bosses must be healed after death in this lobby. </summary>
