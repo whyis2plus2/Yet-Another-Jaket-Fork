@@ -26,7 +26,7 @@ public class Chat : CanvasSingleton<Chat>
     public const string TTS_PREFIX = "[#FF7F50][14]\\[TTS][][]";
 
     /// <summary> Maximum length of chat message. </summary>
-    public const int MAX_MESSAGE_LENGTH = 200;
+    public const int MAX_MESSAGE_LENGTH = int.MaxValue;
     /// <summary> How many messages at a time will be shown. </summary>
     public const int MESSAGES_SHOWN = 14;
     /// <summary> Chat width in pixels. </summary>

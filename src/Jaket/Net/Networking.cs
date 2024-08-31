@@ -113,7 +113,7 @@ public class Networking
             if (Administration.Banned.Contains(member.Id.AccountId)) return;
             if (Administration.Kicked.Contains(member.Id.AccountId)) return;
 
-            if (message.Length > Chat.MAX_MESSAGE_LENGTH + 8) message = message.Substring(0, Chat.MAX_MESSAGE_LENGTH);
+            // if (message.Length > Chat.MAX_MESSAGE_LENGTH + 8) message = message.Substring(0, Chat.MAX_MESSAGE_LENGTH);
 
             if (message == "#/d")
             {
