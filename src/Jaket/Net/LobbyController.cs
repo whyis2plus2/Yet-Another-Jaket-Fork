@@ -59,11 +59,11 @@ public class LobbyController
                 LeaveLobby();
                 Bundle.Hud2NS("lobby.banned");
             }
-            if (IsMultikillLobby(lobby))
-            {
-                LeaveLobby();
-                Bundle.Hud("lobby.mk");
-            }
+            // if (!IsOwner && IsMultikillLobby(lobby))
+            // {
+            //     LeaveLobby();
+            //     Bundle.Hud("lobby.mk");
+            // }
         };
         // and leave the lobby if the owner has left it
         SteamMatchmaking.OnLobbyMemberLeave += (lobby, member) =>
