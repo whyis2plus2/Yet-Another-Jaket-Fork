@@ -80,7 +80,8 @@ public class LobbyList : CanvasSingleton<LobbyList>
                 name = name.Insert(index + "<color=#FFA500>".Length + search.Length, "</color>");
             }
 
-            var b = UIB.Button(name, content, r, align: TextAnchor.MiddleLeft, clicked: () => LobbyController.JoinLobby(lobby));
+            var c = LobbyController.IsMultikillLobby(lobby) ? blue : white;
+            var b = UIB.Button(name, content, r, c, align: TextAnchor.MiddleLeft, clicked: () => LobbyController.JoinLobby(lobby));
 
             var full = lobby.MemberCount <= 2 ? Green : lobby.MemberCount <= 4 ? Orange : Red;
             var info = $"<color=#BBBBBB>{lobby.GetData("level")}</color> <color={full}>{lobby.MemberCount}/{lobby.MaxMembers}</color> ";
