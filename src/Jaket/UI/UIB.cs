@@ -217,9 +217,9 @@ public class UIB
     /// <summary> Adds a command button with the appropriate color. </summary>
     public static Button TeamButton(Team team, Transform parent, Rect r, Action clicked = null)
     {
-        var color = (team <= Team.Pink) ? team.Color() : Pal.white;
+        var color = team.Color();
         var img = Image(team.ToString(), parent, r, color);
-        if (team == Team.Pink) Text("UwU", img.transform, r.Text, Dark(pink));
+        if (team == Team.Pink || team == Team.Purple) Text("UwU", img.transform, r.Text, Dark(team.Color()));
         return Component<Button>(img.gameObject, button =>
         {
             button.targetGraphic = img;

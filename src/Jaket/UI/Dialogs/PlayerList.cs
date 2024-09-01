@@ -10,8 +10,7 @@ using static Rect;
 
 /// <summary> List of all players and teams. </summary>
 public class PlayerList : CanvasSingleton<PlayerList>
-{
-    private void Start()
+{    private void Start()
     {
         UIB.Shadow(transform);
         UIB.Table("Teams", "#player-list.team", transform, Tlw(16f + 230f / 2f, 230f), table =>
@@ -21,19 +20,26 @@ public class PlayerList : CanvasSingleton<PlayerList>
             float x = 8f;
             foreach (Team team in System.Enum.GetValues(typeof(Team)))
             {
-                if (team <= Team.Blue) UIB.TeamButton(team, table, new(x += 64f, -130f, 56f, 56f, new(0f, 1f)), () =>
+                if (team < Team.Pink) UIB.TeamButton(team, table, new(x += 64f, -130f, 56f, 56f, new(0f, 1f)), () =>
                 {
                     Networking.LocalPlayer.Team = team;
                     Events.OnTeamChanged.Fire();
 
                     Rebuild();
                 });
-                else if (team <= (Team.Pink + 1)) 
+                else
                 {
-                    if (team == Team.Blue + 1) x = 72f;
+                    if (team == Team.Pink) x = 8f;
                     UIB.TeamButton(team, table, new(x += 64f, -194f, 56f, 56f, new(0f, 1f)), () =>
                     {
-                        Networking.LocalPlayer.Team = (team > Team.Pink) ? Team.White : team;
+                        if (!LobbyController.IsCurrentMultikillLobby() && team > Team.Pink && team != Team.White)
+                        {
+                            HudMessageReceiver.Instance?.SendHudMessage("Sorry, custom teams only work on Modded Only lobbies");
+                            Networking.LocalPlayer.Team = Team.White;
+                        }
+                        else
+                            Networking.LocalPlayer.Team = team;
+
                         Events.OnTeamChanged.Fire();
 
                         Rebuild();

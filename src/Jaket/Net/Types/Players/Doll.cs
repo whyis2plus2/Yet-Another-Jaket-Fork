@@ -151,7 +151,7 @@ public class Doll : MonoBehaviour
         if (WingLight) WingLight.color = team.Color();
 
         // TODO make it part of customization
-        Suits.GetChild(0).gameObject.SetActive(team == Team.Pink);
+        Suits.GetChild(0).gameObject.SetActive(team == Team.Pink || team == Team.Purple);
     }
 
     public void ApplySuit()

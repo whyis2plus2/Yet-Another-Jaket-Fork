@@ -56,10 +56,10 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             {
                 switch (lobbyAccessLevel = ++lobbyAccessLevel % 4)
                 {
-                    case 0: LobbyController.Lobby?.SetPrivate(); LobbyController.Lobby?.DeleteData("mk_lobby"); break;
+                    case 0: LobbyController.Lobby?.SetPrivate(); break;
                     case 1: LobbyController.Lobby?.SetFriendsOnly(); break;
-                    case 2: LobbyController.Lobby?.SetPublic(); break;
-                    case 3: LobbyController.Lobby?.SetPublic(); LobbyController.Lobby?.SetData("mk_lobby", "true"); break;
+                    case 2: LobbyController.Lobby?.SetPublic(); LobbyController.Lobby?.SetData("mk_lobby", "true"); break;
+                    case 3: LobbyController.Lobby?.SetPublic(); LobbyController.Lobby?.DeleteData("mk_lobby"); break;
                 }
                 Rebuild();
             });
@@ -123,8 +123,8 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
         {
             0 => "lobby-tab.private",
             1 => "lobby-tab.fr-only",
-            2 => "lobby-tab.public",
-            3 => "lobby-tab.modded",
+            2 => "lobby-tab.modded",
+            3 => "lobby-tab.public",
             _ => "lobby-tab.default"
         });
 

@@ -8,6 +8,7 @@ using UnityEngine;
 
 using Jaket.Assets;
 using Jaket.IO;
+using Jaket.Net.Types;
 
 /// <summary> Lobby controller with several useful methods and properties. </summary>
 public class LobbyController
@@ -42,6 +43,11 @@ public class LobbyController
     public static void ScaleHealth(ref float health) => health *= 1f + Math.Min(Lobby?.MemberCount - 1 ?? 1, 1) * PPP;
     /// <summary> Whether the given lobby is created via Multikill. </summary>
     public static bool IsMultikillLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "mk_lobby");
+    /// <summary> Whether the current lobby is created via Multikill. </summary>
+    public static bool IsCurrentMultikillLobby() {
+        if (Offline || !Lobby.HasValue) return false;
+        else return IsMultikillLobby(Lobby.Value);
+    }
 
     /// <summary> Creates the necessary listeners for proper work. </summary>
     public static void Load()
@@ -149,6 +155,8 @@ public class LobbyController
             {
                 IsOwner = false;
                 Lobby = lobby;
+                if (Networking.LocalPlayer.Team > Content.Team.Pink && !IsCurrentMultikillLobby())
+                    Networking.LocalPlayer.Team = Content.Team.White;
             }
             else Log.Warning($"Couldn't join a lobby. Result is {task.Result}");
         });
