@@ -32,13 +32,12 @@ public class PlayerList : CanvasSingleton<PlayerList>
                     if (team == Team.Pink) x = 8f;
                     UIB.TeamButton(team, table, new(x += 64f, -194f, 56f, 56f, new(0f, 1f)), () =>
                     {
-                        if (!LobbyController.IsCurrentMultikillLobby() && team > Team.Pink && team != Team.White)
+                        if (!LobbyController.IsCurrentMultikillLobby() && LobbyController.Online && team > Team.Pink && team != Team.White)
                         {
                             HudMessageReceiver.Instance?.SendHudMessage("Sorry, custom teams only work on Modded Only lobbies");
                             Networking.LocalPlayer.Team = Team.White;
                         }
-                        else
-                            Networking.LocalPlayer.Team = team;
+                        else Networking.LocalPlayer.Team = team;
 
                         Events.OnTeamChanged.Fire();
 

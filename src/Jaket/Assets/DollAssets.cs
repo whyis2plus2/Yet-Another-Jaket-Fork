@@ -21,7 +21,7 @@ public class DollAssets
     public static GameObject Doll, Preview;
 
     /// <summary> Player doll icon. </summary>
-    public static Sprite Icon;
+    public static Sprite Icon, V4Icon;
 
     /// <summary> Mixer processing Sam's voice. Used to change volume. </summary>
     public static AudioMixer Mixer;
@@ -35,6 +35,9 @@ public class DollAssets
 
     /// <summary> Wing textures used to differentiate teams. </summary>
     public static Texture[] WingTextures;
+
+    /// <summary> Body textures used to differentiate teams. </summary>
+    public static Texture[] BodyTextures;
 
     /// <summary> Hand textures used by local player. </summary>
     public static Texture[] HandTextures;
@@ -53,6 +56,7 @@ public class DollAssets
         // cache the shader and the wing textures for future use
         Shader = AssetHelper.LoadPrefab("cb3828ada2cbefe479fed3b51739edf6").GetComponent<global::V2>().smr.material.shader;
         WingTextures = new Texture[Tools.EnumMax<Team>() + 1];
+        BodyTextures = new Texture[Tools.EnumMax<Team>() + 1];
         HandTextures = new Texture[4];
 
         // loading wing textures from the bundle
@@ -60,6 +64,14 @@ public class DollAssets
         {
             var index = i; // C# sucks
             LoadAsync<Texture>("V3-wings-" + ((Team)i).ToString(), tex => WingTextures[index] = tex);
+        }
+
+        // loading body textures from the bundle
+        for (int i = 0; i < WingTextures.Length; i++)
+        {
+            var index = i; // C# sucks
+            if (!Bundle.Contains("v3-body-" + ((Team)i).ToString())) LoadAsync<Texture>("v3-body", tex => BodyTextures[index] = tex);
+            else LoadAsync<Texture>("V3-body-" + ((Team)i).ToString(), tex => BodyTextures[index] = tex);
         }
 
         LoadAsync<Texture>("V3-hand", tex => HandTextures[1] = tex);
@@ -99,6 +111,7 @@ public class DollAssets
 
         // I guess async will improve performance a little bit
         LoadAsync<Sprite>("V3-icon", sprite => Icon = sprite);
+        LoadAsync<Sprite>("V4-icon", sprite => V4Icon = sprite);
         LoadAsync<AudioMixer>("sam-audio", mix =>
         {
             Mixer = mix;
