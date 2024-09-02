@@ -85,7 +85,7 @@ public class Administration
         if (!LobbyController.IsOwner) return;
         LobbyController.Lobby?.SendChatString($"[{UI.Pal.Red}]\\[Server] Kicked {Tools.Name(id)}[]");
 
-        Networking.Send(PacketType.Dummy, null, (data, size) =>
+        Networking.Send(PacketType.Ban, null, (data, size) =>
         {
             var con = Networking.FindCon(id);
             Tools.Send(con, data, size);

@@ -35,6 +35,4 @@ public enum PacketType
     ActivateObject,
     /// <summary> Any action with CyberGrind, like pattern and wave. </summary>
     CyberGrindAction,
-    /// <summary> Dummy Packet Type </summary>
-    Dummy
 }
