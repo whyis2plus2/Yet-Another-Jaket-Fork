@@ -40,13 +40,13 @@ public class LobbyController
     public static float PPP;
 
     /// <summary> Scales health to increase difficulty. </summary>
-    public static void ScaleHealth(ref float health) => health *= (float)Math.Pow(2f, 1f + Math.Min(Lobby?.MemberCount - 1 ?? 1, 1)) * PPP;
+    public static void ScaleHealth(ref float health) => health *= 1f + (float)Math.Pow(Math.Max(Lobby?.MemberCount - 1 ?? 1, 1), 2d) * PPP;
     /// <summary> Whether the given lobby is created via Multikill. </summary>
     public static bool IsMultikillLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "mk_lobby");
     /// <summary> Whether the current lobby is created via Multikill. </summary>
     public static bool IsCurrentMultikillLobby() {
         if (Offline || !Lobby.HasValue) return false;
-        else return IsMultikillLobby(Lobby.Value);
+        return IsMultikillLobby(Lobby.Value);
     }
 
     /// <summary> Creates the necessary listeners for proper work. </summary>

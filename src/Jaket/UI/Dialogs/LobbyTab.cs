@@ -85,7 +85,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             UIB.Text("#lobby-tab.ppp-name", table, Btn(338f), align: TextAnchor.MiddleLeft);
             var PPP = UIB.Text("0PPP", table, Btn(338f), align: TextAnchor.MiddleRight);
 
-            UIB.Slider("Health Multiplier", table, Sld(366f), 8 * 4, value =>
+            UIB.Slider("Health Multiplier", table, Sld(366f), 8 * 2, value =>
             {
                 PPP.text = $"{(int)((LobbyController.PPP = value / 8f) * 100)}PPP";
                 LobbyController.Lobby?.SetData("ppp", LobbyController.PPP.ToString());
