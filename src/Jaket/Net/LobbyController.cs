@@ -40,7 +40,7 @@ public class LobbyController
     public static float PPP;
 
     /// <summary> Scales health to increase difficulty. </summary>
-    public static void ScaleHealth(ref float health) => health *= 1f + (float)Math.Pow(Math.Max(Lobby?.MemberCount - 1 ?? 1, 1), 2d) * PPP;
+    public static void ScaleHealth(ref float health) => health *= 1f + Math.Max(Lobby?.MemberCount - 1 ?? 1, 1) * PPP;
     /// <summary> Whether the given lobby is created via Multikill. </summary>
     public static bool IsMultikillLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "mk_lobby");
     /// <summary> Whether the current lobby is created via Multikill. </summary>
