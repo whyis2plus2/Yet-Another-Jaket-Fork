@@ -49,7 +49,12 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
         });
         UIB.Table("Lobby Config", "#lobby-tab.config", transform, Tlw(384f + 422f / 2f, 422f), table =>
         {
-            field = UIB.Field("#lobby-tab.name", table, Tgl(64f), cons: name => LobbyController.Lobby?.SetData("name", name));
+            field = UIB.Field("#lobby-tab.name", table, Tgl(64f), cons: name =>
+            {
+                LobbyController.Lobby?.SetData("name", name);
+                LobbyController.Lobby?.SetData("lobbyName", name);
+            });
+
             field.characterLimit = 28;
 
             accessibility = UIB.Button("#lobby-tab.private", table, Btn(108f), clicked: () =>
@@ -59,7 +64,14 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
                     case 0: LobbyController.Lobby?.SetPrivate(); break;
                     case 1: LobbyController.Lobby?.SetFriendsOnly(); break;
                     case 2: LobbyController.Lobby?.SetPublic(); LobbyController.Lobby?.SetData("mk_lobby", "true"); break;
-                    case 3: LobbyController.Lobby?.SetPublic(); LobbyController.Lobby?.DeleteData("mk_lobby"); break;
+                    case 3:
+                    {
+                        LobbyController.Lobby?.SetPublic();
+                        LobbyController.Lobby?.DeleteData("mk_lobby");
+
+                        if (Networking.LocalPlayer.Team > Content.Team.Pink) Networking.LocalPlayer.Team = Content.Team.White;
+                    }
+                    break;
                 }
                 Rebuild();
             });
@@ -73,7 +85,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             UIB.Text("#lobby-tab.ppp-name", table, Btn(338f), align: TextAnchor.MiddleLeft);
             var PPP = UIB.Text("0PPP", table, Btn(338f), align: TextAnchor.MiddleRight);
 
-            UIB.Slider("Health Multiplier", table, Sld(366f), 16, value =>
+            UIB.Slider("Health Multiplier", table, Sld(366f), 8 * 4, value =>
             {
                 PPP.text = $"{(int)((LobbyController.PPP = value / 8f) * 100)}PPP";
                 LobbyController.Lobby?.SetData("ppp", LobbyController.PPP.ToString());
