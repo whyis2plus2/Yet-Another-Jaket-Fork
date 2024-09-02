@@ -19,8 +19,7 @@ public class Spray : MonoBehaviour
 
     /// <summary> Image component of the spray. </summary>
     private Image image;
-    /// <summary> Name of the player who spawned the spray. </summary>
-    private Text pname;
+    
     /// <summary> How many seconds has the spray existed. </summary>
     public float Lifetime;
 
@@ -35,20 +34,7 @@ public class Spray : MonoBehaviour
 
     private void Start()
     {
-        UIB.WorldCanvas("Canvas", transform, Vector3.zero, build: canvas =>
-        {
-            image = UIB.Image("Image", canvas, new(0f, 0f, 256f, 256f), type: Image.Type.Filled);
-            pname = UIB.Text(Tools.Name(owner), canvas, new(0f, -144f, 4200f, 4200f), size: 320);
-
-            pname.transform.localEulerAngles = new(0f, 0f, 0f);
-            pname.transform.localScale /= 10f;
-
-            UIB.Component<Outline>(pname.gameObject, outline =>
-            {
-                outline.effectColor = black;
-                outline.effectDistance = Vector2.one * 12f;
-            });
-        });
+        UIB.WorldCanvas("Canvas", transform, Vector3.zero, build: canvas => image = UIB.Image("Image", canvas, new(0f, 0f, 256f, 256f), type: Image.Type.Filled));
         UpdateSprite();
 
         image.preserveAspect = true;
