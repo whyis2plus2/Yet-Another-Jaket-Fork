@@ -114,6 +114,9 @@ public class LobbyController
             Lobby?.SetData("mods", "True");
             Lobby?.SetData("heal-bosses", "False");
         });
+
+        if (Networking.LocalPlayer.Team > Content.Team.Pink)
+            Networking.LocalPlayer.Team = Content.Team.White;
     }
 
     /// <summary> Leaves the lobby. If the player is the owner, then all other players will be thrown into the main menu. </summary>
