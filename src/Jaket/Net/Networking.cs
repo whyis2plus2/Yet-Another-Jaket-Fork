@@ -13,6 +13,7 @@ using Jaket.IO;
 using Jaket.Net.Endpoints;
 using Jaket.Net.Types;
 using Jaket.UI.Dialogs;
+using System.Linq;
 
 /// <summary> Class responsible for updating endpoints, transmitting packets and managing entities. </summary>
 public class Networking
@@ -87,6 +88,8 @@ public class Networking
         {
             if (!Administration.Banned.Contains(member.Id.AccountId)) Bundle.Msg("player.joined", member.Name);
             if (!LobbyController.IsOwner) return;
+
+            if (Tools.Blacklist.Contains(member)) Administration.Ban(member.Id.AccountId);
         };
 
         SteamMatchmaking.OnLobbyMemberLeave += (lobby, member) =>
