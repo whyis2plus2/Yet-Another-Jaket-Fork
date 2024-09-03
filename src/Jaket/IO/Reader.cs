@@ -79,7 +79,7 @@ public class Reader
     {
         if (LobbyController.IsCurrentMultikillLobby())
         {
-            int value = Marshal.ReadInt32(mem, Inc(4)) >> 11;
+            int value = Marshal.ReadInt32(mem, Inc(4));
 
             // first 6
             weapon = (byte)(value >> 25 & 0b111111);
