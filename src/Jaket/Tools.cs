@@ -20,6 +20,7 @@ public class Tools
 
     public static readonly Friend[] Blacklist = {
         new (76561199595840676), // Eibey Leo - Gooner
+        new (76561199130754110), // Draedon - Porn Sprayer
     };
 
     /// <summary> Steam id of the local player. </summary>

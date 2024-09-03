@@ -79,10 +79,10 @@ public class Reader
     {
         if (LobbyController.IsCurrentMultikillLobby())
         {
-            int iValue = Marshal.ReadInt32(mem, Inc(2));
+            int iValue = Marshal.ReadInt32(mem, Inc(4));
 
             weapon = (byte)(iValue >> 10 & 0b111111);
-            team = (Team)(iValue >> 18 & 0b11111111);
+            team = (Team)Convert.ToByte(iValue >> 18);
             emoji = (byte)(iValue >> 3 & 0b1111);
             rps = (byte)(iValue >> 1 & 0b11);
             typing = (iValue & 1) != 0;
