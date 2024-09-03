@@ -79,39 +79,48 @@ public class Reader
     {
         if (LobbyController.IsCurrentMultikillLobby())
         {
-            int iValue = Marshal.ReadInt32(mem, Inc(4));
+            int value = Marshal.ReadInt32(mem, Inc(4)) >> 11;
 
-            weapon = (byte)(iValue >> 10 & 0b111111);
-            team = (Team)Convert.ToByte(iValue >> 18);
-            emoji = (byte)(iValue >> 3 & 0b1111);
-            rps = (byte)(iValue >> 1 & 0b11);
-            typing = (iValue & 1) != 0;
+            // first 6
+            weapon = (byte)(value >> 25 & 0b111111);
+
+            // next 8
+            team = (Team)(value >> 17 & 0b111);
+
+            // next 4
+            emoji = (byte)(value >> 13 & 0b1111);
+
+            // next 2
+            rps = (byte)(value >> 10 & 0b11);
+
+            // last bit
+            typing = (value >> 9 & 1) != 0;
 
             if (weapon == 0b111111) weapon = 0xFF;
             if (emoji == 0b1111) emoji = 0xFF;
-
-            return;
         }
+        else
+        {
+            short value = Marshal.ReadInt16(mem, Inc(2));
 
-        short shValue = Marshal.ReadInt16(mem, Inc(2));
+            // this uses the first 6 bits
+            weapon = (byte)(value >> 10 & 0b111111);
 
-        // this uses the first 6 bits
-        weapon = (byte)(shValue >> 10 & 0b111111);
+            // next 3
+            team = (Team)(value >> 7 & 0b111);
 
-        // next 3
-        team = (Team)(shValue >> 7 & 0b111);
+            // next 4
+            emoji = (byte)(value >> 3 & 0b1111);
 
-        // next 4
-        emoji = (byte)(shValue >> 3 & 0b1111);
+            // next 1
+            rps = (byte)(value >> 1 & 0b11);
 
-        // next 1
-        rps = (byte)(shValue >> 1 & 0b11);
+            // final bit
+            typing = (value & 1) != 0;
 
-        // final bit
-        typing = (shValue & 1) != 0;
-
-        if (weapon == 0b111111) weapon = 0xFF;
-        if (emoji == 0b1111) emoji = 0xFF;
+            if (weapon == 0b111111) weapon = 0xFF;
+            if (emoji == 0b1111) emoji = 0xFF;
+        }
     }
 
     #endregion

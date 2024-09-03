@@ -88,7 +88,7 @@ public class Writer
 
         if (LobbyController.IsCurrentMultikillLobby())
         {
-            Marshal.WriteInt32(mem, Inc(4), (short)((weapon << 10) | (Convert.ToByte(team) << 18) | (emoji << 3) | (rps << 1) | (typing ? 1 : 0)));
+            Marshal.WriteInt32(mem, Inc(4), (short)((weapon << 25) | (Convert.ToByte(team) << 17) | (emoji << 13) | (rps << 10) | ((typing ? 1 : 0) << 9)));
             return;
         }
 
