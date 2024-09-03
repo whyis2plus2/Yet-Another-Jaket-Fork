@@ -83,15 +83,18 @@ public class Administration
     {
         // who does the client think he is?!
         if (!LobbyController.IsOwner) return;
-        LobbyController.Lobby?.SendChatString($"[{UI.Pal.Red}]\\[Server] Kicked {Tools.Name(id)}[]");
 
-        Networking.Send(PacketType.Ban, null, (data, size) =>
+        Networking.Send(PacketType.Kick, null, (data, size) =>
         {
             var con = Networking.FindCon(id);
             Tools.Send(con, data, size);
             con?.Flush();
             Events.Post2(() => con?.Close());
         });
+
+        if (LobbyController.IsCurrentMultikillLobby())
+            LobbyController.Lobby?.SendChatString("#/b" + id);
+        else LobbyController.Lobby?.SendChatString($"[{UI.Pal.Red}]\\[Server] Kicked {Tools.Name(id)}[]");
 
         Kicked.Add(id);
         LobbyController.Lobby?.SetData("kicked", string.Join(" ", Kicked));

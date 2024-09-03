@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine;
 
 using Jaket.Content;
+using Jaket.Net;
 
 /// <summary> Wrapper over Marshal for convenience and the ability to read floating point numbers. </summary>
 public class Reader
@@ -76,13 +77,38 @@ public class Reader
 
     public void Player(out Team team, out byte weapon, out byte emoji, out byte rps, out bool typing)
     {
-        short value = Marshal.ReadInt16(mem, Inc(2));
+        if (LobbyController.IsCurrentMultikillLobby())
+        {
+            int iValue = Marshal.ReadInt32(mem, Inc(2));
 
-        weapon = (byte)(value >> 10 & 0b111111);
-        team = (Team)(value >> 7 & 0b111);
-        emoji = (byte)(value >> 3 & 0b1111);
-        rps = (byte)(value >> 1 & 0b11);
-        typing = (value & 1) != 0;
+            weapon = (byte)(iValue >> 10 & 0b111111);
+            team = (Team)(iValue >> 18 & 0b11111111);
+            emoji = (byte)(iValue >> 3 & 0b1111);
+            rps = (byte)(iValue >> 1 & 0b11);
+            typing = (iValue & 1) != 0;
+
+            if (weapon == 0b111111) weapon = 0xFF;
+            if (emoji == 0b1111) emoji = 0xFF;
+
+            return;
+        }
+
+        short shValue = Marshal.ReadInt16(mem, Inc(2));
+
+        // this uses the first 6 bits
+        weapon = (byte)(shValue >> 10 & 0b111111);
+
+        // next 3
+        team = (Team)(shValue >> 7 & 0b111);
+
+        // next 4
+        emoji = (byte)(shValue >> 3 & 0b1111);
+
+        // next 1
+        rps = (byte)(shValue >> 1 & 0b11);
+
+        // final bit
+        typing = (shValue & 1) != 0;
 
         if (weapon == 0b111111) weapon = 0xFF;
         if (emoji == 0b1111) emoji = 0xFF;
