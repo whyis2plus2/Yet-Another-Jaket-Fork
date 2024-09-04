@@ -220,6 +220,9 @@ public class UIB
         var color = team.Color();
         var img = Image(team.ToString(), parent, r, color);
         if (team == Team.Pink || team == Team.Purple) Text("UwU", img.transform, r.Text, Dark(team.Color()));
+        if (team == Team.V1) Text("V1", img.transform, r.Text, yellow);
+        if (team == Team.V2) Text("V2", img.transform, r.Text, yellow);
+
         return Component<Button>(img.gameObject, button =>
         {
             button.targetGraphic = img;

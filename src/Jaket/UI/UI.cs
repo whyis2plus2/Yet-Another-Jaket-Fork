@@ -14,7 +14,7 @@ public class UI
     /// <summary> Whether the player is focused on a input field. </summary>
     public static bool Focused => Focus != null && Focus.TryGetComponent<InputField>(out var f) && f.isActiveAndEnabled;
     /// <summary> Whether the player is in any of Jaket dialog. </summary>
-    public static bool AnyDialog => Chat.Shown || LobbyTab.Shown || LobbyList.Shown || PlayerList.Shown || Settings.Shown || SpraySettings.Shown || (OptionsManager.Instance?.paused ?? false);
+    public static bool AnyDialog => Chat.Shown || LobbyTab.Shown || LobbyList.Shown || PlayerList.Shown || PlayerListEX.Shown || Settings.Shown || SpraySettings.Shown || (OptionsManager.Instance?.paused ?? false);
     /// <summary> Whether any interface that blocks movement is currently visible. </summary>
     public static bool AnyMovementBlocking => AnyDialog || NewMovement.Instance.dead || Movement.Instance.Emoji != 0xFF;
 
@@ -33,6 +33,7 @@ public class UI
         LobbyTab.Build("Lobby Tab", false, true);
         LobbyList.Build("Lobby List", false, true);
         PlayerList.Build("Player List", false, true);
+        PlayerListEX.Build("Player List", false, true);
         Settings.Build("Settings", false, true);
         SpraySettings.Build("Spray Settings", false, true);
         Debugging.Build("Debugging Menu", false, false);
@@ -51,6 +52,7 @@ public class UI
     {
         if (LobbyTab.Shown) LobbyTab.Instance.Toggle();
         if (PlayerList.Shown) PlayerList.Instance.Toggle();
+        if (PlayerListEX.Shown) PlayerListEX.Instance.Toggle();
         if (Settings.Shown) Settings.Instance.Toggle();
     }
 
