@@ -48,6 +48,24 @@ public class DollAssets
     /// <summary> Icons for the emoji selection wheel. </summary>
     public static Sprite[] EmojiIcons, EmojiGlows;
 
+    /// <summary> Instantiates Preview with a specified skin, defaults to V3 with yellow wings </summary>
+    public static GameObject CreatePreviewWithSkin(Texture WingTex, Texture BodyTex)
+    {
+        if (!Preview) return null;
+
+        var preview = Object.Instantiate(DollAssets.Preview);
+        Object.DontDestroyOnLoad(preview);
+
+        var previewTransform = preview.transform.Find("V3");
+        var previewWingMat = previewTransform.Find("V3").GetComponent<Renderer>().materials[1];
+        var previewBodyMat = previewTransform.Find("V3").GetComponent<Renderer>().materials[0];
+
+        previewWingMat.mainTexture = WingTex;
+        previewBodyMat.mainTexture = BodyTex;
+
+        return preview;
+    }
+
     /// <summary> Loads assets bundle and other necessary stuff. </summary>
     public static void Load()
     {

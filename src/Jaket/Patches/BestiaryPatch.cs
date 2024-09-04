@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 
 using Jaket.Assets;
+using Jaket.Content;
 
 [HarmonyPatch(typeof(EnemyInfoPage), "Start")]
 public class BestiaryPatch
@@ -36,14 +37,6 @@ public class BestiaryPatch
         Array.Copy(___objects.enemies, 15, ___objects.enemies, 16, ___objects.enemies.Length - 16);
         ___objects.enemies[15] = v3;
 
-        var v4Preview = UnityEngine.Object.Instantiate(DollAssets.Preview);
-        var v4Transform = v4Preview.transform.Find("V3");
-        var v4WingMat = v4Transform.Find("V3").GetComponent<Renderer>().materials[1];
-        var v4BodyMat = v4Transform.Find("V3").GetComponent<Renderer>().materials[0];
-
-        v4WingMat.mainTexture = DollAssets.WingTextures[(int)Content.Team.White];
-        v4BodyMat.mainTexture = DollAssets.BodyTextures[(int)Content.Team.White];
-
         var v4 = ScriptableObject.CreateInstance<SpawnableObject>();
         var v4Entry = BestiaryEntry.Load(4);
 
@@ -58,7 +51,10 @@ public class BestiaryPatch
         v4.type = v4Entry.type;
         v4.description = v4Entry.description;
         v4.strategy = v4Entry.strategy;
-        v4.preview = v4Preview;
+        v4.preview = DollAssets.CreatePreviewWithSkin(
+            DollAssets.WingTextures[(int)Team.White],
+            DollAssets.BodyTextures[(int)Team.White]
+        );
 
         // insert v4 after v3 in the list
         Array.Resize(ref ___objects.enemies, ___objects.enemies.Length + 1);

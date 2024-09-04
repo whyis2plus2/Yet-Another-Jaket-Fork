@@ -8,7 +8,7 @@ using Jaket.Net;
 public enum Team
 {
     Yellow, Red, Green, Blue, Pink, Purple, Cyan, White,
-    V1, V2
+    V1, V2,    
 }
 
 /// <summary> Extension class that allows you to get team data. </summary>
