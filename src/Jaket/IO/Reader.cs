@@ -85,7 +85,7 @@ public class Reader
             weapon = (byte)(value >> 25 & 0b111111);
 
             // next 8
-            team = (Team)(value >> 17 & 0b111);
+            team = (Team)(value >> 17 & 0b11111111);
 
             // next 4
             emoji = (byte)(value >> 13 & 0b1111);
