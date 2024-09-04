@@ -13,7 +13,7 @@ public class PlayerListEX : CanvasSingleton<PlayerListEX>
 {    private void Start()
     {
         UIB.Shadow(transform);
-        UIB.Table("Teams", "#player-list.team", transform, TlwEX(16f + 230f / 2f, 230f, 136f + 64f * (float)System.Math.Round(Tools.EnumMax<Team>()/2d)), table =>
+        UIB.Table("Teams", "#player-list.team", transform, Tlw(16f + 230f / 2f, 230f, 136f + 64f * (float)System.Math.Round(Tools.EnumMax<Team>()/2d)), table =>
         {
             UIB.Text("#player-list.info", table, Btn(71f) with { Height = 46f }, size: 16);
 
