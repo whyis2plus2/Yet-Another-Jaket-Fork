@@ -21,7 +21,7 @@ public class DollAssets
     public static GameObject Doll, Preview;
 
     /// <summary> Player doll icon. </summary>
-    public static Sprite Icon, V4Icon;
+    public static Sprite[] Icons;
 
     /// <summary> Mixer processing Sam's voice. Used to change volume. </summary>
     public static AudioMixer Mixer;
@@ -76,6 +76,7 @@ public class DollAssets
         WingTextures = new Texture[Tools.EnumMax<Team>() + 1];
         BodyTextures = new Texture[Tools.EnumMax<Team>() + 1];
         HandTextures = new Texture[4];
+        Icons = new Sprite[3];
 
         // loading wing textures from the bundle
         for (int i = 0; i < WingTextures.Length; i++)
@@ -128,8 +129,10 @@ public class DollAssets
         });
 
         // I guess async will improve performance a little bit
-        LoadAsync<Sprite>("V3-icon", sprite => Icon = sprite);
-        LoadAsync<Sprite>("V4-icon", sprite => V4Icon = sprite);
+        LoadAsync<Sprite>("V3-icon", sprite => Icons[0] = sprite);
+        LoadAsync<Sprite>("V4-icon", sprite => Icons[1] = sprite);
+        LoadAsync<Sprite>("F1-icon", sprite => Icons[2] = sprite);
+
         LoadAsync<AudioMixer>("sam-audio", mix =>
         {
             Mixer = mix;

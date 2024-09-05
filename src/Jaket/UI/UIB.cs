@@ -222,6 +222,7 @@ public class UIB
         if (team == Team.Pink || team == Team.Purple) Text("UwU", img.transform, r.Text, Dark(team.Color()));
         if (team == Team.V1) Text("V1", img.transform, r.Text, yellow);
         if (team == Team.V2) Text("V2", img.transform, r.Text, yellow);
+        if (team == Team.Fraud) Text("F1", img.transform, r.Text, yellow);
 
         return Component<Button>(img.gameObject, button =>
         {

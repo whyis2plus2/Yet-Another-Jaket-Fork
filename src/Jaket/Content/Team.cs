@@ -7,8 +7,9 @@ using Jaket.Net;
 /// <summary> All teams. Teams needed for PvP mechanics. </summary>
 public enum Team
 {
-    Yellow, Red, Green, Blue, Pink, Purple, Cyan, White,
-    V1, V2,    
+    Yellow, Red, Green, Blue, Pink,
+    Purple, Cyan, White, V1, V2,
+    Fraud
 }
 
 /// <summary> Extension class that allows you to get team data. </summary>
@@ -26,6 +27,7 @@ public static class TeamExtensions
         Team.Cyan   => new( 0f,  1f,  1f),
         Team.V1     => new(.1f, .3f,  1f),
         Team.V2     => new( 1f,  0f, .1f),
+        Team.Fraud  => new(.3f, .3f, .3f),
         _ => new(1f, 1f, 1f)
     };
 
