@@ -27,6 +27,8 @@ public class UIB
     /// <summary> Block used to get and set material properties. </summary>
     private static MaterialPropertyBlock block = new();
 
+    public static Color RGBTeam = new (1f, 0f, 0f);
+
     /// <summary> Loads the resources needed for interface. </summary>
     public static void Load()
     {
@@ -145,7 +147,7 @@ public class UIB
         Component<Text>(Rect("Text", parent, r).gameObject, text =>
         {
             text.text = name.StartsWith("#") ? Bundle.Get(name.Substring(1)) : name;
-            text.color = color ?? white;
+            if (color.HasValue) text.color = color.Value;
             text.font = DollAssets.Font;
             text.fontSize = size;
             text.alignment = align;
@@ -219,10 +221,33 @@ public class UIB
     {
         var color = team.Color();
         var img = Image(team.ToString(), parent, r, color);
-        if (team == Team.Pink || team == Team.Purple) Text("UwU", img.transform, r.Text, Dark(team.Color()));
-        if (team == Team.V1) Text("V1", img.transform, r.Text, yellow);
-        if (team == Team.V2) Text("V2", img.transform, r.Text, yellow);
-        if (team == Team.Fraud) Text("F1", img.transform, r.Text, yellow);
+
+        switch (team) {
+            case Team.Pink | Team.Purple:
+                Text("UwU", img.transform, r.Text, Dark(team.Color()));
+                break;
+
+            case Team.V1:
+                Text("V1", img.transform, r.Text, yellow);
+                break;
+
+            case Team.V2:
+                Text("V1", img.transform, r.Text, yellow);
+                break;
+
+            case Team.Fraud:
+                Text("F1", img.transform, r.Text, yellow);
+                break;
+
+            case Team.RGB:
+                Text(
+                    "<color=0xF00>R<color=0x0F0>G<color=0x00F>B</color></color></color>",
+                    img.transform, r.Text
+                );
+                break;
+
+            default: break;
+        }
 
         return Component<Button>(img.gameObject, button =>
         {
@@ -232,8 +257,17 @@ public class UIB
     }
 
     /// <summary> Adds a button that opens the profile of the given member. </summary>
-    public static Button ProfileButton(Friend member, Transform parent, Rect r) =>
-        Button(member.Name, parent, r, Networking.GetTeam(member).Color(), 24, clicked: () => SteamFriends.OpenUserOverlay(member.Id, "steamid"));
+    public static Button ProfileButton(Friend member, Transform parent, Rect r) {
+        float h = 0, dummy;
+        Color.RGBToHSV(RGBTeam, out h, out dummy, out dummy);
+
+        h += 18f * Time.deltaTime; 
+        RGBTeam = Color.HSVToRGB(h, 1f, 1f);
+
+        return (Networking.GetTeam(member) == Team.RGB) ?
+            Button(member.Name, parent, r, RGBTeam, 24, clicked: () => SteamFriends.OpenUserOverlay(member.Id, "steamid")) :
+            Button(member.Name, parent, r, Networking.GetTeam(member).Color(), 24, clicked: () => SteamFriends.OpenUserOverlay(member.Id, "steamid"));
+    }
 
     /// <summary> Adds a button that changes the given keybind. </summary>
     public static Button KeyButton(string name, KeyCode current, Transform parent, Rect r)

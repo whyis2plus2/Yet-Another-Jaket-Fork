@@ -34,7 +34,7 @@ public class DollAssets
     public static Shader Shader;
 
     /// <summary> Wing textures used to differentiate teams. </summary>
-    public static Texture[] WingTextures;
+    public static Texture[] WingTextures, RGBWings;
 
     /// <summary> Body textures used to differentiate teams. </summary>
     public static Texture[] BodyTextures;
@@ -76,6 +76,7 @@ public class DollAssets
         WingTextures = new Texture[Tools.EnumMax<Team>() + 1];
         BodyTextures = new Texture[Tools.EnumMax<Team>() + 1];
         HandTextures = new Texture[4];
+        RGBWings = new Texture[20];
         Icons = new Sprite[3];
 
         // loading wing textures from the bundle
@@ -83,6 +84,13 @@ public class DollAssets
         {
             var index = i; // C# sucks
             LoadAsync<Texture>("V3-wings-" + ((Team)i).ToString(), tex => WingTextures[index] = tex);
+        }
+
+        // loading wing textures from the bundle
+        for (int i = 0; i < RGBWings.Length; i++)
+        {
+            var index = i; // C# sucks
+            LoadAsync<Texture>("V3-wings-rgb" + index.ToString(), tex => RGBWings[index] = tex);
         }
 
         // loading body textures from the bundle

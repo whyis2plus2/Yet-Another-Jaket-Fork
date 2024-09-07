@@ -10,17 +10,25 @@ using static Rect;
 
 /// <summary> List of all players and teams. </summary>
 public class PlayerListEX : CanvasSingleton<PlayerListEX>
-{    private void Start()
+{
+    private void Start()
     {
+        /// <summary> get half of an int, rounded up </summary>
+        int RoundHalf(int x)
+        {
+            if (x % 2 == 1) return x/2 + 1;
+            else return x/2;
+        }
+
         UIB.Shadow(transform);
-        UIB.Table("Teams", "#player-list.team", transform, Tlw(16f + 230f / 2f, 230f, 136f + 64f * (float)System.Math.Round(Tools.EnumMax<Team>()/2d)), table =>
+        UIB.Table("Teams", "#player-list.team", transform, Tlw(16f + 230f / 2f, 230f, 136f + 64f * (RoundHalf(Tools.EnumMax<Team>()) - 1)), table =>
         {
             UIB.Text("#player-list.info", table, Btn(71f) with { Height = 46f }, size: 16);
 
             float x = 8f;
             foreach (Team team in System.Enum.GetValues(typeof(Team)))
             {
-                if ((int)team <= Tools.EnumMax<Team>()/2) UIB.TeamButton(team, table, new(x += 64f, -130f, 56f, 56f, new(0f, 1f)), () =>
+                if ((int)team < RoundHalf(Tools.EnumMax<Team>())) UIB.TeamButton(team, table, new(x += 64f, -130f, 56f, 56f, new(0f, 1f)), () =>
                 {
                     Networking.LocalPlayer.Team = team;
                     Events.OnTeamChanged.Fire();
@@ -29,8 +37,10 @@ public class PlayerListEX : CanvasSingleton<PlayerListEX>
                 });
                 else
                 {
-                    if ((int)team == Tools.EnumMax<Team>()/2 + 1) x = 8f;
-                    UIB.TeamButton(team, table, new(x += 64f, -194f, 56f, 56f, new(0f, 1f)), () =>
+                    if ((int)team == RoundHalf(Tools.EnumMax<Team>())) x = 8f;
+                    Rect r = new(x += 64f, -194f, 56f, 56f, new(0f, 1f));
+                
+                    UIB.TeamButton(team, table, r, () =>
                     {
                         Networking.LocalPlayer.Team = team;
 

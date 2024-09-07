@@ -14,6 +14,9 @@ using Jaket.UI;
 /// </summary>
 public class Doll : MonoBehaviour
 {
+    // float so that we can control the anim with deltaTime
+    float TeamSkinFrame;
+    Team Team;
     /// <summary> Component rendering animations of the doll. </summary>
     public Animator Animator;
     /// <summary> Animator states that affect which animation will be played. </summary>
@@ -139,6 +142,12 @@ public class Doll : MonoBehaviour
             FallParticle.localScale = new(1.2f, .6f, 1f);
         }
         else if (!Falling && FallParticle != null) Destroy(FallParticle.gameObject);
+
+        if (Team == Team.RGB)
+        {
+            TeamSkinFrame += 18f * Time.deltaTime; TeamSkinFrame %= DollAssets.RGBWings.Length;
+            WingMat.mainTexture = SkateMat.mainTexture = DollAssets.RGBWings[(int)Mathf.Floor(TeamSkinFrame)];
+        }
     });
 
     #region apply
@@ -154,6 +163,7 @@ public class Doll : MonoBehaviour
 
         // TODO make it part of customization
         Suits.GetChild(0).gameObject.SetActive(team == Team.Pink || team == Team.Purple);
+        Team = team;
     }
 
     public void ApplySuit()

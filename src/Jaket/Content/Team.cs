@@ -3,18 +3,21 @@ namespace Jaket.Content;
 using UnityEngine;
 
 using Jaket.Net;
+using System.Linq;
 
 /// <summary> All teams. Teams needed for PvP mechanics. </summary>
 public enum Team
 {
     Yellow, Red, Green, Blue, Pink,
     Purple, Cyan, White, V1, V2,
-    Fraud
+    Fraud, RGB
 }
 
 /// <summary> Extension class that allows you to get team data. </summary>
 public static class TeamExtensions
 {
+    static readonly Team[] FFA = { Team.White, Team.RGB };
+
     /// <summary> Returns the team color, used only in the interface. </summary>
     public static Color Color(this Team team) => team switch
     {
@@ -28,9 +31,10 @@ public static class TeamExtensions
         Team.V1     => new(.1f, .3f,  1f),
         Team.V2     => new( 1f,  0f, .1f),
         Team.Fraud  => new(.3f, .3f, .3f),
+        Team.RGB    => new( 0f,  0f,  0f),
         _ => new(1f, 1f, 1f)
     };
 
     /// <summary> Whether this team is allied with the player. </summary>
-    public static bool Ally(this Team team) => (team != Team.White && team == Networking.LocalPlayer.Team) || !LobbyController.PvPAllowed;
+    public static bool Ally(this Team team) => (!FFA.Contains(team) && team == Networking.LocalPlayer.Team) || !LobbyController.PvPAllowed;
 }
