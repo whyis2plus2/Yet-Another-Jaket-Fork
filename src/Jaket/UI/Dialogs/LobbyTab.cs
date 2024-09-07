@@ -69,7 +69,12 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             });
 
             pvp = UIB.Toggle("#lobby-tab.modded", table, Tgl(152f), clicked: allow => {
-                if (allow) LobbyController.Lobby?.SetData("mk_lobby", "true");
+                if (allow)
+                {
+                    LobbyController.Lobby?.SetData("mk_lobby", "true");
+                    Networking.EachPlayer(cons => Administration.Kick(cons.Id)); // this is to prevent the different net code from causing bugs
+                    // with normal jaket players
+                }
                 else LobbyController.Lobby?.DeleteData("mk_lobby");
             });
 
