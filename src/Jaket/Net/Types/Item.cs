@@ -73,6 +73,11 @@ public class Item : OwnableEntity
 
     #region entity
 
+    private void OnDestroy()
+    {
+        if (IsOwner) NetKill();
+    }
+
     public override void Write(Writer w)
     {
         base.Write(w);
