@@ -10,11 +10,11 @@ public class GameAssets
     #region content
 
     /// <summary> List of items that mustn't be synchronized, because they are not items at all. </summary>
-    public static readonly string[] ItemExceptions =
+    public static readonly string[] ItemExceptions = new[]
     { "Minotaur", "Tram (3)", "BombTrigger", "BombStationTramTeleporterKey", "Checker" };
 
     /// <summary> List of internal names of all enemies. </summary>
-    public static readonly string[] Enemies =
+    public static readonly string[] Enemies = new[]
     {
         "Zombie", "Projectile Zombie", "Super Projectile Zombie", "ShotgunHusk", "MinosBoss", "Stalker", "Sisyphus", "Ferryman",
         "SwordsMachineNonboss", "Drone", "Streetcleaner", "Mindflayer", "V2", "V2 Green Arm Variant", "Turret", "Gutterman",
@@ -24,31 +24,31 @@ public class GameAssets
     };
 
     /// <summary> List of internal names of all items. </summary>
-    public static readonly string[] Items =
-    { "Apple Bait", "Maurice Bait", "SkullBlue", "SkullRed", "Soap", "Torch", "Florp Throwable" };
+    public static readonly string[] Items = new[]
+    { ".Apple Bait", ".Maurice Bait", "SkullBlue", "SkullRed", "Soap", "Torch", "Florp Throwable" };
 
+    /// <summary> List of internal names of all dev plushies. </summary>
+    public static readonly string[] Plushies = new[]
+    {
+        "Jacob", "Mako", "HEALTH - Jake", "Dalia", "Jericho", "Meganeko", "Tucker", "BigRock", "Dawg", "Sam",
+        "Cameron", "Gianni", "Salad", "Mandy", "Joy", "Weyte", "Heckteck", "Hakita", "Lenval", ". (CabalCrow) Variant",
+        "Quetzal", "HEALTH - John", "PITR", "HEALTH - BJ", "Francis", "Vvizard", "Lucas", "Scott", "KGC", "."
+    };
+
+    /// <summary> List of readable names of all dev plushies needed for the /plushy command. </summary>
+    public static readonly string[] PlushiesButReadable = new[]
+    {
+        "Jacob", "Maximilian", "Jake", "Dalia", "Jericho", "Meganeko", "Tucker", "BigRock", "Victoria", "Samuel",
+        "Cameron", "Gianni", "Salad", "Mandy", "Joy", "Weyte", "Heckteck", "Hakita", "Lenval", "CabalCrow",
+        "Quetzal", "John", "Pitr", "BJ", "Francis", "Vvizard", "Lucas", "Scott", "KGC", "V1"
+    };
+    
     /// <summary> List of internal names of all fishes. </summary>
     public static readonly string[] Fishes =
     {
         "Funny Fish!!!", "pitr fish", "Trout", "Amid Efil Fish", "Dusk Chomper",
         "Bomb Fish", "Gib Eyeball Fish", "IronLungFish", "Dope Fish", "Fish Stick",
         "Cooked Fish", "Shark Fish", "Burnt Stuff"
-    };
-
-    /// <summary> List of internal names of all dev plushies. </summary>
-    public static readonly string[] Plushies =
-    {
-        "Hakita", "PITR", "Dawg", "Heckteck", ". (CabalCrow) Variant", "Lucas", "Francis", "Jericho", "BigRock", "Mako",
-        "Sam", "Salad", "Meganeko", "KGC", "HEALTH - BJ", "HEALTH - Jake", "HEALTH - John", "Quetzal", "Gianni", "Weyte",
-        "Lenval", "Joy", "Mandy", "Cameron", "Dalia", "Tucker", "Scott", "Jacob", "Vvizard", ".", ".", ".", ".", "."
-    };
-
-    /// <summary> List of readable names of all dev plushies. </summary>
-    public static readonly string[] PlushiesButReadable =
-    {
-        "hakita", "pitr", "victoria", "heckteck", "cabalcrow", "lucas", "francis", "jericho", "bigrock", "mako",
-        "samuel", "salad", "meganeko", "kgc", "bj", "jake", "john", "quetzal", "gianni", "weyte",
-        "lenval", "joy", "mandy", "cameron", "dalia", "tucker", "scott", "jacob", "vvizard", "v1", "v2", "v3", "xzxadixzx", "sowler"
     };
 
     #endregion

@@ -25,8 +25,8 @@ public class Items
         Events.OnLobbyEntered += () => Events.Post2(SyncAll);
 
         foreach (var name in GameAssets.Items) Prefabs.Add(GameAssets.Item(name));
-        foreach (var name in GameAssets.Fishes) Prefabs.Add(GameAssets.Fish(name));
         foreach (var name in GameAssets.Plushies) Prefabs.Add(GameAssets.Plushy(name));
+        foreach (var name in GameAssets.Fishes) Prefabs.Add(GameAssets.Fish(name));
     }
 
     /// <summary> Finds the entity type by item class and first/last child name. </summary>
@@ -67,7 +67,7 @@ public class Items
     /// <summary> Spawns an item with the given type. </summary>
     public static Entity Instantiate(EntityType type)
     {
-        var fsh = type.IsFish() && type != EntityType.AppleBait && type != EntityType.SkullBait;
+        var fsh = type.IsFish();
         var obj = fsh
             ? Entities.Mark(GameAssets.FishTemplate())
             : Entities.Mark(Prefabs[type - EntityType.ItemOffset]);
