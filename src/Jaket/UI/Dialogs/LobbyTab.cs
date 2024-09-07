@@ -47,7 +47,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             UIB.Button("#lobby-tab.join", table, Btn(116f), clicked: LobbyController.JoinByCode);
             UIB.Button("#lobby-tab.list", table, Btn(164f), clicked: LobbyList.Instance.Toggle);
         });
-        UIB.Table("Lobby Config", "#lobby-tab.config", transform, Tlw(384f + 422f / 2f, 422f), table =>
+        UIB.Table("Lobby Config", "#lobby-tab.config", transform, Tlw(384f + 470f / 2f, 470f), table =>
         {
             field = UIB.Field("#lobby-tab.name", table, Tgl(64f), cons: name =>
             {
@@ -63,35 +63,30 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
                 {
                     case 0: LobbyController.Lobby?.SetPrivate(); break;
                     case 1: LobbyController.Lobby?.SetFriendsOnly(); break;
-                    case 2: LobbyController.Lobby?.SetPublic(); LobbyController.Lobby?.SetData("mk_lobby", "true"); break;
-                    case 3:
-                    {
-                        LobbyController.Lobby?.SetPublic();
-                        LobbyController.Lobby?.DeleteData("mk_lobby");
-
-                        if (Networking.LocalPlayer.Team > Content.Team.Pink) Networking.LocalPlayer.Team = Content.Team.White;
-                    }
-                    break;
+                    case 2: LobbyController.Lobby?.SetPublic(); break;
                 }
                 Rebuild();
             });
 
-            pvp = UIB.Toggle("#lobby-tab.allow-pvp", table, Tgl(152f), clicked: allow => LobbyController.Lobby?.SetData("pvp", allow.ToString()));
-            cheats = UIB.Toggle("#lobby-tab.allow-cheats", table, Tgl(192f), clicked: allow => LobbyController.Lobby?.SetData("cheats", allow.ToString()));
-            mods = UIB.Toggle("#lobby-tab.allow-mods", table, Tgl(232f), clicked: allow => LobbyController.Lobby?.SetData("mods", allow.ToString()));
+            pvp = UIB.Toggle("#lobby-tab.modded", table, Tgl(152f), clicked: allow => {
+                if (allow) LobbyController.Lobby?.SetData("mk_lobby", "true");
+                else LobbyController.Lobby?.DeleteData("mk_lobby");
+            });
 
-            UIB.Text("#lobby-tab.ppp-desc", table, Btn(287f) with { Height = 62f }, size: 16);
+            pvp = UIB.Toggle("#lobby-tab.allow-pvp", table, Tgl(192f), clicked: allow => LobbyController.Lobby?.SetData("pvp", allow.ToString()));
+            cheats = UIB.Toggle("#lobby-tab.allow-cheats", table, Tgl(232f), clicked: allow => LobbyController.Lobby?.SetData("cheats", allow.ToString()));
+            mods = UIB.Toggle("#lobby-tab.allow-mods", table, Tgl(272f), clicked: allow => LobbyController.Lobby?.SetData("mods", allow.ToString()));
+            bosses = UIB.Toggle("#lobby-tab.heal-bosses", table, Tgl(309f), 20, allow => LobbyController.Lobby?.SetData("heal-bosses", allow.ToString()));
 
-            UIB.Text("#lobby-tab.ppp-name", table, Btn(338f), align: TextAnchor.MiddleLeft);
-            var PPP = UIB.Text("0PPP", table, Btn(338f), align: TextAnchor.MiddleRight);
+            UIB.Text("#lobby-tab.ppp-desc", table, Btn(358f) with { Height = 62f }, size: 16);
+            UIB.Text("#lobby-tab.ppp-name", table, Btn(408f), align: TextAnchor.MiddleLeft);
+            var PPP = UIB.Text("0PPP", table, Btn(408f), align: TextAnchor.MiddleRight);
 
-            UIB.Slider("Health Multiplier", table, Sld(366f), 8 * 2, value =>
+            UIB.Slider("Health Multiplier", table, Sld(436f), 8 * 2, value =>
             {
                 PPP.text = $"{(int)((LobbyController.PPP = value / 8f) * 100)}PPP";
                 LobbyController.Lobby?.SetData("ppp", LobbyController.PPP.ToString());
             });
-
-            bosses = UIB.Toggle("#lobby-tab.heal-bosses", table, Tgl(398f), 20, allow => LobbyController.Lobby?.SetData("heal-bosses", allow.ToString()));
         });
 
         Version.Label(transform);
@@ -135,8 +130,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
         {
             0 => "lobby-tab.private",
             1 => "lobby-tab.fr-only",
-            2 => "lobby-tab.modded",
-            3 => "lobby-tab.public",
+            2 => "lobby-tab.public",
             _ => "lobby-tab.default"
         });
 
