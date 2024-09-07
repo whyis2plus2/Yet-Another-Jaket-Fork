@@ -35,8 +35,7 @@ public static class Pal
 
     public static Color UpdateRGBCol()
     {
-        float h;
-        Color.RGBToHSV(rainbow, out h, out _, out _);
+        Color.RGBToHSV(rainbow, out float h, out _, out _);
 
         h += .9f * Time.deltaTime;
         return rainbow = Color.HSVToRGB(h, 1f, 1f);

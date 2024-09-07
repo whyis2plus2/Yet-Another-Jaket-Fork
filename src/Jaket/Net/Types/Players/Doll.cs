@@ -14,8 +14,6 @@ using Jaket.UI;
 /// </summary>
 public class Doll : MonoBehaviour
 {
-    // float so that we can control the anim with deltaTime
-    float TeamSkinFrame;
     Team Team;
     /// <summary> Component rendering animations of the doll. </summary>
     public Animator Animator;
@@ -147,7 +145,10 @@ public class Doll : MonoBehaviour
         {
             WingMat.mainTexture = SkateMat.mainTexture = DollAssets.WingTextures[(int)Team.White];
             BodyMat.mainTexture = SkateMat.mainTexture = DollAssets.BodyTextures[(int)Team.White];
+            
             WingMat.color = Pal.rainbow;
+            BodyMat.color = Pal.rainbow;
+            WingLight.color = Pal.rainbow;
         }
     });
 
