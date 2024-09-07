@@ -150,6 +150,7 @@ public class Doll : MonoBehaviour
             WingMat.color = Pal.rainbow;
             BodyMat.color = Pal.rainbow;
             WingLight.color = Pal.rainbow;
+            WingTrail.startColor = Pal.rainbow * new Color(1f, 1f, 1f, 0.5f);
         }
     });
 
