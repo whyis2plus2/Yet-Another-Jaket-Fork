@@ -230,7 +230,7 @@ public class UIB
                 break;
 
             case Team.V2:
-                Text("V1", img.transform, r.Text, yellow);
+                Text("V2", img.transform, r.Text, yellow);
                 break;
 
             case Team.Fraud:
