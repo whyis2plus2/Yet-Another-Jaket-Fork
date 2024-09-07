@@ -88,8 +88,6 @@ public class Networking
         {
             if (!Administration.Banned.Contains(member.Id.AccountId)) Bundle.Msg("player.joined", member.Name);
             if (!LobbyController.IsOwner) return;
-
-            if (Tools.Blacklist.Contains(member)) Administration.Ban(member.Id.AccountId);
         };
 
         SteamMatchmaking.OnLobbyMemberLeave += (lobby, member) =>

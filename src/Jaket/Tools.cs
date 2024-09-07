@@ -18,11 +18,6 @@ public class Tools
 {
     #region networking
 
-    public static readonly Friend[] Blacklist = {
-        new (76561199595840676), // Eibey Leo - Gooner
-        new (76561199130754110), // Draedon - Porn Sprayer
-    };
-
     /// <summary> Steam id of the local player. </summary>
     public static SteamId Id => SteamClient.SteamId;
     /// <summary> Account id of the local player. </summary>
