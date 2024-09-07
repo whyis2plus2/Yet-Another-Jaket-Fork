@@ -221,7 +221,8 @@ public class UIB
         var img = Image(team.ToString(), parent, r, color);
 
         switch (team) {
-            case Team.Pink | Team.Purple:
+            case Team.Pink:
+            case Team.Purple:
                 Text("UwU", img.transform, r.Text, Dark(team.Color()));
                 break;
 
