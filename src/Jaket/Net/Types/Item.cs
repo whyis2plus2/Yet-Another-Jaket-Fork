@@ -3,6 +3,7 @@ namespace Jaket.Net.Types;
 using HarmonyLib;
 using UnityEngine;
 
+using Jaket.Assets;
 using Jaket.Content;
 using Jaket.IO;
 
@@ -21,7 +22,7 @@ public class Item : OwnableEntity
 
     private void Awake()
     {
-        Init(Items.Type, true);
+        Init(_ => Items.Type(ItemId), true);
         InitTransfer(() =>
         {
             if (Rb && !IsOwner) Rb.isKinematic = true;
@@ -97,6 +98,8 @@ public class Item : OwnableEntity
     {
         base.Kill(r);
         gameObject.SetActive(false);
+        
+        if (Type == EntityType.BombFish && r != null) Instantiate(GameAssets.Harmless(), transform.position, Quaternion.identity);
     }
 
     #endregion

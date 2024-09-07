@@ -38,7 +38,7 @@ public class Entities
 
         Providers.Add(EntityType.Brain, () => World.Brain);
 
-        for (var type = EntityType.AppleBait; type <= EntityType.V1; type++)
+        for (var type = EntityType.ItemOffset; type < EntityType.BulletOffset; type++)
         {
             var sucks = type;
             Providers.Add(sucks, () => Items.Instantiate(sucks));

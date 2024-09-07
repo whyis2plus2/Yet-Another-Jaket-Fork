@@ -28,7 +28,7 @@ public class Chat : CanvasSingleton<Chat>
     /// <summary> Maximum length of chat message. </summary>
     public const int MAX_MESSAGE_LENGTH = int.MaxValue;
     /// <summary> How many messages at a time will be shown. </summary>
-    public const int MESSAGES_SHOWN = 14;
+    public const int MESSAGES_SHOWN = 16;
     /// <summary> Chat width in pixels. </summary>
     public const float WIDTH = 640f;
 
