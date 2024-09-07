@@ -32,7 +32,7 @@ public static class TeamExtensions
         Team.V1     => new(.1f, .3f,  1f),
         Team.V2     => new( 1f,  0f, .1f),
         Team.Fraud  => new(.3f, .3f, .3f),
-        Team.RGB    => UIB.RGBTeam,
+        Team.RGB    => Pal.rainbow,
         _ => new(1f, 1f, 1f)
     };
 

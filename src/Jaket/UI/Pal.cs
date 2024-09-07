@@ -29,5 +29,16 @@ public static class Pal
     public static Color coral = new(1f, .5f, .31f);
     public static Color discord = new(.345f, .396f, .949f);
 
+    public static Color rainbow { private set; get; } = new(1f, 0f, 0f);
+
     public static Color Dark(Color original) => Color.Lerp(original, black, .38f);
+
+    public static Color UpdateRGBCol()
+    {
+        float h;
+        Color.RGBToHSV(rainbow, out h, out _, out _);
+
+        h += .9f * Time.deltaTime;
+        return rainbow = Color.HSVToRGB(h, 1f, 1f);
+    }
 }

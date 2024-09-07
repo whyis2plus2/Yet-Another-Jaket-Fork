@@ -52,6 +52,11 @@ public class LocalPlayer : Entity
             var light = nm.transform.Find("Point Light");
             if (light) light.GetComponent<Light>().color = LobbyController.Offline ? Color.white : Team.Color();
         };
+        Events.EveryTick += () =>
+        {
+            var light = nm.transform.Find("Point Light");
+            if (Team == Team.RGB && light) light.GetComponent<Light>().color = Pal.rainbow;
+        };
     }
 
     private void Update() => Stats.MTE(() =>

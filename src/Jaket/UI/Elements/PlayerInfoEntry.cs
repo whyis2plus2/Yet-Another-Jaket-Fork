@@ -44,7 +44,7 @@ public class PlayerInfoEntry : MonoBehaviour
         float hp = player.Health;
         int charge = Mathf.Min(10, player.RailCharge);
 
-        pname.color = hp > 0f ? (LobbyController.PvPAllowed ? (player.Team == Team.RGB ? UIB.RGBTeam: player.Team.Color()) : white) : red;
+        pname.color = hp > 0f ? (LobbyController.PvPAllowed ? (player.Team == Team.RGB ? Pal.rainbow: player.Team.Color()) : white) : red;
         railc.text = $"<b><color=#0080FF>ϟ</color></b>[<color=#0080FF>{new string('I', charge)}</color><color=#003060>{new string('-', 10 - charge)}</color>]";
 
         health.localScale = new(Mathf.Min(hp / 100f, 1f), 1f, 1f);

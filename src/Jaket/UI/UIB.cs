@@ -27,8 +27,6 @@ public class UIB
     /// <summary> Block used to get and set material properties. </summary>
     private static MaterialPropertyBlock block = new();
 
-    public static Color RGBTeam = new (1f, 0f, 0f);
-
     /// <summary> Loads the resources needed for interface. </summary>
     public static void Load()
     {
@@ -256,7 +254,7 @@ public class UIB
     /// <summary> Adds a button that opens the profile of the given member. </summary>
     public static Button ProfileButton(Friend member, Transform parent, Rect r) {
         return (Networking.GetTeam(member) == Team.RGB) ?
-            Button(member.Name, parent, r, RGBTeam, 24, clicked: () => SteamFriends.OpenUserOverlay(member.Id, "steamid")) :
+            Button(member.Name, parent, r, rainbow, 24, clicked: () => SteamFriends.OpenUserOverlay(member.Id, "steamid")) :
             Button(member.Name, parent, r, Networking.GetTeam(member).Color(), 24, clicked: () => SteamFriends.OpenUserOverlay(member.Id, "steamid"));
     }
 

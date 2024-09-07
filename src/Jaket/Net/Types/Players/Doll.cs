@@ -145,8 +145,9 @@ public class Doll : MonoBehaviour
 
         if (Team == Team.RGB)
         {
-            TeamSkinFrame += 18f * Time.deltaTime; TeamSkinFrame %= DollAssets.RGBWings.Length;
-            WingMat.mainTexture = SkateMat.mainTexture = DollAssets.RGBWings[(int)Mathf.Floor(TeamSkinFrame)];
+            WingMat.mainTexture = SkateMat.mainTexture = DollAssets.WingTextures[(int)Team.White];
+            BodyMat.mainTexture = SkateMat.mainTexture = DollAssets.BodyTextures[(int)Team.White];
+            WingMat.color = Pal.rainbow;
         }
     });
 
