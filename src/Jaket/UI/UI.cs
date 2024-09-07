@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Jaket.UI.Dialogs;
 using Jaket.UI.Fragments;
 using Jaket.World;
+using UnityEngine.PlayerLoop;
 
 /// <summary> Class that loads and manages the interface of the mod. </summary>
 public class UI
@@ -22,6 +23,15 @@ public class UI
     public static GameObject Focus => EventSystem.current?.currentSelectedGameObject;
     /// <summary> Object containing the entire interface. </summary>
     public static Transform Root;
+
+    public static Color UpdateRGBCol()
+    {
+        float h , dummy;
+        Color.RGBToHSV(UIB.RGBTeam, out h, out dummy, out dummy);
+
+        h += 3f * Time.deltaTime; 
+        return UIB.RGBTeam = Color.HSVToRGB(h, 1f, 1f);
+    }
 
     /// <summary> Creates singleton instances of fragments and dialogs. </summary>
     public static void Load()
@@ -45,6 +55,10 @@ public class UI
         MainMenuAccess.Build("Main Menu Access", false, true, hide: () => MainMenuAccess.Instance.Toggle());
         InteractiveGuide.Build("Interactive Guide", false, false, hide: () => InteractiveGuide.Instance.OfferAssistance());
         Teleporter.Build("Teleporter", false, false, hide: () => { });
+
+        // This is needed to allow for RGB components to be rebuilt
+        Events.EveryTick += () => UpdateRGBCol();
+        Events.EveryTick += PlayerListEX.Instance.Rebuild;
     }
 
     /// <summary> Hides the interface of the left group. </summary>

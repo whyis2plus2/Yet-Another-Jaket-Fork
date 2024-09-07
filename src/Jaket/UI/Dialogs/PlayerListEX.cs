@@ -38,12 +38,9 @@ public class PlayerListEX : CanvasSingleton<PlayerListEX>
                 else
                 {
                     if ((int)team == RoundHalf(Tools.EnumMax<Team>())) x = 8f;
-                    Rect r = new(x += 64f, -194f, 56f, 56f, new(0f, 1f));
-                
-                    UIB.TeamButton(team, table, r, () =>
+                    UIB.TeamButton(team, table, new(x += 64f, -194f, 56f, 56f, new(0f, 1f)), () =>
                     {
                         Networking.LocalPlayer.Team = team;
-
                         Events.OnTeamChanged.Fire();
 
                         Rebuild();

@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Jaket.Net;
 using System.Linq;
+using Jaket.UI;
 
 /// <summary> All teams. Teams needed for PvP mechanics. </summary>
 public enum Team
@@ -31,7 +32,7 @@ public static class TeamExtensions
         Team.V1     => new(.1f, .3f,  1f),
         Team.V2     => new( 1f,  0f, .1f),
         Team.Fraud  => new(.3f, .3f, .3f),
-        Team.RGB    => new( 0f,  0f,  0f),
+        Team.RGB    => UIB.RGBTeam,
         _ => new(1f, 1f, 1f)
     };
 

@@ -219,7 +219,7 @@ public class UIB
     /// <summary> Adds a command button with the appropriate color. </summary>
     public static Button TeamButton(Team team, Transform parent, Rect r, Action clicked = null)
     {
-        var color = team.Color();
+        var color = team == Team.RGB ? white : team.Color();
         var img = Image(team.ToString(), parent, r, color);
 
         switch (team) {
@@ -240,10 +240,7 @@ public class UIB
                 break;
 
             case Team.RGB:
-                Text(
-                    "<color=0xF00>R<color=0x0F0>G<color=0x00F>B</color></color></color>",
-                    img.transform, r.Text
-                );
+                Text("RGB", img.transform, r.Text, black);
                 break;
 
             default: break;
@@ -258,12 +255,6 @@ public class UIB
 
     /// <summary> Adds a button that opens the profile of the given member. </summary>
     public static Button ProfileButton(Friend member, Transform parent, Rect r) {
-        float h = 0, dummy;
-        Color.RGBToHSV(RGBTeam, out h, out dummy, out dummy);
-
-        h += 18f * Time.deltaTime; 
-        RGBTeam = Color.HSVToRGB(h, 1f, 1f);
-
         return (Networking.GetTeam(member) == Team.RGB) ?
             Button(member.Name, parent, r, RGBTeam, 24, clicked: () => SteamFriends.OpenUserOverlay(member.Id, "steamid")) :
             Button(member.Name, parent, r, Networking.GetTeam(member).Color(), 24, clicked: () => SteamFriends.OpenUserOverlay(member.Id, "steamid"));
