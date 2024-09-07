@@ -165,9 +165,6 @@ public class Doll : MonoBehaviour
         if (WingTrail) WingTrail.startColor = team.Color() with { a = .5f };
         if (WingLight) WingLight.color = team.Color();
 
-        WingMat.color = Pal.white;
-        BodyMat.color = Pal.white;
-
         // TODO make it part of customization
         Suits.GetChild(0).gameObject.SetActive(team == Team.Pink || team == Team.Purple);
         Team = team;
