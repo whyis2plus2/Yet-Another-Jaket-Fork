@@ -59,7 +59,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
 
             accessibility = UIB.Button("#lobby-tab.private", table, Btn(108f), clicked: () =>
             {
-                switch (lobbyAccessLevel = ++lobbyAccessLevel % 4)
+                switch (lobbyAccessLevel = ++lobbyAccessLevel % 3)
                 {
                     case 0: LobbyController.Lobby?.SetPrivate(); break;
                     case 1: LobbyController.Lobby?.SetFriendsOnly(); break;
