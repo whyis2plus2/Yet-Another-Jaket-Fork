@@ -51,6 +51,14 @@ public class GameAssets
         "Cooked Fish", "Shark Fish", "Burnt Stuff"
     };
 
+    /// <summary> List of internal names of all fishes. </summary>
+    public static readonly string[] FishesButReadable =
+    {
+        "Friend", "Pitr", "Trout", "Metal", "Chomper",
+        "Bomb", "Eyeball", "Frog", "Dope", "Stick",
+        "Cooked", "Blahaj", "Burnt Stuff"
+    };
+
     #endregion
     #region tools
 

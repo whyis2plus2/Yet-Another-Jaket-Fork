@@ -14,6 +14,7 @@ public class Items
 {
     /// <summary> List of prefabs of all items. </summary>
     public static List<GameObject> Prefabs = new();
+    private static int PrefabFishOffset;
 
     /// <summary> Loads all items for future use. </summary>
     public static void Load()
@@ -26,6 +27,8 @@ public class Items
 
         foreach (var name in GameAssets.Items) Prefabs.Add(GameAssets.Item(name));
         foreach (var name in GameAssets.Plushies) Prefabs.Add(GameAssets.Plushy(name));
+
+        PrefabFishOffset = Prefabs.Count;
         foreach (var name in GameAssets.Fishes) Prefabs.Add(GameAssets.Fish(name));
     }
 
@@ -75,7 +78,7 @@ public class Items
         // prefabs of fishes do not contain anything except the model of the fish
         if (fsh)
         {
-            Tools.Instantiate(Prefabs[type - EntityType.ItemOffset], obj.transform).transform.localPosition = Vector3.zero;
+            Tools.Instantiate(Prefabs[type - EntityType.FishOffset + PrefabFishOffset], obj.transform).transform.localPosition = Vector3.zero;
             obj.AddComponent<FishObjectReference>();
         }
 

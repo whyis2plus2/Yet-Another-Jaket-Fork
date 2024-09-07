@@ -9,6 +9,7 @@ using Jaket.Net;
 using Jaket.UI.Dialogs;
 using System.Linq;
 using BepInEx;
+using Jaket.Net.Types;
 
 /// <summary> List of chat commands used by the mod. </summary>
 public class Commands
@@ -75,6 +76,28 @@ public class Commands
                 chat.Receive($"[#FF341C]Plushy named {name} not found.");
             else
                 Tools.Instantiate(Items.Prefabs[EntityType.PlushyOffset + index - EntityType.ItemOffset].gameObject, NewMovement.Instance.transform.position);
+        });
+
+        Handler.Register("fishies", "<name>", "Get a list of all fishies", args =>
+        {
+            string[] fishies = (string[])GameAssets.FishesButReadable.Clone();
+            Array.Sort(fishies); // sort alphabetically for a more presentable look
+
+            chat.Receive(string.Join(", ", fishies));
+        });
+        Handler.Register("fishy", "<name>", "Spawn a fishy by name", args =>
+        {
+            string name = args.Length == 0 ? null : string.Join(" ", args).ToLower();
+            int index = Array.FindIndex(GameAssets.FishesButReadable, plushy => plushy.ToLower() == name);
+
+            if (index == -1)
+                chat.Receive($"[#FF341C]Fish named {name} not found.");
+            else
+            {
+                Entity fish = Items.Instantiate(EntityType.FishOffset + index);
+                GameObject.Instantiate(fish.gameObject).transform.position = NewMovement.Instance.transform.position;
+                fish.Dead = true;
+            }
         });
 
         Handler.Register("level", "<layer> <level> / sandbox / cyber grind / credits museum", "Load the given level", args =>
