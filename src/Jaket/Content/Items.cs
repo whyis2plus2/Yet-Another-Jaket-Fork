@@ -14,7 +14,7 @@ public class Items
 {
     /// <summary> List of prefabs of all items. </summary>
     public static List<GameObject> Prefabs = new();
-    private static int PrefabFishOffset;
+    public static int PrefabFishOffset;
 
     /// <summary> Loads all items for future use. </summary>
     public static void Load()

@@ -94,9 +94,11 @@ public class Commands
                 chat.Receive($"[#FF341C]Fish named {name} not found.");
             else
             {
-                Entity fish = Items.Instantiate(EntityType.FishOffset + index);
-                GameObject.Instantiate(fish.gameObject).transform.position = NewMovement.Instance.transform.position;
-                fish.Dead = true;
+                var obj = GameObject.Instantiate(GameAssets.FishTemplate());
+                obj.transform.position = NewMovement.Instance.transform.localPosition;
+                Tools.Instantiate(Items.Prefabs[Items.PrefabFishOffset + index], obj.transform).transform.position = obj.transform.position;
+                obj.AddComponent<FishObjectReference>();
+                obj.AddComponent<Item>();
             }
         });
 
