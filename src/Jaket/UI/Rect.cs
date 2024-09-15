@@ -26,10 +26,9 @@ public struct Rect
 
     #region common
 
-    public static Rect Tlw(float y, float height) => new(16f + 336f / 2f, -y, 336f, height, new(0f, 1f));
-    public static Rect Tlw(float y, float height, float width) => new(16f + width / 2f, -y, width, height, new(0f, 1f));
+    public static Rect Tlw(float y, float height, float width = 336f) => new(16f + width / 2f, -y, width, height, new(0f, 1f));
 
-    public static Rect Blw(float y, float height) => new(16f + 336f / 2f, y, 336f, height, new(0f, 0f));
+    public static Rect Blw(float y, float height, float width = 336f) => new(16f + width / 2f, y, width, height, new(0f, 0f));
 
     public static Rect Btn(float y) => new(0f, -y, 320f, 40f, new(.5f, 1f));
 
