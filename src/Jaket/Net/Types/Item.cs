@@ -103,8 +103,6 @@ public class Item : OwnableEntity
     {
         base.Kill(r);
         gameObject.SetActive(false);
-        
-        if (Type == EntityType.BombFish && r != null) Instantiate(GameAssets.Harmless(), transform.position, Quaternion.identity);
     }
 
     #endregion

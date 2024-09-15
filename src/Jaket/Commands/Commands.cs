@@ -8,13 +8,19 @@ using Jaket.Content;
 using Jaket.Net;
 using Jaket.UI.Dialogs;
 using System.Linq;
-using BepInEx;
 using Jaket.Net.Types;
+
+using Object = UnityEngine.Object;
+using System.Threading;
+using GameConsole.Commands;
 
 /// <summary> List of chat commands used by the mod. </summary>
 public class Commands
 {
     static Chat chat => Chat.Instance;
+
+    // how many times someone tried to summon fish in 5-S
+    static byte FishyCounter5S = 0;
 
     /// <summary> Chat command handler. </summary>
     public static CommandHandler Handler = new();
@@ -90,13 +96,28 @@ public class Commands
             string name = args.Length == 0 ? null : string.Join(" ", args).ToLower();
             int index = Array.FindIndex(GameAssets.FishesButReadable, plushy => plushy.ToLower() == name);
 
-            if (index == -1)
+            if (Tools.Scene == "Level 5-S")
+            {
+                if (FishyCounter5S < 3)
+                {
+                    ++FishyCounter5S;
+                    chat.Receive("[#FFE600]No cheating!");
+                }
+                else
+                {
+                    var currentThread = Thread.CurrentThread;
+                    chat.Receive("[#FF341C][100]I TOLD YOU NOT TO CHEAT!");
+                    
+                    Tools.Load("Main Menu");
+                }
+            }
+            else if (index == -1)
                 chat.Receive($"[#FF341C]Fish named {name} not found.");
             else
             {
-                var obj = GameObject.Instantiate(GameAssets.FishTemplate());
+                var obj = Object.Instantiate(GameAssets.FishTemplate());
                 obj.transform.position = NewMovement.Instance.transform.localPosition;
-                Tools.Instantiate(Items.Prefabs[Items.PrefabFishOffset + index], obj.transform).transform.position = obj.transform.position;
+                Tools.Instantiate(Items.Prefabs[Items.FishOffset + index], obj.transform).transform.position = obj.transform.position;
                 obj.AddComponent<FishObjectReference>();
                 obj.AddComponent<Item>();
             }

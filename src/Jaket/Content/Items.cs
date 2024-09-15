@@ -14,7 +14,7 @@ public class Items
 {
     /// <summary> List of prefabs of all items. </summary>
     public static List<GameObject> Prefabs = new();
-    public static int PrefabFishOffset;
+    public static int FishOffset;
 
     /// <summary> Loads all items for future use. </summary>
     public static void Load()
@@ -28,7 +28,7 @@ public class Items
         foreach (var name in GameAssets.Items) Prefabs.Add(GameAssets.Item(name));
         foreach (var name in GameAssets.Plushies) Prefabs.Add(GameAssets.Plushy(name));
 
-        PrefabFishOffset = Prefabs.Count;
+        FishOffset = Prefabs.Count;
         foreach (var name in GameAssets.Fishes) Prefabs.Add(GameAssets.Fish(name));
     }
 
@@ -44,11 +44,6 @@ public class Items
 
             int index = Prefabs.FindIndex(prefab => prefab.name == id.name);
             return index == -1 ? EntityType.None : (EntityType.ItemOffset + index);
-        }
-        if (id.TryGetComponent(out FishObjectReference fish))
-        {
-            int index = FishManager.Instance.recognizedFishes.Keys.ToList().IndexOf(fish.fishObject);
-            return index == -1 ? EntityType.BurntStuff : (EntityType.FishOffset + index + 2);
         }
         return id.transform.GetChild(0).name switch
         {
@@ -68,22 +63,7 @@ public class Items
     }
 
     /// <summary> Spawns an item with the given type. </summary>
-    public static Entity Instantiate(EntityType type)
-    {
-        var fsh = type.IsFish();
-        var obj = fsh
-            ? Entities.Mark(GameAssets.FishTemplate())
-            : Entities.Mark(Prefabs[type - EntityType.ItemOffset]);
-
-        // prefabs of fishes do not contain anything except the model of the fish
-        if (fsh)
-        {
-            Tools.Instantiate(Prefabs[type - EntityType.FishOffset + PrefabFishOffset], obj.transform).transform.localPosition = Vector3.zero;
-            obj.AddComponent<FishObjectReference>();
-        }
-
-        return obj.AddComponent<Item>();
-    }
+    public static Entity Instantiate(EntityType type) => Entities.Mark(Prefabs[type - EntityType.ItemOffset]).AddComponent<Item>();
 
     /// <summary> Synchronizes the item between network members. </summary>
     public static void Sync(ItemIdentifier itemId, bool single = true)

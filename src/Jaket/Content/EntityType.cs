@@ -97,26 +97,11 @@ public enum EntityType
     Rocket,
     Ball,
 
-    FunnyStupidFish,
-    PitrFish,
-    TroutFish,
-    MetalFish,
-    ChomperFish,
-    BombFish,
-    EyeballFish,
-    FrogFish,
-    DopeFish,
-    StickFish,
-    CookedFish,
-    Shark,
-    BurntStuff,
-
     EnemyOffset = Filth,
     SecuritySystemOffset = SecuritySystem_Main,
     ItemOffset = AppleBait,
     PlushyOffset = Jacob,
     BulletOffset = Coin,
-    FishOffset = FunnyStupidFish,
 }
 
 /// <summary> Extension class that allows you to get entity class. </summary>
@@ -142,8 +127,5 @@ public static class TypeExtensions
     public static bool IsPlushy(this EntityType type) => type >= EntityType.PlushyOffset && type < EntityType.BulletOffset;
 
     /// <summary> Whether the type is a bullet. </summary>
-    public static bool IsBullet(this EntityType type) => type >= EntityType.BulletOffset && type < EntityType.FishOffset;
-
-    /// <summary> Whether the type is a fish. </summary>
-    public static bool IsFish(this EntityType type) => type >= EntityType.FishOffset;
+    public static bool IsBullet(this EntityType type) => type >= EntityType.BulletOffset;
 }

@@ -47,12 +47,6 @@ public class Entities
         Providers.Add(EntityType.Coin, () => Bullets.EInstantiate(EntityType.Coin));
         Providers.Add(EntityType.Rocket, () => Bullets.EInstantiate(EntityType.Rocket));
         Providers.Add(EntityType.Ball, () => Bullets.EInstantiate(EntityType.Ball));
-
-        for (var type = EntityType.FishOffset; (int)type <= Tools.EnumMax<EntityType>(); type++)
-        {
-            var sucks = type;
-            Providers.Add(sucks, () => Items.Instantiate(sucks));
-        }
     }
 
     /// <summary> Instantiates the given prefab and marks it with the Net tag. </summary>
