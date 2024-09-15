@@ -2,6 +2,7 @@ namespace Jaket.Patches;
 
 using Discord;
 using HarmonyLib;
+using UnityEngine;
 
 using Jaket.Net;
 using Jaket.UI;
@@ -24,7 +25,10 @@ public class DiscordPatch
         // patch only the most common shops
         if (__instance.name != "Shop") return;
 
-        var button = UIB.DiscordButton("Join Jaket Discord", __instance.transform.GetChild(1).GetChild(1).GetChild(0));
+        // var button = UIB.LinkButton("Jaket Discord", __instance.transform.GetChild(1).GetChild(1).GetChild(0));
+        // button.transform.localPosition = new(0f, -128f, -20f); // the button is a little stormy
+
+        var button = UIB.LinkButton("Modded Jaket Discord", __instance.transform.GetChild(1).GetChild(1).GetChild(0), "https://discord.gg/YPb6CJ8krg", Pal.ourcourd);
         button.transform.localPosition = new(0f, -128f, -20f); // the button is a little stormy
 
         // add ControllerPointer so that the button can be clicked

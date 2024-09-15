@@ -16,6 +16,7 @@ using Jaket.World;
 using static Pal;
 using static Rect;
 using BepInEx;
+using System.Threading;
 
 /// <summary> Front end of the chat, back end implemented via Steamworks. </summary>
 public class Chat : CanvasSingleton<Chat>
@@ -255,9 +256,8 @@ public class Chat : CanvasSingleton<Chat>
     {
         // if the last owner of the lobby is not equal to 0, then the lobby is not created for the first time
         if (LobbyController.LastOwner != 0L && !force) return;
-
-        void Msg(string msg) => Receive("0096FF", BOT_PREFIX + "xzxADIxzx", msg);
-        void Tip(string tip) => Msg($"[14]* {tip}[]");
+        void Msg(string msg, string name = "xzxADIxzx", string color = "0096FF") => Receive(color, BOT_PREFIX + name, msg);
+        void Tip(string tip, string name = "xzxADIxzx", string color = "0096FF") => Msg($"[14]* {tip}[]", name, color);
 
         Msg("Hello, it's me, the main developer of Jaket.");
         Msg("I just wanted to give you some tips:");
@@ -265,9 +265,13 @@ public class Chat : CanvasSingleton<Chat>
         Tip($"Hold [#FFA500]{Settings.EmojiWheel}[] to open the emote wheel");
         Tip("Try typing [#FFA500]/help[] in the chat");
         Tip("Take a look at the bestiary, there's a [#FF66CC]surprise[] :3");
-        Tip("If you have an issue, tell us in our [#5865F2]Discord[] server");
+        Tip($"If you have an issue, tell us in the [{OurCord}]<i>Modded Jaket</i> Discord[] server", "whyis2plus2", "FFFFFF");
 
         Msg("Cheers~ ♡");
+
+        Tip("I added custom commands, do /help to see what they are!", "whyis2plus2", "FFFFFF");
+        Tip("Credits for F1 and lore for white team are in the terminal", "whyis2plus2", "FFFFFF");
+        Tip("Custom teams other than white only work in singleplayer and modded only lobbies", "whyis2plus2", "FFFFFF");
     }
 
     #endregion
