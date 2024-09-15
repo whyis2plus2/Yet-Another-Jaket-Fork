@@ -31,7 +31,7 @@ public static class Pal
     public static Color coral = new(1f, .5f, .31f);
     public static Color discord = new(.345f, .396f, .949f);
 
-    public static Color ourcourd =  new(0.3f, 0.15f, 0.6f);
+    public static Color ourcord =  new(0.3f, 0.15f, 0.6f);
 
     public static Color rainbow { private set; get; } = new(1f, 0f, 0f);
 
