@@ -31,6 +31,20 @@ public class Tools
     /// <summary> get the maximum value of an emum </summary>
     public static int EnumMax<T>() where T: Enum => ((int[])Enum.GetValues(typeof(T))).Max();
 
+    /// <summary> Convert the old tag format into the new one </summary>
+    public static void FixTag()
+    {
+        PrefsManager pm = PrefsManager.Instance;
+        string color = pm.GetString("YetAnotherJaketFork.msgPrefixCol");
+        string tag = pm.GetString("YetAnotherJaketFork.msgPrefix");
+
+        if (color != null)
+        {
+            pm.SetString("YetAnotherJaketFork.msgPrefix", $"[{color}]\\[{tag}][]");
+            pm.DeleteKey("YetAnotherJaketFork.msgPrefixCol");
+        }
+    }
+
     /// <summary> truncate a string to have a length <= to the specified one </summary>
     public static string TruncateStr(string s, int length)
     {

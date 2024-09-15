@@ -260,11 +260,11 @@ public class TeamCoin : OwnableEntity
 
             if (quadrupled)
             {
-                var prefix = rb.ultraRicocheter ? "<color=orange>ULTRA</color>" : "";
+                var tag = rb.ultraRicocheter ? "<color=orange>ULTRA</color>" : "";
                 int points = rb.ultraRicocheter ? 100 : 50;
                 if (power > 2) points += (power - 1) * 15;
 
-                sh.AddPoints(points, "ultrakill.ricoshot", rb.sourceWeapon, null, power - 1, prefix);
+                sh.AddPoints(points, "ultrakill.ricoshot", rb.sourceWeapon, null, power - 1, tag);
             }
         }
 

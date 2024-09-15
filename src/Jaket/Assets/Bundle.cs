@@ -105,9 +105,8 @@ public class Bundle
         StringBuilder builder = new(original.Length);
         int pointer = 0;
 
-        // \n is read as a regular text, so it must be manually replaced with a transfer char
-        // space and \ are needed to prevent OutOfBounds
-        original = $" {original.Replace("\\n", "\n")}\\";
+        // space and backslash prevent bad index errors
+        original = " " + original + "\\";
 
         while (pointer < original.Length)
         {
@@ -121,15 +120,38 @@ public class Bundle
             // process the special char
             char c = original[pointer];
 
-            if (c == '\\') pointer++;
+            if (c == '\\') 
+            {
+                if (pointer + 1 >= original.Length) { /* Do nothing */ }
+                else {
+                    switch (original[pointer + 1])
+                    {
+                        case '\\':
+                            builder.Append('\\');
+                            break;
+
+                        case 'n':
+                            builder.Append('\n');
+                            break;
+
+                        case '[':
+                            builder.Append('[');
+                            break;
+
+                        default:
+                            --pointer;
+                            break;
+                    }
+
+                    ++pointer;
+                }
+                
+                ++pointer;
+            }
+
             else if (c == '[')
             {
-                if (original[pointer - 1] == '\\')
-                {
-                    builder.Append('[');
-                    pointer++;
-                }
-                else if (original[pointer + 1] == ']')
+                if (original[pointer + 1] == ']')
                 {
                     builder.Append(types.Pop() ? "</size>" : "</color>");
                     pointer += 2;

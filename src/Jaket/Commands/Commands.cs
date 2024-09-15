@@ -242,19 +242,19 @@ public class Commands
             }
         });
 
-        Handler.Register("prefix", "\\[color] \\[value]", "set/get message prefix", args =>
+        Handler.Register("tag", "\\[color] \\[value]", "set/get message tag", args =>
         {
             PrefsManager pm = PrefsManager.Instance;
  
             if (args.Length == 0)
             {
                 string color  = pm.GetString("YetAnotherJaketFork.msgPrefixCol");
-                string prefix = pm.GetString("YetAnotherJaketFork.msgPrefix");
-                prefix = Tools.TruncateStr(prefix, chat.MsgPrefixMaxLen);
+                string tag = pm.GetString("YetAnotherJaketFork.msgPrefix");
+                tag = Tools.TruncateStr(tag, chat.PrefixMaxLen);
                 
-                if (prefix == null) chat.Receive("No prefix has been set");
-                else if (color == null) chat.Receive($"Current prefix: {prefix}");
-                else chat.Receive($"Current prefix: [{color}]\\[{prefix.Replace("[", "\\[")}][]");
+                if (tag == null) chat.Receive("No tag has been set");
+                else if (color == null) chat.Receive($"Current tag: {tag}");
+                else chat.Receive($"Current tag: [{color}]\\[{tag.Replace("[", "\\[")}][]");
             }
             else if (args.Length < 2)
             {
@@ -263,22 +263,27 @@ public class Commands
             else
             {
                 string color  = (args[0] == "null") ? null : args[0];
-                string prefix = Tools.TruncateStr(string.Join(" ", args.Skip(1)), chat.MsgPrefixMaxLen);
-                
-                pm.SetString("YetAnotherJaketFork.msgPrefix", prefix);
+                string tag = Tools.TruncateStr(string.Join(" ", args.Skip(1)), color == null ? int.MaxValue : chat.PrefixMaxLen);
                 
                 if (color == null)
                 {
-                    pm.DeleteKey("YetAnotherJaketFork.msgPrefixCol");
-                    chat.Receive($"Set prefix to {prefix}");
+                    pm.SetString("YetAnotherJaketFork.msgPrefix", tag);
+                    chat.Receive($"Set tag to {tag}");
                     chat.Receive($"[{UI.Pal.Yellow}]Warning: raw prefixes are unsafe! Use at your own risk!");
                 }
                 else
                 {
-                    pm.SetString("YetAnotherJaketFork.msgPrefixCol", color);
-                    chat.Receive($"Set prefix to [{color}]\\[{prefix.Replace("[", "\\[")}][]");
+                    tag = $"[{color}]\\[{tag.Replace("[", "\\[")}][]";
+                    pm.SetString("YetAnotherJaketFork.msgPrefix", tag);
+                    chat.Receive("Set tag to " + tag);
                 }
             }
+        });
+
+        Handler.Register("cleartag", "remove the current tag", args =>
+        {
+            PrefsManager pm = PrefsManager.Instance;
+            pm.DeleteKey("YetAnotherJaketFork.msgPrefix");
         });
     }
 }

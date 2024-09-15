@@ -26,7 +26,7 @@ public class Chat : CanvasSingleton<Chat>
     public const string TTS_PREFIX = "[#FF7F50][14]\\[TTS][][]";
 
     /// <summary> Maximum length of chat message. </summary>
-    public const int MAX_MESSAGE_LENGTH = int.MaxValue;
+    public const int MAX_MESSAGE_LENGTH = 200;
     /// <summary> How many messages at a time will be shown. </summary>
     public const int MESSAGES_SHOWN = 16;
     /// <summary> Chat width in pixels. </summary>
@@ -59,10 +59,8 @@ public class Chat : CanvasSingleton<Chat>
     /// <summary> Custom Player-Defined Message Prefix </summary>
     private string MsgPrefix => PrefsManager.Instance.GetString("YetAnotherJaketFork.msgPrefix");
 
-    /// <summary> Color of msgPrefix </summary>
-    private string MsgPrefixCol => PrefsManager.Instance.GetString("YetAnotherJaketFork.msgPrefixCol");
-        /// <summary> Maximum length for message prefix </summary>
-    public int MsgPrefixMaxLen => (MsgPrefixCol == null) ? int.MaxValue : 20;
+    /// <summary> Maximum length for message tag </summary>
+    public readonly int PrefixMaxLen = 20;
 
     private void Start()
     {
@@ -84,6 +82,8 @@ public class Chat : CanvasSingleton<Chat>
 
         // start the update cycle of typing players
         InvokeRepeating("UpdateTyping", 0f, .5f);
+
+        Tools.FixTag(); // where else would i put this?
     }
 
     private void Update()
@@ -150,16 +150,9 @@ public class Chat : CanvasSingleton<Chat>
         {
             if (!Commands.Handler.Handle(msg))
             {
-                string usedPrefix = "";
-
-                if (MsgPrefix != null)
-                {
-                    usedPrefix = Tools.TruncateStr(MsgPrefix, MsgPrefixMaxLen);
-                    if (MsgPrefixCol == null) usedPrefix = $"{usedPrefix} ";
-                    else usedPrefix = $"[{MsgPrefixCol}]\\[{usedPrefix.Replace("[", "\\[")}][] ";
-                }
-
-                LobbyController.Lobby?.SendChatString(AutoTTS ? "/tts " + usedPrefix + msg : msg);
+                string msgTagged = (MsgPrefix == null)? msg : MsgPrefix + " " + msg;
+                msgTagged = Tools.TruncateStr(msgTagged, MAX_MESSAGE_LENGTH);
+                LobbyController.Lobby?.SendChatString(AutoTTS ? "/tts " + msgTagged : msgTagged);
             }
 
             messages.Insert(0, msg);
@@ -248,7 +241,7 @@ public class Chat : CanvasSingleton<Chat>
     {
         // play the message in the local player's position if he is its author
         if (author.IsMe)
-            SamAPI.TryPlay(msg, Networking.LocalPlayer.Voice);
+            SamAPI.TryPlay(msg.Replace("\\n", " "), Networking.LocalPlayer.Voice);
 
         // or find the author among the other players and play the sound from them
         else if (Networking.Entities.TryGetValue(author.Id.AccountId, out var entity) && entity is RemotePlayer player)
