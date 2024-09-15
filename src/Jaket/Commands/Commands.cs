@@ -110,6 +110,7 @@ public class Commands
                     chat.Receive("[#FF341C][100]I TOLD YOU NOT TO CHEAT!");
                     
                     Tools.Load("Main Menu");
+                    FishyCounter5S = 0;
                 }
             }
             else if (index == -1)
