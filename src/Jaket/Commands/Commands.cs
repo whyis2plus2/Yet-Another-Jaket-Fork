@@ -13,6 +13,7 @@ using Jaket.Net.Types;
 using Object = UnityEngine.Object;
 using System.Threading;
 using GameConsole.Commands;
+using Discord;
 
 /// <summary> List of chat commands used by the mod. </summary>
 public class Commands
@@ -279,7 +280,6 @@ public class Commands
                 }
             }
         });
-
         Handler.Register("cleartag", "remove the current tag", args =>
         {
             PrefsManager pm = PrefsManager.Instance;

@@ -47,7 +47,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             UIB.Button("#lobby-tab.join", table, Btn(116f), clicked: LobbyController.JoinByCode);
             UIB.Button("#lobby-tab.list", table, Btn(164f), clicked: LobbyList.Instance.Toggle);
         });
-        UIB.Table("Lobby Config", "#lobby-tab.config", transform, Tlw(384f + 470f / 2f, 470f), table =>
+        UIB.Table("Lobby Config", "#lobby-tab.config", transform, Tlw(384f + 538f / 2f, 538f), table =>
         {
             field = UIB.Field("#lobby-tab.name", table, Tgl(64f), cons: name =>
             {
@@ -87,10 +87,19 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             UIB.Text("#lobby-tab.ppp-name", table, Btn(408f), align: TextAnchor.MiddleLeft);
             var PPP = UIB.Text("0PPP", table, Btn(408f), align: TextAnchor.MiddleRight);
 
-            UIB.Slider("Health Multiplier", table, Sld(436f), 8 * 2, value =>
+            UIB.Slider("Health Multiplier", table, Sld(436f), 16, value =>
             {
                 PPP.text = $"{(int)((LobbyController.PPP = value / 8f) * 100)}PPP";
                 LobbyController.Lobby?.SetData("ppp", LobbyController.PPP.ToString());
+            });
+
+            UIB.Text("MAX PLAYERS: ", table, Btn(476f), align: TextAnchor.MiddleLeft);
+            var MaxPlayers = UIB.Text("8", table, Btn(476f), align: TextAnchor.MiddleRight);
+            UIB.Slider("Max Players", table, Sld(504f), 16, value =>
+            {
+                var l = LobbyController.Lobby.Value;
+                l.MaxMembers = (value == 16)? ushort.MaxValue : 2 * (value + 1);
+                MaxPlayers.text = (value == 16)? "UNLIMITED" : l.MaxMembers.ToString();
             });
         });
 
