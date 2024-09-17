@@ -146,11 +146,14 @@ public class Doll : MonoBehaviour
             WingMat.mainTexture = SkateMat.mainTexture = DollAssets.WingTextures[(int)Team.White];
             BodyMat.mainTexture = SkateMat.mainTexture = DollAssets.BodyTextures[(int)Team.White];
 
-            CoinMat.color = Pal.rainbow;
             WingMat.color = Pal.rainbow;
             BodyMat.color = Pal.rainbow;
-            WingLight.color = Pal.rainbow;
-            WingTrail.startColor = Pal.rainbow * new Color(1f, 1f, 1f, 0.5f);
+
+            if (LobbyController.Online)
+            {
+                WingLight.color = Pal.rainbow;
+                WingTrail.startColor = Pal.rainbow * new Color(1f, 1f, 1f, 0.5f);
+            }
         }
     });
 
@@ -164,6 +167,10 @@ public class Doll : MonoBehaviour
 
         if (WingTrail) WingTrail.startColor = team.Color() with { a = .5f };
         if (WingLight) WingLight.color = team.Color();
+
+        // do this to prevent rgb team from messing up material colors
+        WingMat.color = Pal.white;
+        BodyMat.color = Pal.white;
 
         // TODO make it part of customization
         Suits.GetChild(0).gameObject.SetActive(team == Team.Pink || team == Team.Purple);

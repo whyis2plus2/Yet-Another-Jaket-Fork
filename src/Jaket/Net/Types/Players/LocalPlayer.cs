@@ -55,7 +55,8 @@ public class LocalPlayer : Entity
         Events.EveryTick += () =>
         {
             var light = nm.transform.Find("Point Light");
-            if (Team == Team.RGB && light) light.GetComponent<Light>().color = Pal.rainbow;
+            if (Team == Team.RGB && light && LobbyController.Online) light.GetComponent<Light>().color = Pal.rainbow;
+            if (LobbyController.Offline) light.GetComponent<Light>().color = Color.white;
         };
     }
 
