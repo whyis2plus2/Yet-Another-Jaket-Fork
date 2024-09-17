@@ -12,7 +12,7 @@ using static Jaket.UI.Rect;
 public class Version
 {
     /// <summary> Current version of the mod installed by the player. </summary>
-    public const string CURRENT = "1.3.42.01";
+    public const string CURRENT = "1.3.42.02";
     /// <summary> Repository of the mod, where the newest version will be taken from. </summary>
     public const string REPO = "whyis2plus2/Yet-Another-Jaket-Fork";
     /// <summary> Github API URL. I think it's not difficult to guess. </summary>

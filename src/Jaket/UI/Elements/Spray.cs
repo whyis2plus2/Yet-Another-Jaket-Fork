@@ -37,6 +37,20 @@ public class Spray : MonoBehaviour
 
     private void Start()
     {
+        if (Settings.AreSpraysLabeled) CanvasLabeled();
+        else CanvasUnlabeled();
+        
+        UpdateSprite();
+
+        image.preserveAspect = true;
+        transform.position = position + direction.normalized * .01f;
+        transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180, 0);
+
+        AudioSource.PlayClipAtPoint(SprayManager.puh, position);
+        SpawnDust();
+    }
+
+    private void CanvasLabeled() =>
         UIB.WorldCanvas("Canvas", transform, Vector3.zero, build: canvas =>
         {
             image = UIB.Image("Image", canvas, new(0f, 0f, 256f, 256f), type: Image.Type.Filled);
@@ -49,15 +63,9 @@ public class Spray : MonoBehaviour
                 outline.effectDistance = Vector2.one * 12f;
             });
         });
-        UpdateSprite();
 
-        image.preserveAspect = true;
-        transform.position = position + direction.normalized * .01f;
-        transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180, 0);
-
-        AudioSource.PlayClipAtPoint(SprayManager.puh, position);
-        SpawnDust();
-    }
+    private void CanvasUnlabeled() =>
+        UIB.WorldCanvas("Canvas", transform, Vector3.zero, build: canvas => image = UIB.Image("Image", canvas, new(0f, 0f, 256f, 256f), type: Image.Type.Filled));
 
     private void Update()
     {

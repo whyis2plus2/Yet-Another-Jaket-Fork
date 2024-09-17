@@ -22,6 +22,8 @@ public class Settings : CanvasSingleton<Settings>
     public static int FeedColor, KnuckleColor;
     /// <summary> Whether freeze frames are disabled. </summary>
     public static bool DisableFreezeFrames;
+    /// <summary> Whether names on sprays are enabled. </summary>
+    public static bool AreSpraysLabeled;
 
     #endregion
     #region controls
@@ -91,6 +93,7 @@ public class Settings : CanvasSingleton<Settings>
         FeedColor = pm.GetInt("jaket.feed-color");
         KnuckleColor = pm.GetInt("jaket.knkl-color");
         DisableFreezeFrames = pm.GetBool("jaket.disable-freeze", true);
+        AreSpraysLabeled = pm.GetBool("YetAnotherJaketFork.label-sprays");
 
         Chat = GetKey("chat", KeyCode.Return);
         ScrollUp = GetKey("scroll-messages-up", KeyCode.UpArrow);
@@ -111,7 +114,7 @@ public class Settings : CanvasSingleton<Settings>
     private void Start()
     {
         UIB.Shadow(transform);
-        UIB.Table("General", "#settings.general", transform, Tlw(16f + 328f / 2f, 328f), table =>
+        UIB.Table("General", "#settings.general", transform, Tlw(16f + 372f / 2f, 372f), table =>
         {
             UIB.Button("#settings.reset", table, Btn(68f), clicked: ResetGeneral);
 
@@ -140,9 +143,17 @@ public class Settings : CanvasSingleton<Settings>
                 pm.SetBool("jaket.disable-freeze", DisableFreezeFrames = _);
             }).isOn = DisableFreezeFrames;
 
-            UIB.Button("#settings.sprays", table, Btn(300f), clicked: SpraySettings.Instance.Toggle);
+            // TODO: Add to bundles
+            UIB.Toggle("LABELED SPRAYS", table, Tgl(300f), 20, _ =>
+            {
+                // TODO: Add message to bundles
+                if (_) HudMessageReceiver.Instance?.SendHudMessage(Bundle.ParseColors("[20][#FFE600]!!!WARNING!!![][]\nThis has a chance of breaking sprays!"));
+                pm.SetBool("YetAnotherJaketFork.label-sprays", AreSpraysLabeled = _);
+            }).isOn = AreSpraysLabeled;
+
+            UIB.Button("#settings.sprays", table, Btn(344f), clicked: SpraySettings.Instance.Toggle);
         });
-        UIB.Table("Controls", "#settings.controls", transform, Tlw(360f + 576f / 2f, 576f), table =>
+        UIB.Table("Controls", "#settings.controls", transform, Tlw(404f + 576f / 2f, 576f), table =>
         {
             UIB.Button("#settings.reset", table, Btn(68f), clicked: ResetControls);
 
