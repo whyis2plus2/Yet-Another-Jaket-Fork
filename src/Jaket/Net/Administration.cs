@@ -4,6 +4,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 
 using Jaket.Content;
+using Jaket.UI.Dialogs;
 
 /// <summary> Class dedicated to protecting the lobby from unfavorable people. </summary>
 public class Administration
@@ -22,8 +23,8 @@ public class Administration
 
     /// <summary> List of banned player ids. </summary>
     public static List<uint> Banned = new();
-    /// <summary> List of kicked player ids. </summary>
-    public static List<uint> Kicked = new();
+    /// <summary> id of last kicked player </summary>
+    public static uint LastKicked { get; private set; } = 0;
     /// <summary> List of banned player sprays. </summary>
     public static List<uint> BannedSprays = new();
 
@@ -42,15 +43,9 @@ public class Administration
             if (LobbyController.IsOwner) return;
 
             Banned.Clear();
-            Kicked.Clear();
             LobbyController.Lobby?.GetData("banned").Split(' ').Do(sid =>
             {
                 if (uint.TryParse(sid, out var id)) Banned.Add(id);
-            });
-
-            LobbyController.Lobby?.GetData("kicked").Split(' ').Do(sid =>
-            {
-                if (uint.TryParse(sid, out var id)) Kicked.Add(id);
             });
         };
         Events.OnLobbyEntered += () => { Banned.Clear(); entityBullets.Clear(); entities.Clear(); plushies.Clear(); };
@@ -84,20 +79,19 @@ public class Administration
         // who does the client think he is?!
         if (!LobbyController.IsOwner) return;
 
-        Networking.Send(PacketType.Kick, null, (data, size) =>
+        Networking.Send(LobbyController.IsCurrentMultikillLobby() ? PacketType.Kick : PacketType.Ban, null, (data, size) =>
         {
             var con = Networking.FindCon(id);
             Tools.Send(con, data, size);
             con?.Flush();
             Events.Post2(() => con?.Close());
         });
-
+        
         if (LobbyController.IsCurrentMultikillLobby())
             LobbyController.Lobby?.SendChatString("#/b" + id);
         else LobbyController.Lobby?.SendChatString($"[{UI.Pal.Red}]\\[Server] Kicked {Tools.Name(id)}[]");
 
-        Kicked.Add(id);
-        LobbyController.Lobby?.SetData("kicked", string.Join(" ", Kicked));
+        LastKicked = id;
     }
 
     /// <summary> Whether the player is sending a large amount of data. </summary>
