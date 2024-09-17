@@ -87,6 +87,7 @@ public class Networking
         SteamMatchmaking.OnLobbyMemberJoined += (lobby, member) =>
         {
             if (!Administration.Banned.Contains(member.Id.AccountId)) Bundle.Msg("player.joined", member.Name);
+            if (Administration.LastKicked == member.Id.AccountId) Administration.LastKicked = 0;
             if (!LobbyController.IsOwner) return;
 
             void Msg(string s) => LobbyController.Lobby?.SendChatString("[#FF7F50]\\[BOT][] " + s);

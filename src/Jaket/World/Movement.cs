@@ -107,7 +107,7 @@ public class Movement : MonoSingleton<Movement>
         if (Input.GetKeyDown(Settings.LobbyTab)) LobbyTab.Instance.Toggle();
 
         if (Input.GetKeyDown(Settings.PlayerList))
-            if (LobbyController.IsCurrentMultikillLobby() || LobbyController.Offline) PlayerListEX.Instance.Toggle();
+            if (LobbyController.IsLobbyMultikill || LobbyController.Offline) PlayerListEX.Instance.Toggle();
             else PlayerList.Instance.Toggle();
 
         if (Input.GetKeyDown(Settings.Settingz)) Settings.Instance.Toggle();

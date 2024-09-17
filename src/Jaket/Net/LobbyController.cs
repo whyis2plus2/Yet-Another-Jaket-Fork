@@ -41,14 +41,12 @@ public class LobbyController
 
     /// <summary> Scales health to increase difficulty. </summary>
     public static void ScaleHealth(ref float health) => health *= 1f + Math.Max(Lobby?.MemberCount - 1 ?? 1, 1) * PPP;
-    /// <summary> Whether the given lobby is created via Multikill. </summary>
-    public static bool IsMultikillLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "mk_lobby");
+    
+    /// <summary> Whether the given lobby exists and is created via Multikill. </summary>
+    public static bool IsMultikillLobby(Lobby? lobby) => lobby?.Data.Any(pair => pair.Key == "mk_lobby") ?? false;
     /// <summary> Whether the current lobby is created via Multikill. </summary>
-    public static bool IsCurrentMultikillLobby() {
-        if (Offline || !Lobby.HasValue) return false;
-        return IsMultikillLobby(Lobby.Value);
-    }
-
+    public static bool IsLobbyMultikill => IsMultikillLobby(Lobby);
+    
     /// <summary> Creates the necessary listeners for proper work. </summary>
     public static void Load()
     {
@@ -159,7 +157,7 @@ public class LobbyController
             {
                 IsOwner = false;
                 Lobby = lobby;
-                if (Networking.LocalPlayer.Team > Content.Team.Pink && !IsCurrentMultikillLobby())
+                if (Networking.LocalPlayer.Team > Content.Team.Pink && !IsLobbyMultikill)
                     Networking.LocalPlayer.Team = Content.Team.White;
             }
             else Log.Warning($"Couldn't join a lobby. Result is {task.Result}");

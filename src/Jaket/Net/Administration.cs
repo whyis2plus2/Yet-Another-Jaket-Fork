@@ -24,7 +24,7 @@ public class Administration
     /// <summary> List of banned player ids. </summary>
     public static List<uint> Banned = new();
     /// <summary> id of last kicked player </summary>
-    public static uint LastKicked { get; private set; } = 0;
+    public static uint LastKicked = 0;
     /// <summary> List of banned player sprays. </summary>
     public static List<uint> BannedSprays = new();
 
@@ -79,7 +79,7 @@ public class Administration
         // who does the client think he is?!
         if (!LobbyController.IsOwner) return;
 
-        Networking.Send(LobbyController.IsCurrentMultikillLobby() ? PacketType.Kick : PacketType.Ban, null, (data, size) =>
+        Networking.Send(LobbyController.IsLobbyMultikill ? PacketType.Kick : PacketType.Ban, null, (data, size) =>
         {
             var con = Networking.FindCon(id);
             Tools.Send(con, data, size);
@@ -87,9 +87,8 @@ public class Administration
             Events.Post2(() => con?.Close());
         });
         
-        if (LobbyController.IsCurrentMultikillLobby())
-            LobbyController.Lobby?.SendChatString("#/b" + id);
-        else LobbyController.Lobby?.SendChatString($"[{UI.Pal.Red}]\\[Server] Kicked {Tools.Name(id)}[]");
+        if (LobbyController.IsLobbyMultikill) LobbyController.Lobby?.SendChatString("#/b" + id);
+        else LobbyController.Lobby?.SendChatString($"{Chat.BOT_PREFIX} [#FFE600]Player {Tools.Name(id)} was kicked!");
 
         LastKicked = id;
     }
