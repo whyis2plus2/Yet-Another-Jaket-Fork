@@ -87,9 +87,8 @@ public class Plugin : MonoBehaviour
         UI.UIB.Load();
         UI.UI.Load();
 
-        // This is needed to allow for RGB components to be rebuilt
+        // This is needed to allow for RGB to be an animated rainbow
         Events.EveryTick += () => UI.Pal.UpdateRGBCol();
-        Events.EveryTick += () => { if (UI.Dialogs.PlayerListEX.Shown) UI.Dialogs.PlayerListEX.Instance.Rebuild(); };
 
         // initialize harmony and patch all the necessary classes
         new Harmony("Should I write something here?").PatchAll();
