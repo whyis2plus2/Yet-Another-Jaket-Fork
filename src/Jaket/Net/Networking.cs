@@ -90,11 +90,9 @@ public class Networking
             if (Administration.LastKicked == member.Id.AccountId) Administration.LastKicked = 0;
             if (!LobbyController.IsOwner) return;
 
-            void Msg(string s) => LobbyController.Lobby?.SendChatString("[#FF7F50]\\[BOT][] " + s);
-
-            Msg("This lobby was made with whyis2plus2's custom jaket fork");
-            Msg("Please report all bugs in this lobby to https://discord.gg/YPb6CJ8krg");
-            Msg("and not to the normal jaket devs");
+            Chat.Instance.SendBot("This lobby was made with whyis2plus2's custom jaket fork");
+            Chat.Instance.SendBot("Please report all bugs in this lobby to https://discord.gg/YPb6CJ8krg");
+            Chat.Instance.SendBot("and not to the normal jaket devs");
         };
 
         SteamMatchmaking.OnLobbyMemberLeave += (lobby, member) =>

@@ -88,7 +88,7 @@ public class Administration
         });
         
         if (LobbyController.IsLobbyMultikill) LobbyController.Lobby?.SendChatString("#/b" + id);
-        else LobbyController.Lobby?.SendChatString($"{Chat.BOT_PREFIX} [#FFE600]Player {Tools.Name(id)} was kicked!");
+        else Chat.Instance.SendBot($"[#FFE600]Player {Tools.Name(id)} was kicked!");
 
         LastKicked = id;
     }

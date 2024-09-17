@@ -164,6 +164,10 @@ public class Chat : CanvasSingleton<Chat>
         Events.Post(Toggle);
     }
 
+    /// <summary> Sends a bot message to all other players. </summary>
+    public void SendBot(string msg) =>
+        LobbyController.Lobby?.SendChatString(BOT_PREFIX + " " + msg.Trim());
+
     /// <summary> Toggles visibility of the chat. </summary>
     public void Toggle()
     {

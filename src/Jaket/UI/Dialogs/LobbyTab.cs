@@ -19,7 +19,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
     /// <summary> Current lobby access level: 0 - private, 1 - friends only, 2 - public. I was too lazy to create an enum. </summary>
     private int lobbyAccessLevel;
     /// <summary> Checkboxes with lobby settings. </summary>
-    private Toggle pvp, cheats, mods, bosses;
+    private Toggle pvp, cheats, mods, bosses, moddedOnly;
 
     private void Start()
     {
@@ -68,12 +68,18 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
                 Rebuild();
             });
 
-            pvp = UIB.Toggle("#lobby-tab.modded", table, Tgl(152f), clicked: allow => {
+            moddedOnly = UIB.Toggle("#lobby-tab.modded", table, Tgl(152f), clicked: allow => {
                 if (allow)
                 {
                     LobbyController.Lobby?.SetData("mk_lobby", "true");
-                    Networking.EachPlayer(cons => Administration.Kick(cons.Id)); // this is to prevent the different net code from causing bugs
-                    // with normal jaket players
+
+                    // tell players why they've been kicked
+                    Chat.Instance.SendBot("This lobby has been set to modded only, as a result, everyone is being kicked");
+                    Chat.Instance.SendBot("this is done to prevent netcode errors, as modded jaket only lobbies");
+                    Chat.Instance.SendBot("have a different netcode than normal jaket lobbies");
+
+                    // this is to prevent the different net code from causing bugs with normal jaket players
+                    Networking.EachPlayer(cons => Administration.Kick(cons.Id));
                 }
                 else LobbyController.Lobby?.DeleteData("mk_lobby");
             });
@@ -129,6 +135,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             cheats.isOn = false;
             mods.isOn = true;
             bosses.isOn = false;
+            moddedOnly.isOn = false;
         }
         else field.text = LobbyController.Lobby?.GetData("name");
 
