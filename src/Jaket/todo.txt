@@ -1,0 +1,7 @@
+- Re-add Names on sprays
+- Re-add colored names when pvp's on
+- Rotate fishes spawned by /fishy to rotate the player
+- Restore old look of the team menu
+- Add more hand colors
+- Make secret team unlocked by doing the Konamii code in reverse (it has 10000 health, and it's named Jorge)
+- Add the ability to set UKMD in modded only lobbies
