@@ -104,6 +104,7 @@ public class LobbyController
             Lobby?.SetJoinable(true);
             Lobby?.SetPrivate();
             Lobby?.SetData("jaket", "true");
+            Lobby?.SetData("YAJF", "true");
             Lobby?.SetData("name", $"{SteamClient.Name}'s Lobby");
             Lobby?.SetData("level", MapMap(Tools.Scene));
             Lobby?.SetData("pvp", "False");
