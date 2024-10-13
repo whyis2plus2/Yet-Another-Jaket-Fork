@@ -34,7 +34,7 @@ public class Enemies
         for (var type = EntityType.Filth; type <= EntityType.Puppet; type++) Types[type] = typeof(SimpleEnemy);
         Types[EntityType.Insurrectionist] = typeof(Insurrectionist);
         Types[EntityType.Swordsmachine] = typeof(Swords);
-        Types[EntityType.V2] = typeof(V2);
+        Types[EntityType.V2_RedArm] = typeof(V2);
         Types[EntityType.V2_GreenArm] = typeof(V2);
         Types[EntityType.Sentry] = typeof(Turret);
         Types[EntityType.Gutterman] = typeof(Gutterman);
@@ -75,9 +75,9 @@ public class Enemies
     {
         // EnemyId of Malicious Face and Cerberus is in a child object
         // https://discord.com/channels/1132614140414935070/1132614140876292190/1146507403102257162
-        var obj = type != EntityType.MaliciousFace && type != EntityType.Cerberus ?
-                Entities.Mark(Prefabs[type - EntityType.EnemyOffset].gameObject) :
-                Entities.Mark(Prefabs[type - EntityType.EnemyOffset].transform.parent.gameObject).transform.GetChild(0).gameObject;
+        var obj = type != EntityType.MaliciousFace && type != EntityType.Cerberus
+            ? Entities.Mark(Prefabs[type - EntityType.EnemyOffset].gameObject)
+            : Entities.Mark(Prefabs[type - EntityType.EnemyOffset].transform.parent.gameObject).transform.GetChild(0).gameObject;
 
         // repeat this, since only the parental object was renamed
         obj.name = "Net";
@@ -88,30 +88,32 @@ public class Enemies
     /// <summary> Synchronizes the enemy between network members. </summary>
     public static bool Sync(EnemyIdentifier enemyId)
     {
-        if (LobbyController.Offline || enemyId.dead || enemyId.name == "Net") return true;
+        if (LobbyController.Offline || enemyId.dead) return true;
+        if (Scene == "Endless") enemyId.spawnEffect = null;
+        if (enemyId.name == "Net") return true;
 
         // levels 2-4, 5-4, 7-1 and 7-4 contain unique bosses that needs to be dealt with separately
-        if (Tools.Scene == "Level 2-4" && enemyId.name == "MinosArm")
+        if (Scene == "Level 2-4" && enemyId.name == "MinosArm")
         {
             enemyId.gameObject.AddComponent<Hand>();
             return true;
         }
         // there is no need to sync the fake, since the coins are synced
-        if (Tools.Scene == "Level 5-2" && enemyId.name == "FerrymanIntro") return true;
-        if (Tools.Scene == "Level 5-4" && enemyId.name == "Leviathan")
+        if (Scene == "Level 5-2" && enemyId.name == "FerrymanIntro") return true;
+        if (Scene == "Level 5-4" && enemyId.name == "Leviathan")
         {
             enemyId.gameObject.AddComponent<Leviathan>();
             return true;
         }
-        if (Tools.Scene == "Level 7-1" && enemyId.name == "MinotaurChase")
+        if (Scene == "Level 7-1" && enemyId.name == "MinotaurChase")
         {
             enemyId.gameObject.AddComponent<Minotaur>();
             return true;
         }
         // the security system is a complex enemy consisting of several subenemies
-        if (Tools.Scene == "Level 7-4" && enemyId.GetComponentInParent<CombinedBossBar>() != null) return true;
-        if (Tools.Scene == "Level 7-4" && enemyId.name == "KillAllEnemiesChecker") return true; // what is that?!
-        if (Tools.Scene == "Level 7-4" && enemyId.name == "Brain")
+        if (Scene == "Level 7-4" && enemyId.GetComponentInParent<CombinedBossBar>() != null) return true;
+        if (Scene == "Level 7-4" && enemyId.name == "KillAllEnemiesChecker") return true; // what is that?!
+        if (Scene == "Level 7-4" && enemyId.name == "Brain")
         {
             enemyId.gameObject.AddComponent<Brain>();
             return true;
@@ -124,7 +126,7 @@ public class Enemies
         }
         else
         {
-            Tools.DestroyImmediate(enemyId.name != "Body" && enemyId.name != "StatueBoss" ? enemyId.gameObject : enemyId.transform.parent.gameObject);
+            DestImmediate(enemyId.name != "Body" && enemyId.name != "StatueBoss" ? enemyId.gameObject : enemyId.transform.parent.gameObject);
             return false;
         }
     }
@@ -167,7 +169,7 @@ public class Enemies
         var target = NewMovement.Instance.transform;
         var dst = (enemy - target.position).sqrMagnitude;
 
-        Networking.EachPlayer(player =>
+        Networking.Entities.Player(player =>
         {
             var newDst = (enemy - player.transform.position).sqrMagnitude;
             if (newDst < dst && player.Health > 0)

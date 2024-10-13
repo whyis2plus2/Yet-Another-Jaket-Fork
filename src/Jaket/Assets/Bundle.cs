@@ -1,11 +1,11 @@
 namespace Jaket.Assets;
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 using Jaket.UI.Dialogs;
 
@@ -29,13 +29,12 @@ public class Bundle
     /// <summary> Loads the translation specified in the settings. </summary>
     public static void Load()
     {
-        var root = Path.GetDirectoryName(Plugin.Instance.Location);
         #region r2mm fix
 
-        var bundles = Path.Combine(root, "bundles");
+        var bundles = Path.Combine(Plugin.Instance.Location, "bundles");
         if (!Directory.Exists(bundles)) Directory.CreateDirectory(bundles);
 
-        foreach (var prop in Directory.EnumerateFiles(root, "*.properties"))
+        foreach (var prop in Directory.EnumerateFiles(Plugin.Instance.Location, "*.properties"))
         {
             var dest = Path.Combine(bundles, Path.GetFileName(prop));
 
@@ -65,7 +64,7 @@ public class Bundle
             return;
         }
 
-        var file = Path.Combine(root, "bundles", $"{Files[localeId]}.properties");
+        var file = Path.Combine(bundles, $"{Files[localeId]}.properties");
         string[] lines;
         try
         {
@@ -143,7 +142,7 @@ public class Bundle
                     bool isSize = int.TryParse(content, out var size);
 
                     types.Push(isSize);
-                    builder.Append(isSize ? "<size=" : "<color=").Append(isSize ? Math.Min(size, maxSize) : content).Append('>');
+                    builder.Append(isSize ? "<size=" : "<color=").Append(isSize ? Mathf.Min(size, maxSize) : content).Append('>');
                     pointer++;
                 }
             }

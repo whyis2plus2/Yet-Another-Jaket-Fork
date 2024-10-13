@@ -53,17 +53,17 @@ public class Coins
 
             ObjectTracker.Instance.cannonballList.ForEach(b =>
             {
-                if (Tools.Within(b.transform, coin.transform, 100f)) Check(b.transform);
+                if (Within(b.transform, coin.transform, 100f)) Check(b.transform);
             });
             ObjectTracker.Instance.grenadeList.ForEach(g =>
             {
-                if (Tools.Within(g.transform, coin.transform, 100f) && !g.playerRiding && !g.enemy) Check(g.transform);
+                if (Within(g.transform, coin.transform, 100f) && !g.playerRiding && !g.enemy) Check(g.transform);
             });
             if (target) return target;
         }
         if (LobbyController.PvPAllowed)
         {
-            Networking.EachPlayer(p =>
+            Networking.Entities.Player(p =>
             {
                 if (!p.Team.Ally() && p.Health > 0) Check(p.Doll.Head);
             });
@@ -74,9 +74,9 @@ public class Coins
             }
         }
 
-        Networking.EachEntity(e => e is Enemy, e =>
+        Networking.Entities.Alive(e => e is Enemy, e =>
         {
-            if (e.Type.IsTargetable() && e.EnemyId && !e.Dead) Check(e.EnemyId.weakPoint?.transform ?? e.transform);
+            if (e.Type.IsTargetable() && e.EnemyId) Check(e.EnemyId.weakPoint?.transform ?? e.transform);
         });
         if (target)
         {

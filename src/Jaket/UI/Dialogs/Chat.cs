@@ -58,7 +58,7 @@ public class Chat : CanvasSingleton<Chat>
 
     private void Start()
     {
-        Events.OnLobbyEntered += () => Hello(); // send some useful information to the chat so that players know about the mod's features
+        Events.OnLobbyEntered += Hello; // send some useful information to the chat so that players know about the mod's features
         AutoTTS = Settings.AutoTTS;
 
         list = UIB.Table("List", transform, Blh(WIDTH)).rectTransform;
@@ -90,7 +90,7 @@ public class Chat : CanvasSingleton<Chat>
         List<string> list = new();
 
         if (Shown) list.Add(Bundle.Get("chat.you"));
-        Networking.EachPlayer(player =>
+        Networking.Entities.Player(player =>
         {
             if (player.Typing) list.Add(player.Header.Name);
         });
@@ -208,7 +208,7 @@ public class Chat : CanvasSingleton<Chat>
         text.rectTransform.anchoredPosition = new(0f, 8f - height / 2f);
 
         foreach (RectTransform child in list) child.anchoredPosition += new Vector2(0f, height);
-        if (list.childCount > MESSAGES_SHOWN) DestroyImmediate(list.GetChild(0).gameObject);
+        if (list.childCount > MESSAGES_SHOWN) DestImmediate(list.GetChild(0).gameObject);
 
         // scale the chat panel
         var top = list.GetChild(0) as RectTransform;
@@ -237,18 +237,15 @@ public class Chat : CanvasSingleton<Chat>
     }
 
     /// <summary> Sends some useful information to the chat. </summary>
-    public void Hello(bool force = false)
+    public void Hello()
     {
-        // if the last owner of the lobby is not equal to 0, then the lobby is not created for the first time
-        if (LobbyController.LastOwner != 0L && !force) return;
-
         void Msg(string msg) => Receive("0096FF", BOT_PREFIX + "xzxADIxzx", msg);
         void Tip(string tip) => Msg($"[14]* {tip}[]");
 
         Msg("Hello, it's me, the main developer of Jaket.");
         Msg("I just wanted to give you some tips:");
 
-        Tip($"Hold [#FFA500]{Settings.EmojiWheel}[] to open the emote wheel");
+        Tip($"Hold [#FFA500]{Settings.EmoteWheel}[] to open the emote wheel");
         Tip("Try typing [#FFA500]/help[] in the chat");
         Tip("Take a look at the bestiary, there's a [#FF66CC]surprise[] :3");
         Tip("If you have an issue, tell us in our [#5865F2]Discord[] server");

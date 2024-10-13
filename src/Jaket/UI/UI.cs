@@ -16,7 +16,7 @@ public class UI
     /// <summary> Whether the player is in any of Jaket dialog. </summary>
     public static bool AnyDialog => Chat.Shown || LobbyTab.Shown || LobbyList.Shown || PlayerList.Shown || Settings.Shown || SpraySettings.Shown || (OptionsManager.Instance?.paused ?? false);
     /// <summary> Whether any interface that blocks movement is currently visible. </summary>
-    public static bool AnyMovementBlocking => AnyDialog || NewMovement.Instance.dead || Movement.Instance.Emoji != 0xFF;
+    public static bool AnyMovementBlocking => AnyDialog || NewMovement.Instance.dead || Movement.Instance.Emote != 0xFF;
 
     /// <summary> Object on which the player is focused. </summary>
     public static GameObject Focus => EventSystem.current?.currentSelectedGameObject;
@@ -26,24 +26,24 @@ public class UI
     /// <summary> Creates singleton instances of fragments and dialogs. </summary>
     public static void Load()
     {
-        Root = Tools.Create("UI").transform;
+        Root = Create("UI").transform;
         Settings.Load(); // settings must be loaded before building the interface
 
-        Chat.Build("Chat", true, true, hide: () => Chat.Instance.Field?.gameObject.SetActive(Chat.Shown = false));
-        LobbyTab.Build("Lobby Tab", false, true);
-        LobbyList.Build("Lobby List", false, true);
-        PlayerList.Build("Player List", false, true);
-        Settings.Build("Settings", false, true);
-        SpraySettings.Build("Spray Settings", false, true);
-        Debugging.Build("Debugging Menu", false, false);
+        Chat.Build("Chat", true, hide: () => Chat.Instance.Field?.gameObject.SetActive(Chat.Shown = false), woh: true);
+        LobbyTab.Build("Lobby Tab", true);
+        LobbyList.Build("Lobby List", true);
+        PlayerList.Build("Player List", true);
+        Settings.Build("Settings", true);
+        SpraySettings.Build("Spray Settings", true);
+        Debugging.Build("Debugging Menu", false);
 
-        PlayerIndicators.Build("Player Indicators", false, false, scene => scene == "Main Menu");
-        PlayerInfo.Build("Player Information", false, false, scene => scene == "Main Menu", () => { if (PlayerInfo.Shown) PlayerInfo.Instance.Toggle(); });
-        EmojiWheel.Build("Emoji Wheel", false, false);
-        Skateboard.Build("Skateboard", false, false);
-        MainMenuAccess.Build("Main Menu Access", false, true, hide: () => MainMenuAccess.Instance.Toggle());
-        InteractiveGuide.Build("Interactive Guide", false, false, hide: () => InteractiveGuide.Instance.OfferAssistance());
-        Teleporter.Build("Teleporter", false, false, hide: () => { });
+        PlayerIndicators.Build("Player Indicators", false, () => Scene == "Main Menu");
+        PlayerInfo.Build("Player Information", false, () => Scene == "Main Menu", () => { if (PlayerInfo.Shown) PlayerInfo.Instance.Toggle(); });
+        EmoteWheel.Build("Emote Wheel", false);
+        Skateboard.Build("Skateboard", false);
+        MainMenuAccess.Build("Main Menu Access", true, hide: () => MainMenuAccess.Instance.Toggle());
+        InteractiveGuide.Build("Interactive Guide", false, hide: () => InteractiveGuide.Instance.OfferAssistance());
+        Teleporter.Build("Teleporter", false, hide: () => { });
     }
 
     /// <summary> Hides the interface of the left group. </summary>
@@ -59,7 +59,7 @@ public class UI
     {
         if (LobbyList.Shown) LobbyList.Instance.Toggle();
         if (SpraySettings.Shown) SpraySettings.Instance.Toggle();
-        if (EmojiWheel.Shown) EmojiWheel.Instance.Hide();
+        if (EmoteWheel.Shown) EmoteWheel.Instance.Hide();
         if (OptionsManager.Instance.paused) OptionsManager.Instance.UnPause();
     }
 }

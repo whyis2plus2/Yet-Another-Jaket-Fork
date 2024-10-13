@@ -42,12 +42,12 @@ public class PlayerIndicators : CanvasSingleton<PlayerIndicators>
     /// <summary> Rebuilds player indicators to match a new state. </summary>
     public void Rebuild()
     {
-        indicators.ForEach(ind => Destroy(ind.gameObject));
+        indicators.ForEach(ind => Dest(ind.gameObject));
         indicators.Clear();
         targets.Clear();
 
-        // create new indicators for each player
-        Networking.EachPlayer(AddIndicator);
+        if (Scene == "Level 2-S" || Scene == "Intermission1" || Scene == "Intermission2") return;
+        Networking.Entities.Player(AddIndicator);
         Update();
     }
 

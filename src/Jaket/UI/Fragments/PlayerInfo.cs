@@ -43,15 +43,11 @@ public class PlayerInfo : CanvasSingleton<PlayerInfo>
     /// <summary> Rebuilds the information table to match a new state. </summary>
     public void Rebuild()
     {
-        if (root) Destroy(root.gameObject); // for some reason the operator ? doesn't work here
+        if (root) Dest(root.gameObject); // for some reason the operator ? doesn't work here
         if (!Shown || !StyleHUD.Instance) return;
 
         List<RemotePlayer> teammates = new();
-        Networking.EachPlayer(player =>
-        {
-            // the player should only see information about teammates
-            if (player.Team.Ally()) teammates.Add(player);
-        });
+        Networking.Entities.Player(player => player.Team.Ally(), teammates.Add);
 
         float height = teammates.Count == 0 ? 40f : teammates.Count * 48f + 8f;
 

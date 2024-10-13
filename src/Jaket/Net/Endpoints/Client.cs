@@ -2,7 +2,6 @@ namespace Jaket.Net.Endpoints;
 
 using Steamworks;
 using Steamworks.Data;
-using System;
 
 using Jaket.Content;
 using Jaket.IO;
@@ -23,7 +22,7 @@ public class Client : Endpoint, IConnectionManager
             var id = r.Id();
             var type = r.Enum<EntityType>();
 
-            if (!ents.ContainsKey(id) || ents[id] == null) ents[id] = Entities.Get(id, type);
+            if (ents[id] == null) ents[id] = Entities.Get(id, type);
             ents[id]?.Read(r);
         });
         Listen(PacketType.Level, World.ReadData);
@@ -63,23 +62,24 @@ public class Client : Endpoint, IConnectionManager
         Listen(PacketType.ActivateObject, World.ReadAction);
 
         Listen(PacketType.CyberGrindAction, CyberGrind.LoadPattern);
+
+        Listen(PacketType.Vote, r => Votes.UpdateVote(r.Id(), r.Byte()));
     }
 
     public override void Update()
     {
-        Stats.MeasureTime(ref Stats.ReadTime, () => Manager.Receive(256));
+        Stats.MeasureTime(ref Stats.ReadTime, () => Manager.Receive(64));
         Stats.MeasureTime(ref Stats.WriteTime, () =>
         {
             if (Networking.Loading) return;
-            Networking.EachEntity(entity => entity.IsOwner, entity => Networking.Send(PacketType.Snapshot, w =>
+            ents.Pool(pool = ++pool % 4, e => e.IsOwner, e => Networking.Send(PacketType.Snapshot, w =>
             {
-                w.Id(entity.Id);
-                w.Enum(entity.Type);
-                entity.Write(w);
+                w.Id(e.Id);
+                w.Enum(e.Type);
+                e.Write(w);
             }));
         });
 
-        // flush data
         Manager.Connection.Flush();
         Pointers.Free();
     }

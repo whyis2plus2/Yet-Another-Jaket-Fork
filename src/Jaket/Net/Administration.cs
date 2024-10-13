@@ -1,6 +1,5 @@
 namespace Jaket.Net;
 
-using HarmonyLib;
 using System.Collections.Generic;
 
 using Jaket.Content;
@@ -40,7 +39,7 @@ public class Administration
             if (LobbyController.IsOwner) return;
 
             Banned.Clear();
-            LobbyController.Lobby?.GetData("banned").Split(' ').Do(sid =>
+            LobbyController.Lobby?.GetData("banned").Split(' ').Each(sid =>
             {
                 if (uint.TryParse(sid, out var id)) Banned.Add(id);
             });
@@ -60,7 +59,7 @@ public class Administration
         Networking.Send(PacketType.Ban, null, (data, size) =>
         {
             var con = Networking.FindCon(id);
-            Tools.Send(con, data, size);
+            Networking.Send(con, data, size);
             con?.Flush();
             Events.Post2(() => con?.Close());
         });
@@ -91,14 +90,14 @@ public class Administration
             tree[owner].Add(entity);
         }
 
-        if (entity.Type.IsEnemy() || entity.Type.IsItem())
+        if (entity.Type.IsEnemy() || entity.Type.IsItem() || entity.Type.IsFish())
         {
             // player can only spawn one big enemy at a time
             if (entity.Type.IsBigEnemy() && entities.TryGetValue(owner, out var list)) list.ForEach(e => e.NetKill());
 
             Default(entities, MAX_ENTITIES);
         }
-        else if (entity.Type.IsPlushy()) Default(plushies, MAX_PLUSHIES);
+        else if (entity.Type.IsPlushie()) Default(plushies, MAX_PLUSHIES);
         else if (entity.Type.IsBullet()) Default(entityBullets, MAX_BULLETS);
     }
 

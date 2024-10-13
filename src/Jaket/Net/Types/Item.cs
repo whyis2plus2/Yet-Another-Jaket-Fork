@@ -1,14 +1,17 @@
 namespace Jaket.Net.Types;
 
-using HarmonyLib;
+using System.Linq;
 using UnityEngine;
 
+using Jaket.Assets;
 using Jaket.Content;
 using Jaket.IO;
 
 /// <summary> Representation of all items in the game, except glasses and books. </summary>
 public class Item : OwnableEntity
 {
+    static FishManager fm => FishManager.Instance;
+
     /// <summary> Item position and rotation. </summary>
     private FloatLerp x, y, z, rx, ry, rz;
     /// <summary> Player holding the item in their hands. </summary>
@@ -21,7 +24,7 @@ public class Item : OwnableEntity
 
     private void Awake()
     {
-        Init(Items.Type, true);
+        Init(_ => Items.Type(ItemId), true);
         InitTransfer(() =>
         {
             if (Rb && !IsOwner) Rb.isKinematic = true;
@@ -30,6 +33,12 @@ public class Item : OwnableEntity
 
         x = new(); y = new(); z = new();
         rx = new(); ry = new(); rz = new();
+    }
+
+    private void Start()
+    {
+        if (Type.IsFish() && TryGetComponent(out FishObjectReference fish))
+            fm.UnlockFish(fish.fishObject = fm.recognizedFishes.Keys.ElementAt(Type - EntityType.FishOffset - 2));
     }
 
     private void Update() => Stats.MTE(() =>
@@ -46,12 +55,12 @@ public class Item : OwnableEntity
         // remove from the altar
         if (!placed && ItemId.Placed())
         {
-            transform.GetComponentsInParent<ItemPlaceZone>().Do(zone => Events.Post(() => zone.CheckItem()));
+            transform.GetComponentsInParent<ItemPlaceZone>().Each(zone => Events.Post(() => zone.CheckItem()));
             transform.SetParent(null);
             ItemId.ipz = null;
         }
         // put on the altar
-        if (placed && !ItemId.Placed()) Physics.OverlapSphere(transform.position, .5f, 20971776, QueryTriggerInteraction.Collide).DoIf(
+        if (placed && !ItemId.Placed()) Physics.OverlapSphere(transform.position, .5f, 20971776, QueryTriggerInteraction.Collide).Each(
             col => col.gameObject.layer == 22,
             col =>
             {
@@ -59,16 +68,29 @@ public class Item : OwnableEntity
                 if (zones.Length > 0)
                 {
                     transform.SetParent(col.transform);
-                    zones.Do(zone => zone.CheckItem());
+                    zones.Each(zone => zone.CheckItem());
                 }
             });
     });
+
+    private void OnDestroy()
+    {
+        if (IsOwner) NetKill();
+    }
 
     public void PickUp()
     {
         TakeOwnage();
         Networking.LocalPlayer.HeldItem = this;
+
+        // a special feature of my dev plushie
+        if (Type == EntityType.xzxADIxzx)
+            for (int i = 0; i <= 16; i++)
+                Invoke(i == 16 ? "Return" : "Rotate", i / Networking.TICKS_PER_SECOND);
     }
+
+    private void Rotate() => transform.Find("adi/Head").localEulerAngles = new(90f * Random.Range(0, 3), 90f * Random.Range(0, 3), 90f * Random.Range(0, 3));
+    private void Return() => transform.Find("adi/Head").localEulerAngles = new(270f, Random.value < .042f ? 45f : 0f, 0f);
 
     #region entity
 
@@ -96,7 +118,10 @@ public class Item : OwnableEntity
     public override void Kill(Reader r)
     {
         base.Kill(r);
-        gameObject.SetActive(false);
+        DeadEntity.Replace(this);
+
+        Dest(gameObject);
+        if (Type == EntityType.BombFish && r != null) Inst(GameAssets.Harmless(), transform.position);
     }
 
     #endregion

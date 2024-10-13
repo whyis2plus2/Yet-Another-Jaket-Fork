@@ -62,7 +62,7 @@ public class TeamCoin : OwnableEntity
                 mat ??= GetComponent<Renderer>().material;
                 trail ??= GetComponent<TrailRenderer>();
 
-                mat.mainTexture = DollAssets.CoinTexture;
+                mat.mainTexture = ModAssets.CoinTexture;
                 mat.color = Team.Color();
                 trail.startColor = Team.Color() with { a = .5f };
             }
@@ -119,8 +119,8 @@ public class TeamCoin : OwnableEntity
 
     private void Effect(GameObject flash, float size)
     {
-        Destroy(effect);
-        effect = Instantiate(flash, transform);
+        Dest(effect);
+        effect = Inst(flash, transform);
 
         effect.transform.localScale = Vector3.one * size;
         effect.GetComponentInChildren<SpriteRenderer>(true).color = Team.Color();
@@ -150,7 +150,7 @@ public class TeamCoin : OwnableEntity
         mat.mainTexture = null; // the texture has its own color, which is extremely undesirable
     }
 
-    private void Quadruple()
+    private void Quadruple(bool silent = false)
     {
         quadrupled = true;
         Effect(coin.enemyFlash, 15f);
@@ -158,12 +158,13 @@ public class TeamCoin : OwnableEntity
         var light = effect.GetComponent<Light>();
         light.color = Team.Color();
         light.intensity = 10f;
+        if (silent) Dest(effect.GetComponent<AudioSource>());
     }
 
     private void Reset()
     {
         Rb.isKinematic = !Dead && (!IsOwner || shot);
-        Destroy(effect);
+        Dest(effect);
 
         CancelInvoke("Double");
         CancelInvoke("DoubleEnd");
@@ -209,7 +210,7 @@ public class TeamCoin : OwnableEntity
         if (isPlayer || isEnemy)
         {
             TakeOwnage();
-            Quadruple();
+            Quadruple(isEnemy);
         }
         Invoke("Reflect", (isPlayer ? 1.2f : isEnemy ? .3f : .1f) + offset);
 
@@ -227,7 +228,7 @@ public class TeamCoin : OwnableEntity
         tag = "Untagged";
 
         // play the sound before killing the coin
-        PlaySound(Instantiate(coin.coinHitSound, transform));
+        PlaySound(Inst(coin.coinHitSound, transform));
 
         var rvp = beam == null; // only RV1 PRI can be doubled
         if (rvp && doubled)
@@ -235,7 +236,7 @@ public class TeamCoin : OwnableEntity
         else
             NetKill();
 
-        if (rvp) Coins.PaintBeam(beam = Instantiate(Bullets.Prefabs[0], Vector3.zero, Quaternion.identity), Team);
+        if (rvp) Coins.PaintBeam(beam = Inst(Bullets.Prefabs[0], Vector3.zero), Team);
         beam.SetActive(true);
         beam.transform.position = transform.position;
 
@@ -299,7 +300,7 @@ public class TeamCoin : OwnableEntity
         // make the coin unavailable for future use
         if (pos == null) shot = true;
 
-        var beam = Instantiate(coin.refBeam, transform.position, Quaternion.identity).GetComponent<LineRenderer>();
+        var beam = Inst(coin.refBeam, transform.position).GetComponent<LineRenderer>();
         PlaySound(beam.gameObject);
         trail.Clear();
 
@@ -373,13 +374,14 @@ public class TeamCoin : OwnableEntity
     public override void Kill(Reader r)
     {
         base.Kill(r);
-        Reset();
+        DeadEntity.Replace(this);
 
+        Reset();
         coin.GetDeleted();
         Coins.Alive.Remove(this);
 
         mat = GetComponent<Renderer>().material;
-        mat.mainTexture = DollAssets.CoinTexture;
+        mat.mainTexture = ModAssets.CoinTexture;
         mat.color = Team.Color();
     }
 

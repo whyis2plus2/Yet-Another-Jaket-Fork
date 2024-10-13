@@ -40,13 +40,18 @@ public class LocalPlayer : Entity
 
     private void Awake()
     {
-        Owner = Id = Tools.AccId;
+        Owner = Id = AccId;
         Type = EntityType.Player;
 
         Voice = gameObject.AddComponent<AudioSource>(); // add a 2D audio source that will be heard from everywhere
 
-        Events.OnLoaded += () => Events.Post(UpdateWeapons);
+        Events.OnLoaded += () => Invoke("UpdateWeapons", .4f);
         Events.OnWeaponChanged += () => Events.Post(UpdateWeapons);
+        Events.OnTeamChanged += () =>
+        {
+            var light = nm.transform.Find("Point Light");
+            if (light) light.GetComponent<Light>().color = LobbyController.Offline ? Color.white : Team.Color();
+        };
     }
 
     private void Update() => Stats.MTE(() =>
@@ -64,6 +69,10 @@ public class LocalPlayer : Entity
     public void SyncSuit() => Networking.Send(PacketType.Style, w =>
     {
         w.Id(Id);
+
+        w.Int(Shop.SelectedHat);
+        w.Int(Shop.SelectedJacket);
+
         if (cw?.GetComponentInChildren<GunColorGetter>()?.TryGetComponent<Renderer>(out var renderer) ?? false)
         {
             bool custom = renderer.material.name.Contains("Custom");
@@ -77,25 +86,25 @@ public class LocalPlayer : Entity
             });
         }
         else w.Bool(false);
-    }, size: 17);
+    }, size: 25);
 
     /// <summary> Caches the id of the current weapon and paints the hands of the local player. </summary>
     public void UpdateWeapons()
     {
         weapon = Weapons.Type();
-        is44 = Tools.Scene == "Level 4-4";
+        is44 = Scene == "Level 4-4";
 
         if (LobbyController.Online) SyncSuit();
 
         // according to the lore, the player plays for V3, so we need to paint the hands
         var punch = fc.transform.Find("Arm Blue(Clone)");
-        if (punch) punch.GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture = DollAssets.HandTexture();
+        if (punch) punch.GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture = ModAssets.HandTexture();
 
         var right = cw?.transform.GetChild(0).Find("RightArm");
-        if (right) right.GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture = DollAssets.HandTexture();
+        if (right) right.GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture = ModAssets.HandTexture();
 
         var knuckle = fc.transform.Find("Arm Red(Clone)");
-        if (knuckle) knuckle.GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture = DollAssets.HandTexture(false);
+        if (knuckle) knuckle.GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture = ModAssets.HandTexture(false);
     }
 
     #endregion
@@ -112,7 +121,7 @@ public class LocalPlayer : Entity
 
         w.Byte((byte)nm.hp);
         w.Byte((byte)Mathf.Floor(WeaponCharges.Instance.raicharge * 2.5f));
-        w.Player(Team, weapon, Movement.Instance.Emoji, Movement.Instance.Rps, Chat.Shown);
+        w.Player(Team, weapon, Movement.Instance.Emote, Movement.Instance.Rps, Chat.Shown);
         w.Bools(
             nm.walking,
             nm.sliding || (is44 && nm.transform.position.y > 610f && nm.transform.position.y < 611f),

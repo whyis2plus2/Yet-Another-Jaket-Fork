@@ -18,7 +18,7 @@ public class Entities
     /// <summary> Loads providers into the dictionary. </summary>
     public static void Load()
     {
-        Providers.Add(EntityType.Player, DollAssets.CreateDoll);
+        Providers.Add(EntityType.Player, ModAssets.CreateDoll);
 
         for (var type = EntityType.Filth; type <= EntityType.Puppet; type++)
         {
@@ -38,7 +38,7 @@ public class Entities
 
         Providers.Add(EntityType.Brain, () => World.Brain);
 
-        for (var type = EntityType.AppleBait; type <= EntityType.V1; type++)
+        for (var type = EntityType.BlueSkull; type <= EntityType.Sowler; type++)
         {
             var sucks = type;
             Providers.Add(sucks, () => Items.Instantiate(sucks));
@@ -53,7 +53,7 @@ public class Entities
     public static GameObject Mark(GameObject prefab)
     {
         // the instance is created on these coordinates so as not to collide with anything after the spawn
-        var instance = Tools.Instantiate(prefab, Vector3.zero);
+        var instance = Inst(prefab, Vector3.zero);
 
         instance.name = "Net";
         return instance;
@@ -74,10 +74,10 @@ public class Entities
     /// <summary> Returns the next available id, skips ids of all existing entities. </summary>
     public static uint NextId()
     {
-        if (LastId < Tools.AccId) LastId = Tools.AccId;
+        if (LastId < AccId) LastId = AccId;
 
         LastId++;
-        while (Networking.Entities.ContainsKey(LastId)) LastId += 8192;
+        while (Networking.Entities.Contains(LastId)) LastId += 8192;
 
         return LastId;
     }

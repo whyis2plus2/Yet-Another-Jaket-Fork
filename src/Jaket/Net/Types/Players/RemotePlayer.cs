@@ -52,12 +52,12 @@ public class RemotePlayer : Entity
     private void Start()
     {
         Doll = gameObject.AddComponent<Doll>();
-        Doll.OnEmojiStart += () =>
+        Doll.OnEmoteStart += () =>
         {
             // recreate the weapon if the animation is over
-            if (Doll.Emoji == 0xFF) LastWeapon = 0xFF;
+            if (Doll.Emote == 0xFF) LastWeapon = 0xFF;
             // or destroy it if the animation has started
-            else foreach (Transform child in Doll.Hand) Destroy(child.gameObject);
+            else foreach (Transform child in Doll.Hand) Dest(child.gameObject);
         };
         Header = new(Owner = Id, transform);
         tag = "Enemy";
@@ -80,14 +80,14 @@ public class RemotePlayer : Entity
         Header.Update(Health, Typing);
         if (Animator == null) // the player is dead
         {
-            if (Health != 0) Destroy(gameObject); // the player has respawned, the doll needs to be recreated
+            if (Health != 0) Dest(gameObject); // the player has respawned, the doll needs to be recreated
             return;
         }
-        else if (Health == 0) EnemyId.machine.GoLimp();
+        else if (Health == 0) GoLimp();
 
         transform.position = new(x.Get(LastUpdate), y.Get(LastUpdate) - (Doll.Sliding ? .3f : 1.5f), z.Get(LastUpdate));
         transform.eulerAngles = new(0f, bodyRotation.GetAngel(LastUpdate));
-        Doll.Head.localEulerAngles = new(Doll.Emoji == 8 ? -20f : headRotation.Get(LastUpdate), 0f);
+        Doll.Head.localEulerAngles = new(Doll.Emote == 8 ? -20f : headRotation.Get(LastUpdate), 0f);
 
         EnemyId.machine.health = 4200f; // prevent the doll from dying too early
 
@@ -98,7 +98,7 @@ public class RemotePlayer : Entity
         }
         if (LastWeapon != Weapon)
         {
-            foreach (Transform child in Doll.Hand) Destroy(child.gameObject);
+            foreach (Transform child in Doll.Hand) Dest(child.gameObject);
             if ((LastWeapon = Weapon) != 0xFF)
             {
                 Weapons.Instantiate(Weapon, Doll.Hand);
@@ -119,12 +119,20 @@ public class RemotePlayer : Entity
         Doll.HookWinch.SetPosition(1, Doll.Hook.position);
     });
 
+    private void GoLimp()
+    {
+        EnemyId.machine.GoLimp();
+        Dest(Doll.WingLight);
+        Dest(Doll.SlideParticle?.gameObject);
+        Dest(Doll.FallParticle?.gameObject);
+    }
+
     #region special
 
     /// <summary> Plays the punching animation and creates a shockwave as needed. </summary>
     public void Punch(Reader r)
     {
-        var field = Tools.Field<Harpoon>("target");
+        var field = Field<Harpoon>("target");
         foreach (var harpoon in FindObjectsOfType<Harpoon>())
             if ((field.GetValue(harpoon) as EnemyIdentifierIdentifier)?.eid == EnemyId) Bullets.Punch(harpoon, false);
 
@@ -134,12 +142,12 @@ public class RemotePlayer : Entity
                 Animator.SetTrigger(r.Bool() ? "parry" : "punch");
                 break;
             case 1:
-                var blast = Instantiate(GameAssets.Blast(), r.Vector(), Quaternion.Euler(r.Vector()));
+                var blast = Inst(GameAssets.Blast(), r.Vector(), Quaternion.Euler(r.Vector()));
                 blast.name = "Net";
                 blast.GetComponentInChildren<Explosion>().sourceWeapon = Bullets.Fake;
                 break;
             case 2:
-                var shock = Instantiate(NewMovement.Instance.gc.shockwave, transform.position, Quaternion.identity).GetComponent<PhysicalShockwave>();
+                var shock = Inst(NewMovement.Instance.gc.shockwave, transform.position).GetComponent<PhysicalShockwave>();
                 shock.name = "Net";
                 shock.force = r.Float();
                 break;
@@ -170,7 +178,7 @@ public class RemotePlayer : Entity
 
         if (!Doll) return;
 
-        w.Player(Team, Weapon, Doll.Emoji, Doll.Rps, Typing);
+        w.Player(Team, Weapon, Doll.Emote, Doll.Rps, Typing);
         Doll.WriteAnim(w);
     }
 
@@ -188,17 +196,20 @@ public class RemotePlayer : Entity
 
         if (!Doll || r.Position >= r.Length) return;
 
-        r.Player(out Team, out Weapon, out Doll.Emoji, out Doll.Rps, out Typing);
+        r.Player(out Team, out Weapon, out Doll.Emote, out Doll.Rps, out Typing);
         Doll.ReadAnim(r);
     }
 
     public override void Kill(Reader r = null)
     {
-        EnemyId.machine.GoLimp();
-        Header.Hide();
+        base.Kill(r);
+        DeadEntity.Replace(this);
 
-        Destroy(Doll.Hand.gameObject); // destroy the weapon so that the railcannon's sound doesn't play forever
-        DestroyImmediate(this); // destroy the entity so that the indicators no longer point to it
+        Header.Hide();
+        GoLimp();
+        Dest(Doll.Hand.gameObject); // destroy the weapon so that the railcannon's sound doesn't play forever
+        Dest(this);
+
         Events.OnTeamChanged.Fire();
     }
 
