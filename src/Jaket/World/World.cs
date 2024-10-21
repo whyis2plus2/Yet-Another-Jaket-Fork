@@ -63,7 +63,7 @@ public class World
         w.String(Tools.Pending ?? Tools.Scene);
 
         // the version is needed for a warning about incompatibility
-        w.String(Version.CURRENT);
+        w.String(Version.ACTUAL);
         w.Byte((byte)PrefsManager.Instance.GetInt("difficulty"));
 
         // synchronize activated actions
@@ -76,7 +76,7 @@ public class World
         Tools.Load(r.String());
 
         // if the mod version doesn't match the host's one, then reading the packet is complete, as this may lead to bigger bugs
-        if (r.String() != Version.CURRENT)
+        if (r.String() != Version.ACTUAL)
         {
             Version.Notify();
             return;

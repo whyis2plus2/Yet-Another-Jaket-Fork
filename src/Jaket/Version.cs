@@ -12,6 +12,8 @@ using static Jaket.UI.Rect;
 public class Version
 {
     /// <summary> Current version of the mod installed by the player. </summary>
+    public const string ACTUAL = "1.3.42.03b";
+    /// <summary> Current version, but formatted so that BepIn doesn't throw it out </summary>
     public const string CURRENT = "1.3.42.03";
     /// <summary> Repository of the mod, where the newest version will be taken from. </summary>
     public const string REPO = "whyis2plus2/Yet-Another-Jaket-Fork";
@@ -26,7 +28,7 @@ public class Version
     /// <summary> Checks for updates using Github and notifies the player about it. </summary>
     public static void Check4Update() => Fetch((done, result) =>
     {
-        if (done && Parse(result, out var latest, out var name) && latest != CURRENT) Bundle.Hud("version.outdated", false, CURRENT, latest, name);
+        if (done && Parse(result, out var latest, out var name) && latest != ACTUAL) Bundle.Hud("version.outdated", false, ACTUAL, latest, name);
     });
 
     /// <summary> Fetches a json file with all versions of the mod from GitHub. </summary>
@@ -55,7 +57,7 @@ public class Version
     /// <summary> Adds the mod version to the bottom left edge of the screen. </summary>
     public static void Label(Transform parent)
     {
-        var r = Blw(36f, 40f, 376f);
-        UIB.Table("Version", parent, r, table => UIB.Text($"Jaket version is {CURRENT}", table, r.Text, Color.grey));
+        var r = Blw(36f, 40f, 406f);
+        UIB.Table("Version", parent, r, table => UIB.Text($"Jaket version is {ACTUAL}", table, r.Text, Color.grey));
     }
 }
