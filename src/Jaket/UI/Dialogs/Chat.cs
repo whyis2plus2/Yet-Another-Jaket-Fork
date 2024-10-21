@@ -270,6 +270,7 @@ public class Chat : CanvasSingleton<Chat>
         Tip("Try typing [#FFA500]/help[] in the chat");
         Tip("Take a look at the bestiary, there's a [#FF66CC]surprise[] :3");
         Tip($"If you have an issue, tell us in the [{OurCord}]<i>Modded Jaket</i> Discord[] server", "whyis2plus2", "FFFFFF");
+        Tip($"[{Yellow}]<b>The discord has been moved to another server! Please leave the old one!</b>", "whyis2plus2", "FFFFFF");
 
         Msg("Cheers~ ♡");
 
