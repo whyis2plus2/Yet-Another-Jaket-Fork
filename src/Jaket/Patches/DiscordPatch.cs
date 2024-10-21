@@ -28,7 +28,7 @@ public class DiscordPatch
         // var button = UIB.LinkButton("Jaket Discord", __instance.transform.GetChild(1).GetChild(1).GetChild(0));
         // button.transform.localPosition = new(0f, -128f, -20f); // the button is a little stormy
 
-        var button = UIB.LinkButton("Modded Jaket Discord", __instance.transform.GetChild(1).GetChild(1).GetChild(0), "https://discord.gg/YPb6CJ8krg", Pal.ourcord);
+        var button = UIB.LinkButton("Modded Jaket Discord", __instance.transform.GetChild(1).GetChild(1).GetChild(0), "https://discord.gg/ANMa6psnwh", Pal.ourcord);
         button.transform.localPosition = new(0f, -128f, -20f); // the button is a little stormy
 
         // add ControllerPointer so that the button can be clicked

@@ -91,7 +91,7 @@ public class Networking
             if (!LobbyController.IsOwner) return;
 
             Chat.Instance.SendBot("This lobby was made with whyis2plus2's custom jaket fork");
-            Chat.Instance.SendBot("Please report all bugs in this lobby to https://discord.gg/YPb6CJ8krg");
+            Chat.Instance.SendBot("Please report all bugs in this lobby to https://discord.gg/ANMa6psnwh");
             Chat.Instance.SendBot("and not to the normal jaket devs");
         };
 
