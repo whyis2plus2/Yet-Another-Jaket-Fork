@@ -75,7 +75,7 @@ public class DollAssets
         Shader = AssetHelper.LoadPrefab("cb3828ada2cbefe479fed3b51739edf6").GetComponent<global::V2>().smr.material.shader;
         WingTextures = new Texture[Tools.EnumMax<Team>() + 1];
         BodyTextures = new Texture[Tools.EnumMax<Team>() + 1];
-        HandTextures = new Texture[4];
+        HandTextures = new Texture[8];
         Icons = new Sprite[3];
 
         // loading wing textures from the bundle
@@ -94,9 +94,13 @@ public class DollAssets
         }
 
         HandTextures[0] = FistControl.Instance.blueArm.ToAsset().GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture;
-        HandTextures[1] = FistControl.Instance.redArm.ToAsset().GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture;
-        LoadAsync<Texture>("V3-hand",  tex => HandTextures[2] = tex);
-        LoadAsync<Texture>("V3-blast", tex => HandTextures[3] = tex);
+        LoadAsync<Texture>("V3-blast-blue", tex => HandTextures[1] = tex);
+        LoadAsync<Texture>("V3-hand-red", tex => HandTextures[2] = tex);
+        HandTextures[3] = FistControl.Instance.redArm.ToAsset().GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture;
+        LoadAsync<Texture>("V3-hand", tex => HandTextures[4] = tex);
+        LoadAsync<Texture>("V3-blast", tex => HandTextures[5] = tex);
+        LoadAsync<Texture>("V3-hand-white", tex => HandTextures[6] = tex);
+        LoadAsync<Texture>("V3-blast-white", tex => HandTextures[7] = tex);
 
         LoadAsync<Texture>("coin", tex => CoinTexture = tex);
 
@@ -223,8 +227,14 @@ public class DollAssets
     /// <summary> Returns the hand texture currently in use. Depends on whether the player is in the lobby or not. </summary>
     public static Texture HandTexture(bool feedbacker = true)
     {
-        var s = feedbacker ? Settings.FeedColor : Settings.KnuckleColor;
-        if (s == 0) return HandTextures[(feedbacker? 0 : 1) + (LobbyController.Online? 2 : 0)];
-        return HandTextures[(feedbacker? 0 : 1) + 2 * (s % 2)];
+        // local team - used to help figure some stuff out for defaults
+        Team t = Networking.LocalPlayer.Team;
+        int s = feedbacker ? Settings.FeedColor : Settings.KnuckleColor;
+        if (s == 0 && LobbyController.Offline) return HandTextures[feedbacker? 0 : 3];
+        return HandTextures[s switch
+        {
+            0 => t == Team.White? 6 : t == Team.V2? 2 : 4,
+            _ => 2 * (s - 1)
+        } + (feedbacker? 0 : 1)];
     }
 }

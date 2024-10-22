@@ -18,7 +18,13 @@ public class Settings : CanvasSingleton<Settings>
 
     /// <summary> Id of the currently selected language. </summary>
     public static int Language;
-    /// <summary> 0 - default (depending on whether the player is in the lobby or not), 1 - always green, 2 - always blue/red. </summary>
+    /// <summary>
+    /// 0 - default (depending on whether the player is in the lobby or not), 
+    /// 1 - always blue, 
+    /// 2 - always red,
+    /// 3 - always green,
+    /// 4 - always white
+    /// </summary>
     public static int FeedColor, KnuckleColor;
     /// <summary> Whether freeze frames are disabled. </summary>
     public static bool DisableFreezeFrames;
@@ -127,14 +133,14 @@ public class Settings : CanvasSingleton<Settings>
             UIB.Text("FEEDBACKER:", table, Btn(164f), align: TextAnchor.MiddleLeft);
             feed = UIB.Button("", table, Stn(164f, 160f), clicked: () =>
             {
-                pm.SetInt("jaket.feed-color", FeedColor = ++FeedColor % 3);
+                pm.SetInt("jaket.feed-color", FeedColor = ++FeedColor % 5);
                 Rebuild();
             });
 
             UIB.Text("KNUCKLE:", table, Btn(212f), align: TextAnchor.MiddleLeft);
             knkl = UIB.Button("", table, Stn(212f, 160f), clicked: () =>
             {
-                pm.SetInt("jaket.knkl-color", KnuckleColor = ++KnuckleColor % 3);
+                pm.SetInt("jaket.knkl-color", KnuckleColor = ++KnuckleColor % 5);
                 Rebuild();
             });
 
@@ -206,8 +212,10 @@ public class Settings : CanvasSingleton<Settings>
         string Mode(int mode) => Bundle.Get(mode switch
         {
             0 => "settings.default",
-            1 => "settings.green",
-            2 => "settings.vanilla",
+            1 => "settings.blue",
+            2 => "settings.red",
+            3 => "settings.green",
+            4 => "settings.white",
             _ => "lobby-tab.default"
         });
 
