@@ -230,7 +230,7 @@ public class DollAssets
         // local team - used to help figure some stuff out for defaults
         Team t = Networking.LocalPlayer.Team;
         int s = feedbacker ? Settings.FeedColor : Settings.KnuckleColor;
-        if (s == 0 && LobbyController.Offline) return HandTextures[feedbacker? 0 : 3];
+        if (s == 0 && (LobbyController.Offline || t == Team.V1)) return HandTextures[feedbacker? 0 : 3];
         return HandTextures[s switch
         {
             0 => t == Team.White? 6 : t == Team.V2? 2 : 4,

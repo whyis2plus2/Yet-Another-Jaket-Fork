@@ -28,12 +28,12 @@ public class PlayerList : CanvasSingleton<PlayerList>
 
                     Rebuild();
                 });
-                else if (team <= (Team.Pink + 1)) 
+                else if (team < (Team)8) 
                 {
-                    if (team == Team.Blue + 1) x = 72f;
-                    UIB.TeamButton(team == Team.Pink ? team : Team.White, table, new(x += 64f, -194f, 56f, 56f, new(0f, 1f)), () =>
+                    if (team == Team.Blue + 1) x = 8f;
+                    UIB.TeamButton(team, table, new(x += 64f, -194f, 56f, 56f, new(0f, 1f)), () =>
                     {
-                        Networking.LocalPlayer.Team = (team > Team.Pink) ? Team.White : team;
+                        Networking.LocalPlayer.Team = team;
                         Events.OnTeamChanged.Fire();
 
                         Rebuild();

@@ -10,8 +10,8 @@ using Jaket.UI;
 public enum Team
 {
     Yellow, Red, Green, Blue, Pink,
-    Purple, Cyan, White, V1, V2,
-    Fraud, RGB
+    White, Fraud, RGB, V1, V2,
+    Purple, Cyan
 }
 
 /// <summary> Extension class that allows you to get team data. </summary>
