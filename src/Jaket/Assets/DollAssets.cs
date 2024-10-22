@@ -34,7 +34,7 @@ public class DollAssets
     public static Shader Shader;
 
     /// <summary> Wing textures used to differentiate teams. </summary>
-    public static Texture[] WingTextures, RGBWings;
+    public static Texture[] WingTextures;
 
     /// <summary> Body textures used to differentiate teams. </summary>
     public static Texture[] BodyTextures;
@@ -76,7 +76,6 @@ public class DollAssets
         WingTextures = new Texture[Tools.EnumMax<Team>() + 1];
         BodyTextures = new Texture[Tools.EnumMax<Team>() + 1];
         HandTextures = new Texture[4];
-        RGBWings = new Texture[20];
         Icons = new Sprite[3];
 
         // loading wing textures from the bundle
@@ -84,13 +83,6 @@ public class DollAssets
         {
             var index = i; // C# sucks
             LoadAsync<Texture>("V3-wings-" + ((Team)i).ToString(), tex => WingTextures[index] = tex);
-        }
-
-        // loading wing textures from the bundle
-        for (int i = 0; i < RGBWings.Length; i++)
-        {
-            var index = i; // C# sucks
-            LoadAsync<Texture>("V3-wings-rgb" + index.ToString(), tex => RGBWings[index] = tex);
         }
 
         // loading body textures from the bundle
@@ -101,10 +93,10 @@ public class DollAssets
             else LoadAsync<Texture>("V3-body-" + ((Team)i).ToString(), tex => BodyTextures[index] = tex);
         }
 
-        LoadAsync<Texture>("V3-hand", tex => HandTextures[1] = tex);
-        LoadAsync<Texture>("V3-blast", tex => HandTextures[3] = tex);
         HandTextures[0] = FistControl.Instance.blueArm.ToAsset().GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture;
-        HandTextures[2] = FistControl.Instance.redArm.ToAsset().GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture;
+        HandTextures[1] = FistControl.Instance.redArm.ToAsset().GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture;
+        LoadAsync<Texture>("V3-hand",  tex => HandTextures[2] = tex);
+        LoadAsync<Texture>("V3-blast", tex => HandTextures[3] = tex);
 
         LoadAsync<Texture>("coin", tex => CoinTexture = tex);
 
@@ -232,6 +224,7 @@ public class DollAssets
     public static Texture HandTexture(bool feedbacker = true)
     {
         var s = feedbacker ? Settings.FeedColor : Settings.KnuckleColor;
-        return HandTextures[(feedbacker ? 0 : 2) + (s == 0 ? (LobbyController.Offline ? 0 : 1) : s == 1 ? 1 : 0)];
+        if (s == 0) return HandTextures[(feedbacker? 0 : 1) + (LobbyController.Online? 2 : 0)];
+        return HandTextures[(feedbacker? 0 : 1) + 2 * (s % 2)];
     }
 }
