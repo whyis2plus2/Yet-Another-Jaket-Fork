@@ -79,7 +79,7 @@ public class Administration
         // who does the client think he is?!
         if (!LobbyController.IsOwner) return;
 
-        Networking.Send(LobbyController.IsLobbyMultikill ? PacketType.Kick : PacketType.Ban, null, (data, size) =>
+        Networking.Send(LobbyController.ModdedOnly ? PacketType.Kick : PacketType.Ban, null, (data, size) =>
         {
             var con = Networking.FindCon(id);
             Tools.Send(con, data, size);
@@ -87,7 +87,7 @@ public class Administration
             Events.Post2(() => con?.Close());
         });
         
-        if (LobbyController.IsLobbyMultikill) LobbyController.Lobby?.SendChatString("#/b" + id);
+        if (LobbyController.ModdedOnly) LobbyController.Lobby?.SendChatString("#/b" + id);
         else Chat.Instance.SendBot($"[#FFE600]Player {Tools.Name(id)} was kicked!");
 
         LastKicked = id;

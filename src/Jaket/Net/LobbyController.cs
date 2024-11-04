@@ -36,16 +36,18 @@ public class LobbyController
     public static bool ModsAllowed => true; // Lobby?.GetData("mods") == "True";
     /// <summary> Whether bosses must be healed after death in this lobby. </summary>
     public static bool HealBosses => Lobby?.GetData("heal-bosses") == "True";
+    /// <summary> Whether the current lobby is modded only. </summary>
+    public static bool ModdedOnly => Lobby?.GetData("YetAnotherJaketFork") == "true";
     /// <summary> Number of percentages that will be added to the boss's health for each player. </summary>
     public static float PPP;
 
     /// <summary> Scales health to increase difficulty. </summary>
     public static void ScaleHealth(ref float health) => health *= 1f + Math.Max(Lobby?.MemberCount - 1 ?? 1, 1) * PPP;
     
+    /// <summary> Whether the given lobby exists and is created via YAJF. </summary>
+    public static bool IsYAJFLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "mk_lobby") && lobby.Data.Any(pair => pair.Key == "YetAnotherJaketFork");
     /// <summary> Whether the given lobby exists and is created via Multikill. </summary>
-    public static bool IsMultikillLobby(Lobby? lobby) => lobby?.Data.Any(pair => pair.Key == "mk_lobby") ?? false;
-    /// <summary> Whether the current lobby is created via Multikill. </summary>
-    public static bool IsLobbyMultikill => IsMultikillLobby(Lobby);
+    public static bool IsMultikillLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "mk_lobby") && !lobby.Data.Any(pair => pair.Key == "YetAnotherJaketFork");
     
     /// <summary> Creates the necessary listeners for proper work. </summary>
     public static void Load()
@@ -60,11 +62,11 @@ public class LobbyController
                 LeaveLobby();
                 Bundle.Hud2NS("lobby.banned");
             }
-            // if (!IsOwner && IsMultikillLobby(lobby))
-            // {
-            //     LeaveLobby();
-            //     Bundle.Hud("lobby.mk");
-            // }
+            if (!IsOwner && IsMultikillLobby(lobby))
+            {
+                LeaveLobby();
+                Bundle.Hud("lobby.mk");
+            }
         };
         // and leave the lobby if the owner has left it
         SteamMatchmaking.OnLobbyMemberLeave += (lobby, member) =>
@@ -104,7 +106,7 @@ public class LobbyController
             Lobby?.SetJoinable(true);
             Lobby?.SetPrivate();
             Lobby?.SetData("jaket", "true");
-            Lobby?.SetData("YAJF", "true");
+            Lobby?.SetData("YetAnotherJaketFork", "true");
             Lobby?.SetData("name", $"{SteamClient.Name}'s Lobby");
             Lobby?.SetData("level", MapMap(Tools.Scene));
             Lobby?.SetData("pvp", "False");
@@ -157,7 +159,7 @@ public class LobbyController
             {
                 IsOwner = false;
                 Lobby = lobby;
-                if (Networking.LocalPlayer.Team > Content.Team.Pink && !IsLobbyMultikill)
+                if (Networking.LocalPlayer.Team > Content.Team.Pink && !ModdedOnly)
                     Networking.LocalPlayer.Team = Content.Team.White;
             }
             else Log.Warning($"Couldn't join a lobby. Result is {task.Result}");

@@ -70,6 +70,8 @@ public class LobbyList : CanvasSingleton<LobbyList>
         float y = -24f;
         foreach (var lobby in lobbies)
         {
+            if (LobbyController.IsMultikillLobby(lobby)) continue;
+            
             var name = " " + lobby.GetData("name");
             var r = Btn(y += 48f) with { Width = 624f };
 
@@ -80,7 +82,7 @@ public class LobbyList : CanvasSingleton<LobbyList>
                 name = name.Insert(index + "<color=#FFA500>".Length + search.Length, "</color>");
             }
 
-            var c = LobbyController.IsMultikillLobby(lobby) ? blue : white;
+            var c = LobbyController.IsYAJFLobby(lobby) ? blue : white;
             var b = UIB.Button(name, content, r, c, align: TextAnchor.MiddleLeft, clicked: () => LobbyController.JoinLobby(lobby));
 
             var full = lobby.MemberCount <= 2 ? Green : lobby.MemberCount <= 4 ? Orange : Red;

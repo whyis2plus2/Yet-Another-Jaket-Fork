@@ -77,7 +77,7 @@ public class Reader
 
     public void Player(out Team team, out byte weapon, out byte emoji, out byte rps, out bool typing)
     {
-        if (LobbyController.IsLobbyMultikill)
+        if (LobbyController.ModdedOnly)
         {
             int value = Marshal.ReadInt32(mem, Inc(4));
 
