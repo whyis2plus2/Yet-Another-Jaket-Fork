@@ -37,7 +37,14 @@ public class LobbyController
     /// <summary> Whether bosses must be healed after death in this lobby. </summary>
     public static bool HealBosses => Lobby?.GetData("heal-bosses") == "True";
     /// <summary> Whether the current lobby is modded only. </summary>
-    public static bool ModdedOnly => Lobby?.GetData("YetAnotherJaketFork") == "true";
+    public static bool ModdedOnly
+    {
+        get
+        {
+            if (Offline) return false;
+            return IsYAJFLobby(Lobby.Value);
+        }
+    }
     /// <summary> Number of percentages that will be added to the boss's health for each player. </summary>
     public static float PPP;
 
