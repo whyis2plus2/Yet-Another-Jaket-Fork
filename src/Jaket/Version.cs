@@ -12,7 +12,7 @@ using static Jaket.UI.Rect;
 public class Version
 {
     /// <summary> Current version of the mod installed by the player. </summary>
-    public const string ACTUAL = "1.3.42.03c";
+    public const string ACTUAL = "1.3.42.03d";
     /// <summary> Current version, but formatted so that BepIn doesn't throw it out </summary>
     public const string CURRENT = "1.3.42.03";
     /// <summary> Repository of the mod, where the newest version will be taken from. </summary>
