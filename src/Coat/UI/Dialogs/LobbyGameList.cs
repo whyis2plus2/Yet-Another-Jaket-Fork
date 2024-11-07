@@ -64,7 +64,11 @@ public class LobbyGameList : CanvasSingleton<LobbyGameList>
         {
             case Gamemode_Type.REGULAR:
                 Tools.LoadScn("Tutorial");
-                LobbyController.CreateLobbyCoat();
+                LobbyController.CreateLobbyCoat(Gamemode_Type.REGULAR.ToString());
+                break;
+            default:
+                Tools.LoadScn("Tutorial");
+                LobbyController.CreateLobbyCoat(gamemode.Type.ToString());
                 break;
         }
     }

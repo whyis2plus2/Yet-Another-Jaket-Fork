@@ -15,9 +15,26 @@ public class Commands
     /// <summary> Chat command handler. </summary>
     public static CommandHandler Handler = new();
 
+    public static bool HandshakeTime = false;
+
     /// <summary> Registers all default mod commands. </summary>
     public static void Load()
     {
+        // Remove and do something better
+        Events.Post2(() =>
+        {
+            if (HandshakeTime)
+            {
+                Networking.Send(PacketType.COAT_Handshake, w =>
+                {
+                    w.Id(12345);
+                    w.Enum(PacketType.COAT_Handshake);
+                });
+
+                HandshakeTime = false;
+            }
+        });
+
         Handler.Register("help", "Display the list of all commands", args =>
         {
             Handler.Commands.ForEach(command =>
@@ -152,5 +169,19 @@ public class Commands
             chat.Receive("0096FF", Chat.BOT_PREFIX + "xzxADIxzx", "Thank you all, I couldn't have done it alone ♡");
         });
         Handler.Register("support", "Support the author by buying him a coffee", args => Application.OpenURL("https://www.buymeacoffee.com/adithedev"));
+        
+        // Debug
+        Handler.Register("gamemode", "Debug gamemode", args => chat.Receive("Gamemode: " + LobbyController.Lobby?.GetData("gamemode"), true));
+
+        Handler.Register("handshake", "Display the list of the mod developers", args =>
+        {
+            if (!LobbyController.UsingCoat)
+            {
+                chat.Receive("Use coat >:3");
+                return;
+            }
+
+            HandshakeTime = true;
+        });
     }
 }

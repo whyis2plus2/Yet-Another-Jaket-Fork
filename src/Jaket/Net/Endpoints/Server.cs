@@ -8,6 +8,7 @@ using Jaket.IO;
 using Jaket.Net.Types;
 using Jaket.Sprays;
 using Jaket.World;
+using Jaket.UI.Dialogs;
 
 /// <summary> Host endpoint processing socket events and client packets. </summary>
 public class Server : Endpoint, ISocketManager
@@ -129,6 +130,14 @@ public class Server : Endpoint, ISocketManager
                 Votes.UpdateVote(owner, r.Byte());
                 Redirect(r, con);
             }
+        });
+
+        Listen(PacketType.COAT_Handshake, (con, sender, r) =>
+        {
+            if (!LobbyController.UsingCoat)
+                return;
+
+            Chat.Instance.Receive($"Handshake completed:3, ID: {r.Id()}");
         });
     }
 

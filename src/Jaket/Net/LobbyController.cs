@@ -33,7 +33,7 @@ public class LobbyController
     /// <summary> Whether mods are allowed in this lobby. </summary>
     public static bool ModsAllowed => true/*Lobby?.GetData("mods") == "True"*/;
     /// <summary> To see if the server is using Coat</summary>
-    public static bool UsingCoat => Lobby?.GetData("COAT") == "true";
+    public static bool UsingCoat => Lobby?.GetData("Karma.Coat") == "true";
     /// <summary> Whether bosses must be healed after death in this lobby. </summary>
     public static bool HealBosses => Lobby?.GetData("heal-bosses") == "True";
     /// <summary> Number of percentages that will be added to the boss's health for each player. </summary>
@@ -113,7 +113,7 @@ public class LobbyController
         });
     }
 
-    public static void CreateLobbyCoat()
+    public static void CreateLobbyCoat(string gamemode)
     {
         if (Lobby != null || CreatingLobby) return;
         Log.Debug("Creating a lobby...");
@@ -126,8 +126,9 @@ public class LobbyController
 
             Lobby?.SetJoinable(true);
             Lobby?.SetPublic();
-            Lobby?.SetData("coat", "true");
+            Lobby?.SetData("Karma.Coat", "true");
             Lobby?.SetData("name", $"{SteamClient.Name}'s Lobby");
+            Lobby?.SetData("gamemode", gamemode);
             Lobby?.SetData("level", MapMap(Scene));
             Lobby?.SetData("pvp", "True");
             Lobby?.SetData("cheats", "False");
@@ -218,7 +219,7 @@ public class LobbyController
         SteamMatchmaking.LobbyList.RequestAsync().ContinueWith(task =>
         {
             FetchingLobbies = false;
-            done(task.Result.Where(l => l.Data.Any(p => p.Key == "coat")).ToArray());
+            done(task.Result.Where(l => l.Data.Any(p => p.Key == "Karma.Coat")).ToArray());
         });
     }
 
