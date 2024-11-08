@@ -64,12 +64,15 @@ public class LobbyGameList : CanvasSingleton<LobbyGameList>
         {
             case Gamemode_Type.REGULAR:
                 Tools.LoadScn("Tutorial");
-                LobbyController.CreateLobbyCoat(Gamemode_Type.REGULAR.ToString());
+                break;
+            case Gamemode_Type.TF2:
+                // Load UI and clear the menu screen
                 break;
             default:
                 Tools.LoadScn("Tutorial");
-                LobbyController.CreateLobbyCoat(gamemode.Type.ToString());
                 break;
         }
+
+        LobbyController.CreateLobbyCoat(gamemode.Type);
     }
 }

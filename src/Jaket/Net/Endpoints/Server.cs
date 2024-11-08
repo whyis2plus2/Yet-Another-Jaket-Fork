@@ -137,7 +137,7 @@ public class Server : Endpoint, ISocketManager
             if (!LobbyController.UsingCoat)
                 return;
 
-            Chat.Instance.Receive($"Handshake completed:3, ID: {r.Id()}");
+            Chat.Instance.Receive($"Server: Handshake completed :3, ID: {r.Id()}");
         });
     }
 

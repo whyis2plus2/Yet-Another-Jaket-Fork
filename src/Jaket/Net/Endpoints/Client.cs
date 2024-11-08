@@ -66,12 +66,12 @@ public class Client : Endpoint, IConnectionManager
 
         Listen(PacketType.Vote, r => Votes.UpdateVote(r.Id(), r.Byte()));
 
-        Listen(PacketType.COAT_Handshake, (con, sender, r) =>
+        Listen(PacketType.COAT_Handshake, r =>
         {
             if (!LobbyController.UsingCoat)
                 return;
 
-            Chat.Instance.Receive($"Handshake completed:3, ID: {r.Id()}");
+            Chat.Instance.Receive($"Client: Handshake completed :3, ID: {r.Id()}");
         });
     }
 

@@ -7,6 +7,7 @@ using UnityEngine;
 
 using Jaket.Assets;
 using Jaket.IO;
+using Coat.Content.Gamemodes;
 
 /// <summary> Lobby controller with several useful methods and properties. </summary>
 public class LobbyController
@@ -38,6 +39,9 @@ public class LobbyController
     public static bool HealBosses => Lobby?.GetData("heal-bosses") == "True";
     /// <summary> Number of percentages that will be added to the boss's health for each player. </summary>
     public static float PPP;
+
+    /// <summary> Shows what gamemode the player is playing in </summary>
+    public static Gamemode_Type Gamemode { private set; get; }
 
     /// <summary> Scales health to increase difficulty. </summary>
     public static void ScaleHealth(ref float health) => health *= 1f + Mathf.Min(Lobby?.MemberCount - 1 ?? 1, 1) * PPP;
@@ -113,10 +117,12 @@ public class LobbyController
         });
     }
 
-    public static void CreateLobbyCoat(string gamemode)
+    public static void CreateLobbyCoat(Gamemode_Type gamemode)
     {
         if (Lobby != null || CreatingLobby) return;
         Log.Debug("Creating a lobby...");
+
+        Gamemode = gamemode;
 
         CreatingLobby = true;
         SteamMatchmaking.CreateLobbyAsync(8).ContinueWith(task =>
@@ -128,7 +134,7 @@ public class LobbyController
             Lobby?.SetPublic();
             Lobby?.SetData("Karma.Coat", "true");
             Lobby?.SetData("name", $"{SteamClient.Name}'s Lobby");
-            Lobby?.SetData("gamemode", gamemode);
+            Lobby?.SetData("gamemode", gamemode.ToString());
             Lobby?.SetData("level", MapMap(Scene));
             Lobby?.SetData("pvp", "True");
             Lobby?.SetData("cheats", "False");
