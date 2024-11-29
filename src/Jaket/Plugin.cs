@@ -93,6 +93,10 @@ public class Plugin : MonoBehaviour
         // check if there is any incompatible mods
         HasIncompatibility = Chainloader.PluginInfos.Values.Any(info => !Compatible.Contains(info.Metadata.Name));
 
+        // move legacy configs to new keys
+        YAJF.Prefs.CopyString("YAJF.tag", "YetAnotherJaketFork.msgPrefix");
+        YAJF.Prefs.CopyBool("YAJF.labelSprays", "YetAnotherJaketFork.label-sprays");
+
         // mark the plugin as initialized and log a message about it
         Initialized = true;
         Log.Info("Jaket initialized!");
