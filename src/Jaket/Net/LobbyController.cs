@@ -13,11 +13,13 @@ using BepInEx;
 /// <summary> Lobby controller with several useful methods and properties. </summary>
 public class LobbyController
 {
+    const string YAJF_Id = "YAJF-0.2.0";
+
     /// <summary> Whether the current lobby is modded-only. </summary>
-    public static bool YAJF_Modded => Lobby?.GetData("YAJF") == "true";
+    public static bool YAJF_Modded => Lobby?.GetData(YAJF_Id) == "true";
 
     /// <summary> Whether the given lobby is modded-only. </summary>
-    public static bool YAJF_IsModdedLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "YAJF");
+    public static bool YAJF_IsModdedLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == YAJF_Id);
 
     /// <summary> Asynchronously creates a new modded-only lobby with default settings and connects to it. </summary>
     public static void YAJF_CreateModdedLobby()
@@ -33,7 +35,7 @@ public class LobbyController
 
             Lobby?.SetJoinable(true);
             Lobby?.SetPrivate();
-            Lobby?.SetData("YAJF", "true");
+            Lobby?.SetData(YAJF_Id, "true");
             Lobby?.SetData("mk_lobby", "true"); // need to set this to prevent normal jaket users from joining
             Lobby?.SetData("jaket", "true");    // this probably prevents actual multikill users from joining (probably)
             Lobby?.SetData("name", $"{SteamClient.Name}'s Lobby");

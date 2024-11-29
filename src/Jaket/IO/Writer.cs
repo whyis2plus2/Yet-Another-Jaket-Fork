@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine;
 
 using Jaket.Content;
+using Jaket.Net;
 
 /// <summary> Wrapper over Marshal for convenience and the ability to write floating point numbers. </summary>
 public class Writer
@@ -82,10 +83,25 @@ public class Writer
 
     public void Player(Team team, byte weapon, byte emoji, byte rps, bool typing)
     {
+        if (LobbyController.YAJF_Modded)
+        {
+            YAJF_Player(team, weapon, emoji, rps, typing);
+            return;
+        }
+
         if (weapon == 0xFF) weapon = 0b111111;
         if (emoji == 0xFF) emoji = 0b1111; // null emoji is recorded as 255, but only 4 bits stand out under emoji
 
         Marshal.WriteInt16(mem, Inc(2), (short)((weapon << 10) | (Convert.ToByte(team) << 7) | (emoji << 3) | (rps << 1) | (typing ? 1 : 0)));
+    }
+
+    public void YAJF_Player(Team team, byte weapon, byte emoji, byte rps, bool typing)
+    {
+        if (weapon == 0xFF) weapon = 0b111111;
+        if (emoji == 0xFF) emoji = 0b111111; // null emoji is recorded as 255, but only 6 bits stand out under emoji
+
+        // actually 24-bit
+        Marshal.WriteInt32(mem, Inc(3), ((weapon << 18) | (Convert.ToByte(team) << 11) | (emoji << 5) | (rps << 1) | (typing ? 1 : 0)) << 8);
     }
 
     #endregion

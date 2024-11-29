@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine;
 
 using Jaket.Content;
+using Jaket.Net;
 
 /// <summary> Wrapper over Marshal for convenience and the ability to read floating point numbers. </summary>
 public class Reader
@@ -76,6 +77,12 @@ public class Reader
 
     public void Player(out Team team, out byte weapon, out byte emoji, out byte rps, out bool typing)
     {
+        if (LobbyController.YAJF_Modded)
+        {
+            YAJF_Player(out team, out weapon, out emoji, out rps, out typing);
+            return;
+        }
+
         short value = Marshal.ReadInt16(mem, Inc(2));
 
         weapon = (byte)(value >> 10 & 0b111111);
@@ -86,6 +93,21 @@ public class Reader
 
         if (weapon == 0b111111) weapon = 0xFF;
         if (emoji == 0b1111) emoji = 0xFF;
+    }
+
+    public void YAJF_Player(out Team team, out byte weapon, out byte emoji, out byte rps, out bool typing)
+    {
+        // actually 24-bit
+        int value = Marshal.ReadInt32(mem, Inc(3)) >> 8;
+
+        weapon = (byte)(value >> 18 & 0b111111);
+        team = (Team)(value >> 11 & 0b1111111);
+        emoji = (byte)(value >> 5 & 0b111111);
+        rps = (byte)(value >> 1 & 0b11);
+        typing = (value & 1) != 0;
+
+        if (weapon == 0b111111) weapon = 0xFF;
+        if (emoji == 0b111111) emoji = 0xFF;
     }
 
     #endregion
