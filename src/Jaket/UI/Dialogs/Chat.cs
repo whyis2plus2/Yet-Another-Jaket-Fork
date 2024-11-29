@@ -140,7 +140,7 @@ public class Chat : CanvasSingleton<Chat>
         // if the message is not empty, then send it to other players and remember it
         if (Bundle.CutColors(msg).Trim() != "")
         {
-            if (!Commands.Handler.Handle(msg)) LobbyController.Lobby?.SendChatString(AutoTTS ? "/tts " + msg : msg);
+            if (!Commands.YAJF_CallCommand(msg)) LobbyController.Lobby?.SendChatString(AutoTTS ? "/tts " + msg : msg);
             messages.Insert(0, msg);
         }
 

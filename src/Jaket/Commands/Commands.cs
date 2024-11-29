@@ -14,11 +14,16 @@ public class Commands
     static Chat chat => Chat.Instance;
 
     /// <summary> Chat command handler. </summary>
-    public static CommandHandler Handler = new();
+    public static CommandHandler Handler = new('/');
+    public static CommandHandler YAJF_Handler = new('!');
+
+    /// <summary> Checks if the message is a valid command in either handler </summary>
+    public static bool YAJF_CallCommand(string msg) => Handler.Handle(msg) || YAJF_Handler.Handle(msg);
 
     /// <summary> Registers all default mod commands. </summary>
     public static void Load()
     {
+#region Jaket Commands
         Handler.Register("help", "Display the list of all commands", args =>
         {
             Handler.Commands.ForEach(command =>
@@ -147,5 +152,24 @@ public class Commands
             chat.Receive("0096FF", Chat.BOT_PREFIX + "xzxADIxzx", "Thank you all, I couldn't have done it alone ♡");
         });
         Handler.Register("support", "Support the author by buying him a coffee", args => Application.OpenURL("https://www.buymeacoffee.com/adidev"));
+        Handler.Register("yajf", "show a list of all custom commands", args => chat.Send("!help"));
+#endregion Jaket Commands
+#region YAJF Commands
+        YAJF_Handler.Register("help", "show a list of all custom commands", args =>
+        {
+            YAJF_Handler.Commands.ForEach(command =>
+            {
+                chat.Receive($"[14]* !{command.Name}{(command.Args == null ? "" : $" [#BBBBBB]{command.Args}[]")} - {command.Desc}[]");
+            });
+        });
+
+        YAJF_Handler.Register("clear", "clear chat locally", args =>
+        {
+            for (int i = 0; i < Chat.MESSAGES_SHOWN; ++i)
+            {
+                chat.Receive("");
+            }
+        });
+#endregion YAJF Commands
     }
 }
