@@ -85,7 +85,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
                 table, Btn(448f) with { Height = 62f }, size: 16
             );
 
-            modded = UIB.Toggle("Modded Only", table, Tgl(488f), clicked: allow => LobbyController.YAJF_ToggleModded());
+            modded = UIB.Toggle("MODDED ONLY", table, Tgl(488f), clicked: allow => LobbyController.YAJF_ToggleModded());
         });
 
         Version.Label(transform);
