@@ -8,10 +8,45 @@ using UnityEngine;
 
 using Jaket.Assets;
 using Jaket.IO;
+using BepInEx;
 
 /// <summary> Lobby controller with several useful methods and properties. </summary>
 public class LobbyController
 {
+    /// <summary> Whether the current lobby is modded-only. </summary>
+    public static bool YAJF_Modded => Lobby?.GetData("YAJF") == "true";
+
+    /// <summary> Whether the given lobby is modded-only. </summary>
+    public static bool YAJF_IsModdedLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "YAJF");
+
+    /// <summary> Asynchronously creates a new modded-only lobby with default settings and connects to it. </summary>
+    public static void YAJF_CreateModdedLobby()
+    {
+        if (Lobby != null || CreatingLobby) return;
+        Log.Debug("Creating a lobby...");
+
+        CreatingLobby = true;
+        SteamMatchmaking.CreateLobbyAsync(8).ContinueWith(task =>
+        {
+            CreatingLobby = false; IsOwner = true;
+            Lobby = task.Result;
+
+            Lobby?.SetJoinable(true);
+            Lobby?.SetPrivate();
+            Lobby?.SetData("YAJF", "true");
+            Lobby?.SetData("mk_lobby", "true"); // need to set this to prevent normal jaket users from joining
+            Lobby?.SetData("jaket", "true");    // this probably prevents actual multikill users from joining (probably)
+            Lobby?.SetData("name", $"{SteamClient.Name}'s Lobby");
+            Lobby?.SetData("level", MapMap(Tools.Scene));
+            Lobby?.SetData("pvp", "True");
+            Lobby?.SetData("cheats", "False");
+            Lobby?.SetData("mods", "False");
+            Lobby?.SetData("heal-bosses", "True");
+        });
+    }
+
+
+
     /// <summary> The current lobby the player is connected to. Null if the player is not connected to any lobby. </summary>
     public static Lobby? Lobby;
     public static bool Online => Lobby != null;
@@ -41,7 +76,7 @@ public class LobbyController
     /// <summary> Scales health to increase difficulty. </summary>
     public static void ScaleHealth(ref float health) => health *= 1f + Math.Min(Lobby?.MemberCount - 1 ?? 1, 1) * PPP;
     /// <summary> Whether the given lobby is created via Multikill. </summary>
-    public static bool IsMultikillLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "mk_lobby");
+    public static bool IsMultikillLobby(Lobby lobby) => lobby.Data.Any(pair => pair.Key == "mk_lobby") && !YAJF_IsModdedLobby(lobby);
 
     /// <summary> Creates the necessary listeners for proper work. </summary>
     public static void Load()
