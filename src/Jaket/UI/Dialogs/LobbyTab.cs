@@ -19,7 +19,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
     /// <summary> Current lobby access level: 0 - private, 1 - friends only, 2 - public. I was too lazy to create an enum. </summary>
     private int lobbyAccessLevel;
     /// <summary> Checkboxes with lobby settings. </summary>
-    private Toggle pvp, cheats, mods, bosses;
+    private Toggle pvp, cheats, mods, bosses, modded;
 
     private void Start()
     {
@@ -47,7 +47,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             UIB.Button("#lobby-tab.join", table, Btn(116f), clicked: LobbyController.JoinByCode);
             UIB.Button("#lobby-tab.list", table, Btn(164f), clicked: LobbyList.Instance.Toggle);
         });
-        UIB.Table("Lobby Config", "#lobby-tab.config", transform, Tlw(384f + 422f / 2f, 422f), table =>
+        UIB.Table("Lobby Config", "#lobby-tab.config", transform, Tlw(384f + 512f / 2f, 512f), table =>
         {
             field = UIB.Field("#lobby-tab.name", table, Tgl(64f), cons: name => LobbyController.Lobby?.SetData("name", name));
             field.characterLimit = 28;
@@ -79,6 +79,13 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             });
 
             bosses = UIB.Toggle("#lobby-tab.heal-bosses", table, Tgl(398f), 20, allow => LobbyController.Lobby?.SetData("heal-bosses", allow.ToString()));
+
+            UIB.Text(
+                "This is required for some YAJF features, but prevents normal Jaket users from joining", 
+                table, Btn(448f) with { Height = 62f }, size: 16
+            );
+
+            modded = UIB.Toggle("Modded Only", table, Tgl(488f), clicked: allow => LobbyController.YAJF_ToggleModded());
         });
 
         Version.Label(transform);
@@ -107,6 +114,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             cheats.isOn = false;
             mods.isOn = false;
             bosses.isOn = true;
+            modded.isOn = false;
         }
         else field.text = LobbyController.Lobby?.GetData("name");
 

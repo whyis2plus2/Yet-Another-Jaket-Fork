@@ -9,11 +9,27 @@ using UnityEngine;
 using Jaket.Assets;
 using Jaket.IO;
 using BepInEx;
+using HarmonyLib;
 
 /// <summary> Lobby controller with several useful methods and properties. </summary>
 public class LobbyController
 {
     const string YAJF_Id = "YAJF-0.2.0";
+
+    /// <summary> toggle whether or not a lobby is modded-only </summary>
+    public static void YAJF_ToggleModded()
+    {
+        if (Offline) return;
+
+        if (YAJF_IsModdedLobby(Lobby.Value))
+        {
+            Lobby?.DeleteData(YAJF_Id);
+            Lobby?.DeleteData("mk_lobby");
+        }
+
+        Lobby?.SetData(YAJF_Id, "true");
+        Lobby?.SetData("mk_lobby", "true");
+    }
 
     /// <summary> The current lobby the player is connected to. Null if the player is not connected to any lobby. </summary>
     public static Lobby? Lobby;
@@ -107,32 +123,6 @@ public class LobbyController
             Lobby?.SetJoinable(true);
             Lobby?.SetPrivate();
             Lobby?.SetData("jaket", "true");
-            Lobby?.SetData("name", $"{SteamClient.Name}'s Lobby");
-            Lobby?.SetData("level", MapMap(Tools.Scene));
-            Lobby?.SetData("pvp", "True");
-            Lobby?.SetData("cheats", "False");
-            Lobby?.SetData("mods", "False");
-            Lobby?.SetData("heal-bosses", "True");
-        });
-    }
-
-    /// <summary> Asynchronously creates a new modded-only lobby with default settings and connects to it. </summary>
-    public static void YAJF_CreateModdedLobby()
-    {
-        if (Lobby != null || CreatingLobby) return;
-        Log.Debug("Creating a lobby...");
-
-        CreatingLobby = true;
-        SteamMatchmaking.CreateLobbyAsync(8).ContinueWith(task =>
-        {
-            CreatingLobby = false; IsOwner = true;
-            Lobby = task.Result;
-
-            Lobby?.SetJoinable(true);
-            Lobby?.SetPrivate();
-            Lobby?.SetData(YAJF_Id, "true");
-            Lobby?.SetData("mk_lobby", "true"); // need to set this to prevent normal jaket users from joining
-            Lobby?.SetData("jaket", "true");    // this probably prevents actual multikill users from joining (probably)
             Lobby?.SetData("name", $"{SteamClient.Name}'s Lobby");
             Lobby?.SetData("level", MapMap(Tools.Scene));
             Lobby?.SetData("pvp", "True");
