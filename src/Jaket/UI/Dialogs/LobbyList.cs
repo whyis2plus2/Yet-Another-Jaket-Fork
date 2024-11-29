@@ -73,6 +73,7 @@ public class LobbyList : CanvasSingleton<LobbyList>
             if (lobby.GetData("level") == "enu" || LobbyController.IsMultikillLobby(lobby)) continue;
 
             var name = " " + lobby.GetData("name");
+            if (LobbyController.YAJF_IsModdedLobby(lobby)) name = $" [YAJF]<color=#fff>{name}</color>";
             var r = Btn(y += 48f) with { Width = 624f };
 
             if (search != "")
@@ -82,11 +83,14 @@ public class LobbyList : CanvasSingleton<LobbyList>
                 name = name.Insert(index + "<color=#FFA500>".Length + search.Length, "</color>");
             }
 
-            var col = LobbyController.YAJF_IsModdedLobby(lobby) ? blue : white;
+            var col = LobbyController.YAJF_IsModdedLobby(lobby) ? pink : white;
             var b = UIB.Button(name, content, r, col, align: TextAnchor.MiddleLeft, clicked: () => LobbyController.JoinLobby(lobby));
 
-            var full = lobby.MemberCount <= 2 ? Green : lobby.MemberCount <= 4 ? Orange : Red;
-            var info = $"<color=#BBBBBB>{lobby.GetData("level")}</color> <color={full}>{lobby.MemberCount}/{lobby.MaxMembers}</color> ";
+            var full = lobby.MemberCount <= lobby.MaxMembers/4 ? Green : lobby.MemberCount <= lobby.MaxMembers/2 ? Orange : Red;
+            var info = (lobby.MaxMembers < 250)
+                ? $"<color=#BBBBBB>{lobby.GetData("level")}</color> <color={full}>{lobby.MemberCount}/{lobby.MaxMembers}</color> "
+                : $"<color=#BBBBBB>{lobby.GetData("level")}</color> <color={Green}>{lobby.MemberCount}</color> ";
+
             UIB.Text(info, b.transform, r.Text, align: TextAnchor.MiddleRight);
         }
     }
