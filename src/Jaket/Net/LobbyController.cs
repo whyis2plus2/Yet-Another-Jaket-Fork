@@ -25,6 +25,7 @@ public class LobbyController
         {
             Lobby?.DeleteData(YAJF_Id);
             Lobby?.DeleteData("mk_lobby");
+            return;
         }
 
         Lobby?.SetData(YAJF_Id, "true");
