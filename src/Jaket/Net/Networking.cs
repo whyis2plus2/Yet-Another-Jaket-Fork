@@ -105,6 +105,7 @@ public class Networking
         {
             if (Administration.Banned.Contains(member.Id.AccountId)) return;
             if (message.Length > Chat.MAX_MESSAGE_LENGTH + 8) message = message.Substring(0, Chat.MAX_MESSAGE_LENGTH);
+            bool containsId = uint.TryParse(message.Substring(3, message.IndexOf(' ') - 3), out uint id);
 
             if (message == "#/d")
             {
@@ -115,8 +116,13 @@ public class Networking
                 });
             }
 
-            else if (message.StartsWith("#/k") && uint.TryParse(message.Substring(3), out uint id))
+            else if (message.StartsWith("#/k") && containsId)
                 Bundle.Msg("player.banned", Tools.Name(id));
+            else if (message.StartsWith("#/w") && containsId && LocalPlayer.Id == id)
+            {
+                var received = message.Substring(message.IndexOf(' ') + 1);
+                Chat.Instance.Receive($"<size=14><color=#C0C0C0>{member.Name} whispers to you: \"{received}\"</color></size>");
+            }
 
             else if (message.StartsWith("#/s") && byte.TryParse(message.Substring(3), out byte team))
             {

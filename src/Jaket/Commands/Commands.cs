@@ -7,6 +7,8 @@ using Jaket.Assets;
 using Jaket.Content;
 using Jaket.Net;
 using Jaket.UI.Dialogs;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 /// <summary> List of chat commands used by the mod. </summary>
 public class Commands
@@ -169,6 +171,39 @@ public class Commands
             {
                 chat.Receive("");
             }
+        });
+
+        YAJF_Handler.Register("whisper", "<user> <message>", "send a message to ONLY the specified player", args =>
+        {
+            if (!LobbyController.YAJF_Modded) 
+            {
+                chat.Receive("[#FF341C]This command can only be ran in a modded-only lobby");
+                return;
+            }
+
+            var user = args[0];
+            var message = Regex.Replace(string.Join(" ", args.Skip(1)), "<*.?>", "").Replace("[", "\\[");
+            uint id = 0;
+
+            if (args.Length < 2)
+            {
+                chat.Receive("[#FF341C]This command requires at least 2 args: <user> <message>");
+                return;
+            }
+
+            if (Tools.Name(Tools.AccId).StartsWith(user)) id = Tools.AccId;
+            else Networking.EachPlayer(con =>
+            {
+                if (con.name.StartsWith(user)) id = con.Id;
+            });
+
+            if (id == 0)
+            {
+                chat.Receive($"[#FF341C]\"{user}\" is not a valid user");
+                return;
+            }
+
+            LobbyController.Lobby?.SendChatString($"#/w{id} {message}");
         });
 #endregion YAJF Commands
     }
