@@ -8,6 +8,7 @@ using Jaket.World;
 
 using static Pal;
 using static Rect;
+using YAJF.UI.Dialogs;
 
 /// <summary> Global mod settings not related to the lobby. </summary>
 public class Settings : CanvasSingleton<Settings>
@@ -111,7 +112,7 @@ public class Settings : CanvasSingleton<Settings>
     private void Start()
     {
         UIB.Shadow(transform);
-        UIB.Table("General", "#settings.general", transform, Tlw(16f + 328f / 2f, 328f), table =>
+        UIB.Table("General", "#settings.general", transform, Tlw(16f + 376f / 2f, 376f), table =>
         {
             UIB.Button("#settings.reset", table, Btn(68f), clicked: ResetGeneral);
 
@@ -141,8 +142,9 @@ public class Settings : CanvasSingleton<Settings>
             }).isOn = DisableFreezeFrames;
 
             UIB.Button("#settings.sprays", table, Btn(300f), clicked: SpraySettings.Instance.Toggle);
+            UIB.Button("TAG SETTINGS", table, Btn(348f), clicked: TagSettings.Instance.Toggle);
         });
-        UIB.Table("Controls", "#settings.controls", transform, Tlw(360f + 576f / 2f, 576f), table =>
+        UIB.Table("Controls", "#settings.controls", transform, Tlw(392f + 576f / 2f, 576f), table =>
         {
             UIB.Button("#settings.reset", table, Btn(68f), clicked: ResetControls);
 

@@ -8,6 +8,8 @@ using Jaket.UI.Dialogs;
 using Jaket.UI.Fragments;
 using Jaket.World;
 
+using YAJF.UI.Dialogs;
+
 /// <summary> Class that loads and manages the interface of the mod. </summary>
 public class UI
 {
@@ -36,6 +38,7 @@ public class UI
         Settings.Build("Settings", false, true);
         SpraySettings.Build("Spray Settings", false, true);
         Debugging.Build("Debugging Menu", false, false);
+        TagSettings.Build("Tag Settings", false, true);
 
         PlayerIndicators.Build("Player Indicators", false, false, scene => scene == "Main Menu");
         PlayerInfo.Build("Player Information", false, false, scene => scene == "Main Menu", () => { if (PlayerInfo.Shown) PlayerInfo.Instance.Toggle(); });
@@ -61,5 +64,6 @@ public class UI
         if (SpraySettings.Shown) SpraySettings.Instance.Toggle();
         if (EmojiWheel.Shown) EmojiWheel.Instance.Hide();
         if (OptionsManager.Instance.paused) OptionsManager.Instance.UnPause();
+        if (TagSettings.Shown) TagSettings.Instance.Toggle();
     }
 }
