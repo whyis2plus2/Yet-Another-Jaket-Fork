@@ -1,5 +1,7 @@
 namespace YAJF.UI.Dialogs;
 
+using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using UnityEngine;
@@ -9,7 +11,7 @@ using Jaket.UI;
 using Jaket.World;
 using static Jaket.UI.Rect;
 using static Jaket.UI.Pal;
-using System;
+using System.Timers;
 
 public class TagSettings: CanvasSingleton<TagSettings>
 {
@@ -69,7 +71,10 @@ public class TagSettings: CanvasSingleton<TagSettings>
             {
                 Prefs.tagColor = $"#{r:X}{g:X}{b:X}";
                 Prefs.tag = Regex.Replace(field.text.Trim(), "<*.?>", "").Replace("[", "\\[");
-                HudMessageReceiver.Instance?.SendHudMessage($"Succesfully Set Tag to \"<color={Prefs.tagColor}>{Prefs.tag}</color>\"");
+
+                if (string.IsNullOrEmpty(Prefs.tag)) HudMessageReceiver.Instance?.SendHudMessage($"Succesfully Removed Tag");
+                else HudMessageReceiver.Instance?.SendHudMessage($"Succesfully Set Tag to \"<color={Prefs.tagColor}>{Prefs.tag}</color>\"");
+                
                 Toggle();
             });
         });
