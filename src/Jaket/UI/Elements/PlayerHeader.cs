@@ -1,5 +1,7 @@
 namespace Jaket.UI.Elements;
 
+using System.Text.RegularExpressions;
+using Jaket.Net;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,8 +26,9 @@ public class PlayerHeader
     public PlayerHeader(uint id, Transform parent)
     {
         Name = Tools.Name(id);
+        if (LobbyController.LastOwner.AccountId == id) Name = $"<color=#fe7>[HOST]</color> {Name}";
 
-        float width = Name.Length * 14f + 16f;
+        float width = Regex.Replace(Name, "</?color.*?>", string.Empty).Length * 14f + 16f;
         canvas = UIB.WorldCanvas("Header", parent, new(0f, 5f, 0f), build: canvas =>
         {
             UIB.Table("Name", canvas, Size(width, 40f), table => Text = UIB.Text(Name, table, Huge, size: 240));

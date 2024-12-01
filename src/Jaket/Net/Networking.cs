@@ -135,7 +135,7 @@ public class Networking
             else if (message.StartsWith("/tts "))
                 Chat.Instance.ReceiveTTS(GetTeamColor(member), member, message.Substring(5));
             else
-                Chat.Instance.Receive(GetTeamColor(member), member.Name.Replace("[", "\\["), message);
+                Chat.Instance.YAJF_Receive(GetTeamColor(member), member, message);
         };
     }
 

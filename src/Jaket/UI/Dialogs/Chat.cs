@@ -23,6 +23,8 @@ public class Chat : CanvasSingleton<Chat>
     public const string BOT_PREFIX = "[#FF7F50][14]\\[BOT][][]";
     /// <summary> Prefix that will be added to TTS messages. </summary>
     public const string TTS_PREFIX = "[#FF7F50][14]\\[TTS][][]";
+    /// <summary> Prefix that will be added to the host's messages. </summary>
+    public const string YAJF_HOST_PREFIX = "[#fe7][14]\\[HOST][][]";
 
     /// <summary> Maximum length of chat message. </summary>
     public const int MAX_MESSAGE_LENGTH = 128;
@@ -229,6 +231,10 @@ public class Chat : CanvasSingleton<Chat>
     /// <summary> Writes a message to the chat, formatting it beforehand. </summary>
     public void Receive(string color, string author, string msg) => Receive($"<b>[#{color}]{author}[][#FF7F50]:[]</b> {Bundle.CutDangerous(msg)}");
 
+    /// <summary> Writes a message to the chat, formatting it beforehand. </summary>
+    public void YAJF_Receive(string color, Friend author, string msg) =>
+        Receive(color, (LobbyController.LastOwner == author.Id? YAJF_HOST_PREFIX : "") + author.Name.Replace("[", "\\["), msg);
+
     /// <summary> Speaks the message before writing it. </summary>
     public void ReceiveTTS(string color, Friend author, string msg)
     {
@@ -240,7 +246,7 @@ public class Chat : CanvasSingleton<Chat>
         else if (Networking.Entities.TryGetValue(author.Id.AccountId, out var entity) && entity is RemotePlayer player)
             SamAPI.TryPlay(msg, player.Voice);
 
-        Receive(color, TTS_PREFIX + author.Name.Replace("[", "\\["), msg);
+        Receive(color, TTS_PREFIX + (LobbyController.LastOwner == author.Id? YAJF_HOST_PREFIX : "") + author.Name.Replace("[", "\\["), msg);
     }
 
     /// <summary> Sends some useful information to the chat. </summary>
