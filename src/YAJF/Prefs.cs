@@ -4,10 +4,15 @@ public static class Prefs
 {
     static PrefsManager pm => PrefsManager.Instance;
 
-    public const int MAX_TAG_LEN = 32;
+    public const int MAX_TAG_LEN = 24;
     public static string tag
     {
-        get => pm.GetString("YAJF.tag");
+        get 
+        {
+            string value = pm.GetString("YAJF.tag");
+            value = value.Length > MAX_TAG_LEN? value.Substring(0, MAX_TAG_LEN) : value;
+            return value;
+        }
         set 
         {
             value = value.Length > MAX_TAG_LEN? value.Substring(0, MAX_TAG_LEN) : value;
