@@ -9,9 +9,9 @@ using UnityEngine.UI;
 
 using Jaket.UI;
 using Jaket.World;
+
 using static Jaket.UI.Rect;
 using static Jaket.UI.Pal;
-using System.Timers;
 
 public class TagSettings: CanvasSingleton<TagSettings>
 {

@@ -55,6 +55,10 @@ public class Chat : CanvasSingleton<Chat>
     private List<string> messages = new();
     /// <summary> Index of the current message in the list. </summary>
     private int messageIndex;
+    /// <summary> The local player's tag, formatted nicely for chat </summary>
+    private string YAJF_tagFormatted => string.IsNullOrEmpty(YAJF.Prefs.tag)
+        ? string.Empty
+        : $"<b>[{YAJF.Prefs.tagColor}]\\[{YAJF.Prefs.tag}][][#FF7F50]:[]</b> ";
 
     private void Start()
     {
@@ -71,7 +75,7 @@ public class Chat : CanvasSingleton<Chat>
         UIB.Text("#chat.tts", ttsBg, Blh(128f).Text);
 
         Field = UIB.Field("#chat.info", transform, Msg(1888f) with { y = 32f }, cons: OnFocusLost);
-        Field.characterLimit = MAX_MESSAGE_LENGTH;
+        Field.characterLimit = MAX_MESSAGE_LENGTH - YAJF_tagFormatted.Length;
         Field.gameObject.SetActive(false);
 
         // start the update cycle of typing players
@@ -82,6 +86,7 @@ public class Chat : CanvasSingleton<Chat>
     {
         listBg.alpha = Mathf.Lerp(listBg.alpha, Shown || Time.time - lastMessageTime < 5f ? 1f : 0f, Time.deltaTime * 5f);
         ttsBg.gameObject.SetActive(AutoTTS && Shown);
+        Field.characterLimit = MAX_MESSAGE_LENGTH - YAJF_tagFormatted.Length;
     }
 
     private void UpdateTyping()
@@ -140,7 +145,7 @@ public class Chat : CanvasSingleton<Chat>
         // if the message is not empty, then send it to other players and remember it
         if (Bundle.CutColors(msg).Trim() != "")
         {
-            var taggedMessage = string.IsNullOrEmpty(YAJF.Prefs.tag)? msg : $"[{YAJF.Prefs.tagColor}]\\[{YAJF.Prefs.tag}][] {msg}";
+            var taggedMessage = string.IsNullOrEmpty(YAJF.Prefs.tag)? msg : YAJF_tagFormatted + msg;
             if (!Commands.YAJF_CallCommand(msg))
                 LobbyController.Lobby?.SendChatString(AutoTTS ? "/tts " + taggedMessage : taggedMessage);
             messages.Insert(0, msg);
