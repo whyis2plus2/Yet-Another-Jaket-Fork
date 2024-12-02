@@ -62,6 +62,9 @@ public class Chat : CanvasSingleton<Chat>
         ? string.Empty
         : $"<b>[14][{YAJF.Prefs.tagColor}]\\[{YAJF.Prefs.tag}][][][#FF7F50]:[]</b> ";
 
+    /// <summary> Send a chat message as a bot </summary>
+    public static string YAJF_BotFormat(string msg) => $"<b>{BOT_PREFIX}[#FF7F50]:[]</b> {msg}";
+
     private void Start()
     {
         Events.OnLobbyEntered += () => Hello(); // send some useful information to the chat so that players know about the mod's features

@@ -4,6 +4,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 
 using Jaket.Content;
+using Jaket.UI.Dialogs;
 
 /// <summary> Class dedicated to protecting the lobby from unfavorable people. </summary>
 public class Administration
@@ -20,6 +21,8 @@ public class Administration
     /// <summary> Max amount of plushies per player. </summary>
     public const int MAX_PLUSHIES = 6;
 
+    /// <summary> List of banned player ids. </summary>
+    public static uint YAJF_LastKicked = 0u;
     /// <summary> List of banned player ids. </summary>
     public static List<uint> Banned = new();
     /// <summary> List of banned player sprays. </summary>
@@ -45,13 +48,13 @@ public class Administration
                 if (uint.TryParse(sid, out var id)) Banned.Add(id);
             });
         };
-        Events.OnLobbyEntered += () => { Banned.Clear(); entityBullets.Clear(); entities.Clear(); plushies.Clear(); };
+        Events.OnLobbyEntered += () => { Banned.Clear(); entityBullets.Clear(); entities.Clear(); plushies.Clear(); YAJF_LastKicked = 0; };
         Events.EverySecond += spam.Clear;
         Events.EverySecond += commonBullets.Clear;
         Events.EveryDozen += warnings.Clear;
     }
 
-    /// <summary> Kicks the member from the lobby, or rather asks him to leave, because Valve hasn't added such functionality to their API. </summary>
+    /// <summary> Ban the member from the lobby, or rather asks him to leave, because Valve hasn't added such functionality to their API. </summary>
     public static void Ban(uint id)
     {
         // who does the client think he is?!
@@ -68,6 +71,28 @@ public class Administration
         Banned.Add(id);
         LobbyController.Lobby?.SendChatString("#/k" + id);
         LobbyController.Lobby?.SetData("banned", string.Join(" ", Banned));
+    }
+
+    /// <summary> Kicks the member from the lobby, or rather asks him to leave, because Valve hasn't added such functionality to their API. </summary>
+    public static void YAJF_Kick(uint id)
+    {
+        // we cant use the kick packet on normal jaket clients because they don't have the code for that
+        var packet = LobbyController.YAJF_Modded? PacketType.YAJF_Kick : PacketType.Ban;
+        string msg = LobbyController.YAJF_Modded? "#/b" + id : Chat.YAJF_BotFormat($"[#fce132]Player {Tools.Name(id)} was kicked![]");
+
+        // who does the client think he is?!
+        if (!LobbyController.IsOwner) return;
+
+        Networking.Send(PacketType.Ban, null, (data, size) =>
+        {
+            var con = Networking.FindCon(id);
+            Tools.Send(con, data, size);
+            con?.Flush();
+            Events.Post2(() => con?.Close());
+        });
+
+        YAJF_LastKicked = id;
+        LobbyController.Lobby?.SendChatString(msg);
     }
 
     /// <summary> Whether the player is sending a large amount of data. </summary>

@@ -85,12 +85,14 @@ public class Networking
 
         SteamMatchmaking.OnLobbyMemberJoined += (lobby, member) =>
         {
-            if (!Administration.Banned.Contains(member.Id.AccountId)) Bundle.Msg("player.joined", member.Name);
+            if (!Administration.Banned.Contains(member.Id.AccountId) && Administration.YAJF_LastKicked != member.Id.AccountId)
+                Bundle.Msg("player.joined", member.Name);
         };
 
         SteamMatchmaking.OnLobbyMemberLeave += (lobby, member) =>
         {
-            if (!Administration.Banned.Contains(member.Id.AccountId)) Bundle.Msg("player.left", member.Name);
+            if (!Administration.Banned.Contains(member.Id.AccountId) && Administration.YAJF_LastKicked != member.Id.AccountId)
+                Bundle.Msg("player.left", member.Name);
             if (!LobbyController.IsOwner) return;
 
             // returning the exited player's entities back to the host owner & close the connection
@@ -103,7 +105,7 @@ public class Networking
 
         SteamMatchmaking.OnChatMessage += (lobby, member, message) =>
         {
-            if (Administration.Banned.Contains(member.Id.AccountId)) return;
+            if (Administration.Banned.Contains(member.Id.AccountId) || Administration.YAJF_LastKicked == member.Id.AccountId) return;
             if (message.Length > Chat.MAX_MESSAGE_LENGTH + 8) message = message.Substring(0, Chat.MAX_MESSAGE_LENGTH);
             bool containsId = uint.TryParse(message.Substring(3, message.IndexOf(' ') - 3), out uint id);
 
@@ -118,6 +120,8 @@ public class Networking
 
             else if (message.StartsWith("#/k") && containsId)
                 Bundle.Msg("player.banned", Tools.Name(id));
+            else if (message.StartsWith("#/b") && containsId)
+                Chat.Instance.Receive($"[#fce132]Player {Tools.Name(id)} was kicked![]");
             else if (message.StartsWith("#/w") && containsId && LocalPlayer.Id == id)
             {
                 var received = message.Substring(message.IndexOf(' ') + 1);

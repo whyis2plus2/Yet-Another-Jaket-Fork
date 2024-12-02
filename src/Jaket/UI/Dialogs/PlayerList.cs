@@ -65,8 +65,9 @@ public class PlayerList : CanvasSingleton<PlayerList>
                 {
                     if (LobbyController.IsOwner)
                     {
-                        UIB.ProfileButton(member, table, Stn(y += 48f, -48f));
-                        UIB.IconButton("X", table, Icon(140f, y), red, clicked: () => Administration.Ban(member.Id.AccountId));
+                        UIB.ProfileButton(member, table, Stn(y += 48f, -96f));
+                        UIB.IconButton("K", table, Icon(92f, y), YAJF_yellow, clicked: () => Administration.YAJF_Kick(member.Id.AccountId));
+                        UIB.IconButton("B", table, Icon(140f, y), red, clicked: () => Administration.Ban(member.Id.AccountId));
                     }
                     else UIB.ProfileButton(member, table, Btn(y += 48f));
                 }
