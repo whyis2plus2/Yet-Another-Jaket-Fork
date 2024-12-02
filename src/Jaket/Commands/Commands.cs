@@ -173,7 +173,7 @@ public class Commands
             }
         });
 
-        YAJF_Handler.Register("whisper", "<user> <message>", "send a message to ONLY the specified player", args =>
+        YAJF_Handler.Register("whisper", "<player> <message>", "send a message to ONLY the specified player", args =>
         {
             if (!LobbyController.YAJF_Modded) 
             {
@@ -204,6 +204,26 @@ public class Commands
             }
 
             LobbyController.Lobby?.SendChatString($"#/w{id} {message}");
+        });
+
+        YAJF_Handler.Register("difficulty", "\\[value]", "get/set the difficulty, setting the difficulty restarts the level", args =>
+        {
+            if (args.Length == 0)
+            {
+                chat.Receive($"Current difficulty is {YAJF.Prefs.difficulty}");
+                return;
+            }
+
+            bool valid = int.TryParse(args[0], out int difficulty) && difficulty >= 0 && difficulty <= 4;
+            if (!valid)
+            {
+                chat.Receive($"[#FF341C]value must be a number from 0 to 4, \"{args[0]}\" is not valid");
+                return;
+            }
+
+            YAJF.Prefs.difficulty = difficulty;
+            chat.Receive($"Set difficulty to {YAJF.Prefs.difficulty}");
+            Tools.Load(Tools.Scene); // restart the current level
         });
 #endregion YAJF Commands
     }

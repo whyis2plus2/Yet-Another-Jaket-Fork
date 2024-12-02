@@ -5,6 +5,21 @@ public static class Prefs
     static PrefsManager pm => PrefsManager.Instance;
 
     public const int MAX_TAG_LEN = 24;
+    public static int difficulty
+    {
+        get => pm.GetInt("difficulty", 2);
+        set 
+        {
+            if (value < 0 || value > 4)
+            {
+                Jaket.Log.Warning($"YAJF: Difficulty {value} is out of bounds");
+                return;
+            }
+
+            pm.SetInt("difficulty", value);
+        }
+    }
+
     public static string tag
     {
         get 

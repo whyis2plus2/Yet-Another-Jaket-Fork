@@ -11,6 +11,7 @@ using Jaket.Net;
 using Jaket.Net.Types;
 
 using Version = Version;
+using GameConsole.Commands;
 
 /// <summary> Class that manages objects in the level, such as hook points, skull cases, triggers and etc. </summary>
 public class World
@@ -64,7 +65,7 @@ public class World
 
         // the version is needed for a warning about incompatibility
         w.String(Version.CURRENT);
-        w.Byte((byte)PrefsManager.Instance.GetInt("difficulty"));
+        w.Byte((byte)YAJF.Prefs.difficulty);
 
         // synchronize activated actions
         w.Bytes(Activated.ToArray());
@@ -81,7 +82,7 @@ public class World
             Version.Notify();
             return;
         }
-        PrefsManager.Instance.SetInt("difficulty", r.Byte());
+        YAJF.Prefs.difficulty = r.Byte();
 
         Activated.Clear();
         Activated.AddRange(r.Bytes(r.Length - r.Position));
