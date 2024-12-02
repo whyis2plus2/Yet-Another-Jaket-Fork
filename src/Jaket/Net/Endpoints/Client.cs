@@ -9,6 +9,7 @@ using Jaket.IO;
 using Jaket.Net.Types;
 using Jaket.Sprays;
 using Jaket.World;
+using Jaket.Assets;
 
 /// <summary> Client endpoint processing socket events and host packets. </summary>
 public class Client : Endpoint, IConnectionManager
@@ -31,6 +32,11 @@ public class Client : Endpoint, IConnectionManager
         {
             LobbyController.LeaveLobby();
             Assets.Bundle.Hud2NS("lobby.banned");
+        });
+        Listen(PacketType.YAJF_Kick, r =>
+        {
+            LobbyController.LeaveLobby();
+            HudMessageReceiver.Instance?.SendHudMessage(Bundle.ParseColors("[20][#fce132]You are kicked, sadge.[][]\nYou can still rejoin..."));
         });
 
         Listen(PacketType.SpawnBullet, Bullets.CInstantiate);
