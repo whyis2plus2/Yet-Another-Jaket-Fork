@@ -9,6 +9,7 @@ using Jaket.Net;
 using Jaket.UI.Dialogs;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 /// <summary> List of chat commands used by the mod. </summary>
 public class Commands
@@ -181,25 +182,25 @@ public class Commands
                 return;
             }
 
-            var user = args[0];
+            var player = args[0];
             var message = Regex.Replace(string.Join(" ", args.Skip(1)), "<*.?>", "").Replace("[", "\\[");
             uint id = 0;
 
             if (args.Length < 2)
             {
-                chat.Receive("[#FF341C]This command requires at least 2 args: <user> <message>");
+                chat.Receive("[#FF341C]This command requires at least 2 args: <player> <message>");
                 return;
             }
 
-            if (Tools.Name(Tools.AccId).StartsWith(user)) id = Tools.AccId;
+            if (Tools.Name(Tools.AccId).StartsWith(player)) id = Tools.AccId;
             else Networking.EachPlayer(con =>
             {
-                if (con.name.StartsWith(user)) id = con.Id;
+                if (con.name.StartsWith(player)) id = con.Id;
             });
 
             if (id == 0)
             {
-                chat.Receive($"[#FF341C]\"{user}\" is not a valid user");
+                chat.Receive($"[#FF341C]\"{player}\" is not a valid user");
                 return;
             }
 
@@ -224,6 +225,47 @@ public class Commands
             YAJF.Prefs.difficulty = difficulty;
             chat.Receive($"Set difficulty to {YAJF.Prefs.difficulty}");
             Tools.Load(Tools.Scene); // restart the current level
+        });
+
+        YAJF_Handler.Register("fishies", "Get the list of all fishies/baits", args =>
+        {
+            var fishies = GameAssets.YAJF_FishiesButReadable.ToList();
+            fishies.Sort(); // sort alphabetically for a more presentable look
+
+            // add baits to the printed list
+            fishies.Add("Apple Bait");
+            fishies.Add("Maurice Bait");
+
+            chat.Receive(string.Join(", ", fishies));
+        });
+        YAJF_Handler.Register("fishy", "<name>", "spawn a fish/bait by name", args =>
+        {
+            bool isBait = false;
+            string[] baits = new[] { "Apple Bait", "Maurice Bait" };
+
+            string name = args.Length == 0 ? null : string.Join(" ", args).ToLower();
+            int index = Array.FindIndex(GameAssets.YAJF_FishiesButReadable, fishy => fishy.ToLower().StartsWith(name));
+
+            if (index == -1)
+            {
+                isBait = true;
+                index = Array.FindIndex(baits, bait => bait.ToLower().StartsWith(name));
+            }
+
+            // if the index is still not found, then we know it's invalid
+            if (index == -1) chat.Receive($"[#FF341C]Fishy/Bait named {name} not found.");
+            else if (isBait) Tools.Instantiate(Items.Prefabs[index].gameObject, NewMovement.Instance.transform.position);
+            else
+            {
+                // fishy prefabs have no collision by themselves, so we have to use a separate prefab to give them collision and to
+                // allow them to be picked up
+                // var pickup = Tools.Instantiate(GameAssets.YAJF_FishTemplate(), NewMovement.Instance.transform.position);
+
+                // use a v1 plush to allow for pickups because it makes a squeaky sound :) (and it makes fish face the player)
+                var pickup = Tools.Instantiate(Items.Prefabs[EntityType.V1 - EntityType.ItemOffset].gameObject, NewMovement.Instance.transform.position);
+                Tools.Instantiate(Items.Prefabs[Items.YAJF_FishyOffset + index].gameObject, pickup.transform).transform.position = pickup.transform.position;
+                pickup.GetComponentInChildren<Renderer>().enabled = false; // make the v1 plush invisible because it's only purpose is as a hitbox and a sound source
+            }
         });
 #endregion YAJF Commands
     }
