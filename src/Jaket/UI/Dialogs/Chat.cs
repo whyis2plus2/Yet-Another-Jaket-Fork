@@ -60,7 +60,7 @@ public class Chat : CanvasSingleton<Chat>
     /// <summary> The local player's tag, formatted nicely for chat </summary>
     private string YAJF_tagFormatted => string.IsNullOrEmpty(YAJF.Prefs.tag)
         ? string.Empty
-        : $"<b>[14][{YAJF.Prefs.tagColor}]\\[{YAJF.Prefs.tag}][][][#FF7F50]:[]</b> ";
+        : $"<b>[14][{YAJF.Prefs.tagColor}]\\[{YAJF.Prefs.tag.Replace("[", "\\[")}][][][#FF7F50]:[]</b> ";
 
     /// <summary> Send a chat message as a bot </summary>
     public static string YAJF_BotFormat(string msg) => $"<b>{BOT_PREFIX}[#FF7F50]:[]</b> {msg}";

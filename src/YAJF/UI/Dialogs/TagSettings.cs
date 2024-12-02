@@ -14,7 +14,7 @@ using static Jaket.UI.Pal;
 
 public class TagSettings: CanvasSingleton<TagSettings>
 {
-    InputField field, Hex;
+    InputField Field, Hex;
     Slider Red, Green, Blue;
     byte r = 255, g = 255, b = 255;
 
@@ -31,12 +31,12 @@ public class TagSettings: CanvasSingleton<TagSettings>
         {
             UIB.IconButton("X", table, Icon(292f, 24f), red, clicked: Toggle);
 
-            field = UIB.Field("TAG", table, new(320f, -68f, 350f, 40f, new(0f, 1f)), cons: text =>
+            Field = UIB.Field("TAG", table, new(320f, -68f, 350f, 40f, new(0f, 1f)), cons: text =>
             {
                 Prefs.tagColor = $"#{r:X2}{g:X2}{b:X2}";
-                Prefs.tag = Regex.Replace(text.Trim(), "<*.?>", "").Replace("[", "\\[");
+                Prefs.tag = Regex.Replace(text.Trim(), "<*.?>", "");
             });
-            field.characterLimit = Prefs.MAX_TAG_LEN;
+            Field.characterLimit = Prefs.MAX_TAG_LEN;
 
             UIB.Text("Red", table, Btn(108), red, align: TextAnchor.MiddleLeft);
             var RText = UIB.Text("0", table, Btn(108), red, align: TextAnchor.MiddleRight);
@@ -98,7 +98,7 @@ public class TagSettings: CanvasSingleton<TagSettings>
             UIB.IconButton("CONFIRM", table, Btn(335), green, clicked: () =>
             {
                 Prefs.tagColor = $"#{r:X2}{g:X2}{b:X2}";
-                Prefs.tag = Regex.Replace(field.text.Trim(), "<*.?>", "").Replace("[", "\\[");
+                Prefs.tag = Regex.Replace(Field.text.Trim(), "<*.?>", "");
 
                 if (string.IsNullOrEmpty(Prefs.tag)) HudMessageReceiver.Instance?.SendHudMessage($"Succesfully Removed Tag");
                 else HudMessageReceiver.Instance?.SendHudMessage($"Succesfully Set Tag to \"<color={Prefs.tagColor}>{Prefs.tag}</color>\"");
@@ -112,8 +112,8 @@ public class TagSettings: CanvasSingleton<TagSettings>
 
     private void Rebuild()
     {
-        field.textComponent.color = new Color32(r, g, b, 0xFF);
-        field.text = Prefs.tag;
+        Field.textComponent.color = new Color32(r, g, b, 0xFF);
+        Field.text = Prefs.tag;
         Hex.text = $"{r:X2}{g:X2}{b:X2}";
 
         if (r != 0) Red.value = r;
