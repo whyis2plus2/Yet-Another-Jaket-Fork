@@ -36,8 +36,8 @@ public class Doll : MonoBehaviour
     /// <summary> Position in which the doll holds an item. </summary>
     public Vector3 HoldPosition => Hooking ? Hook.position : HookRoot.position;
 
-    /// <summary> Materials of the wings, coin and skateboard. </summary>
-    public Material WingMat, CoinMat, SkateMat;
+    /// <summary> Materials of the body, cat ears, wings, coin and skateboard. </summary>
+    public Material YAJF_BodyMat, YAJF_EarMat, WingMat, CoinMat, SkateMat;
     /// <summary> Trail of the wings. </summary>
     public TrailRenderer WingTrail;
     /// <summary> Light of the wings. </summary>
@@ -75,6 +75,8 @@ public class Doll : MonoBehaviour
         Skateboard = V3.Find("Skateboard");
         Suits = V3.Find("Suits");
 
+        YAJF_BodyMat = V3.Find("V3").GetComponent<Renderer>().materials[0];
+        YAJF_EarMat = Suits.GetChild(0).GetComponent<Renderer>().materials[0];
         WingMat = V3.Find("V3").GetComponent<Renderer>().materials[1];
         CoinMat = Coin.GetComponent<Renderer>().material;
         SkateMat = Skateboard.GetComponent<Renderer>().material;
@@ -143,15 +145,17 @@ public class Doll : MonoBehaviour
     #region apply
 
     public void ApplyTeam(Team team)
-    {
-        WingMat.mainTexture = SkateMat.mainTexture = DollAssets.WingTextures[(int)team];
+    {        
+        WingMat.mainTexture = SkateMat.mainTexture = DollAssets.WingTextures[(int)team.YAJF_RemoveMasks()];
+        YAJF_EarMat.mainTexture = YAJF_BodyMat.mainTexture = DollAssets.YAJF_BodyTextures[(int)team.YAJF_RemoveMasks()];
         CoinMat.color = team.Color();
 
         if (WingTrail) WingTrail.startColor = team.Color() with { a = .5f };
         if (WingLight) WingLight.color = team.Color();
 
         // TODO make it part of customization
-        Suits.GetChild(0).gameObject.SetActive(team == Team.Pink);
+        if (LobbyController.YAJF_Modded || LobbyController.Offline) Suits.GetChild(0).gameObject.SetActive((team & Team.YAJF_CatEars_Mask) != 0);
+        else Suits.GetChild(0).gameObject.SetActive(team == Team.Pink);
     }
 
     public void ApplySuit()

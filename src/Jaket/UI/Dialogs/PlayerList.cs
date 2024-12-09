@@ -1,5 +1,6 @@
 namespace Jaket.UI.Dialogs;
 
+using UnityEngine;
 using Jaket.Assets;
 using Jaket.Content;
 using Jaket.Net;
@@ -11,23 +12,11 @@ using static Rect;
 /// <summary> List of all players and teams. </summary>
 public class PlayerList : CanvasSingleton<PlayerList>
 {
+    Team max => (LobbyController.Offline || LobbyController.YAJF_Modded)? Team.White : Team.Pink;
+    
     private void Start()
     {
         UIB.Shadow(transform);
-        UIB.Table("Teams", "#player-list.team", transform, Tlw(16f + 166f / 2f, 166f), table =>
-        {
-            UIB.Text("#player-list.info", table, Btn(71f) with { Height = 46f }, size: 16);
-
-            float x = -24f;
-            foreach (Team team in System.Enum.GetValues(typeof(Team))) UIB.TeamButton(team, table, new(x += 64f, -130f, 56f, 56f, new(0f, 1f)), () =>
-            {
-                Networking.LocalPlayer.Team = team;
-                Events.OnTeamChanged.Fire();
-
-                Rebuild();
-            });
-        });
-
         Version.Label(transform);
         Rebuild();
     }
@@ -47,31 +36,54 @@ public class PlayerList : CanvasSingleton<PlayerList>
     public void Rebuild()
     {
         // destroy old player list
-        if (transform.childCount > 3) Destroy(transform.GetChild(3).gameObject);
-        if (LobbyController.Offline) return;
+        for (int i = 2; i < transform.childCount; ++i) Destroy(transform.GetChild(i).gameObject);
 
-        float height = LobbyController.Lobby.Value.MemberCount * 48f + 48f;
-        UIB.Table("List", "#player-list.list", transform, Tlw(198f + height / 2f, height), table =>
+        float teamListHeight = 38f + 64f * Mathf.CeilToInt((float)max / 5f + 1f);
+        UIB.Table("Teams", "#player-list.team", transform, Tlw(16f + teamListHeight / 2f, teamListHeight), table =>
         {
-            float y = 20f;
-            foreach (var member in LobbyController.Lobby?.Members)
+            UIB.Text("#player-list.info", table, Btn(71f) with { Height = 46f }, size: 16);
+
+            float x = -24f;
+            float y = -130f;
+            foreach (Team team in System.Enum.GetValues(typeof(Team))) if (team <= max)
             {
-                if (LobbyController.LastOwner == member.Id)
+                if (team > 0 && (int)team % 5 == 0) { x = -24f; y -= 64f; }
+
+                UIB.TeamButton(team, table, new(x += 64f, y, 56f, 56f, new(0f, 1f)), () =>
                 {
-                    UIB.ProfileButton(member, table, Stn(y += 48f, -48f));
-                    UIB.IconButton("★", table, Icon(140f, y), new(1f, .7f, .1f), new(1f, 4f), () => Bundle.Hud("player-list.owner"));
-                }
-                else
-                {
-                    if (LobbyController.IsOwner)
-                    {
-                        UIB.ProfileButton(member, table, Stn(y += 48f, -96f));
-                        UIB.IconButton("K", table, Icon(92f, y), YAJF_yellow, clicked: () => Administration.YAJF_Kick(member.Id.AccountId));
-                        UIB.IconButton("B", table, Icon(140f, y), red, clicked: () => Administration.Ban(member.Id.AccountId));
-                    }
-                    else UIB.ProfileButton(member, table, Btn(y += 48f));
-                }
+                    Networking.LocalPlayer.Team = team;
+                    Events.OnTeamChanged.Fire();
+
+                    Rebuild();
+                });
             }
         });
+
+        if (LobbyController.Online)
+        {
+            float height = LobbyController.Lobby.Value.MemberCount * 48f + 48f;
+            UIB.Table("List", "#player-list.list", transform, Tlw(teamListHeight + 32 + height / 2f, height), table =>
+            {
+                float y = 20f;
+                foreach (var member in LobbyController.Lobby?.Members)
+                {
+                    if (LobbyController.LastOwner == member.Id)
+                    {
+                        UIB.ProfileButton(member, table, Stn(y += 48f, -48f));
+                        UIB.IconButton("★", table, Icon(140f, y), new(1f, .7f, .1f), new(1f, 4f), () => Bundle.Hud("player-list.owner"));
+                    }
+                    else
+                    {
+                        if (LobbyController.IsOwner)
+                        {
+                            UIB.ProfileButton(member, table, Stn(y += 48f, -96f));
+                            UIB.IconButton("K", table, Icon(92f, y), YAJF_yellow, clicked: () => Administration.YAJF_Kick(member.Id.AccountId));
+                            UIB.IconButton("B", table, Icon(140f, y), red, clicked: () => Administration.Ban(member.Id.AccountId));
+                        }
+                        else UIB.ProfileButton(member, table, Btn(y += 48f));
+                    }
+                }
+            });
+        }
     }
 }

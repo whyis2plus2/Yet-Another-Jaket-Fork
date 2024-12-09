@@ -98,10 +98,10 @@ public class Writer
     public void YAJF_Player(Team team, byte weapon, byte emoji, byte rps, bool typing)
     {
         if (weapon == 0xFF) weapon = 0b111111;
-        if (emoji == 0xFF) emoji = 0b111111; // null emoji is recorded as 255, but only 6 bits stand out under emoji
+        if (emoji == 0xFF) emoji = 0b1111; // null emoji is recorded as 255, but only 4 bits stand out under emoji
 
         // actually 24-bit
-        Marshal.WriteInt32(mem, Inc(3), ((weapon << 18) | (Convert.ToByte(team) << 11) | (emoji << 5) | (rps << 1) | (typing ? 1 : 0)) << 8);
+        Marshal.WriteInt32(mem, Inc(3), ((weapon << 18) | (Convert.ToUInt16(team) << 7) | (emoji << 3) | (rps << 1) | (typing ? 1 : 0)) << 8);
     }
 
     #endregion

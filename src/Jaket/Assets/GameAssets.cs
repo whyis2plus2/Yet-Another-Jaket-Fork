@@ -52,8 +52,8 @@ public class GameAssets
     public static readonly string[] YAJF_FishiesButReadable = new[]
     {
         "Funny Stupid Fish (Friend)", "Pitr Fish", "Trout", "Metal Fish", "Chomper",
-        "Bomb Fish", "Eyeball", "Frog(?)", "Dope Fish", "Fish Stick", "Cooked Fish",
-        "Shark", "Burnt Stuff"
+        "Bomb Fish", "Eyeball", "Frog(?)", "Dope Fish", "Fish Stick",
+        "Cooked Fish", "Shark", "Burnt Stuff"
     };
 
     /// <summary> Loads an enemy prefab by name. </summary>

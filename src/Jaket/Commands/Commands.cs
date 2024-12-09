@@ -263,9 +263,19 @@ public class Commands
 
                 // use a v1 plush to allow for pickups because it makes a squeaky sound :) (and it makes fish face the player)
                 var pickup = Tools.Instantiate(Items.Prefabs[EntityType.V1 - EntityType.ItemOffset].gameObject, NewMovement.Instance.transform.position);
-                Tools.Instantiate(Items.Prefabs[Items.YAJF_FishyOffset + index].gameObject, pickup.transform).transform.position = pickup.transform.position;
+                var fish = Tools.Instantiate(Items.Prefabs[Items.YAJF_FishyOffset + index].gameObject, pickup.transform);
+
+                fish.transform.position = pickup.transform.position; // make sure that the fish and the v1 plush are at the same position
                 pickup.GetComponentInChildren<Renderer>().enabled = false; // make the v1 plush invisible because it's only purpose is as a hitbox and a sound source
             }
+        });
+
+        YAJF_Handler.Register("uwu", "Toggle cat ears", args =>
+        {
+            Networking.LocalPlayer.Team ^= Team.YAJF_CatEars_Mask;
+
+            if ((Networking.LocalPlayer.Team & Team.YAJF_CatEars_Mask) != 0) chat.Receive("Enabled cat ears");
+            else chat.Receive("Disabled cat ears");
         });
 #endregion YAJF Commands
     }

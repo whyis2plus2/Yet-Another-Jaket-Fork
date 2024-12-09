@@ -36,6 +36,9 @@ public class DollAssets
     /// <summary> Wing textures used to differentiate teams. </summary>
     public static Texture[] WingTextures;
 
+    /// <summary> Body textures used to differentiate teams. </summary>
+    public static Texture[] YAJF_BodyTextures;
+
     /// <summary> Hand textures used by local player. </summary>
     public static Texture[] HandTextures;
 
@@ -52,14 +55,25 @@ public class DollAssets
 
         // cache the shader and the wing textures for future use
         Shader = AssetHelper.LoadPrefab("cb3828ada2cbefe479fed3b51739edf6").GetComponent<global::V2>().smr.material.shader;
-        WingTextures = new Texture[5];
+        WingTextures = new Texture[10];
+        YAJF_BodyTextures = new Texture[10];
         HandTextures = new Texture[4];
 
         // loading wing textures from the bundle
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < WingTextures.Length; i++)
         {
             var index = i; // C# sucks
             LoadAsync<Texture>("V3-wings-" + ((Team)i).ToString(), tex => WingTextures[index] = tex);
+        }
+
+        // loading body textures from the bundle
+        for (int i = 0; i < YAJF_BodyTextures.Length; i++)
+        {
+            var index = i; // C# sucks
+            var name = $"V3-body-{(Team)i}";
+            if (!Bundle.Contains(name)) name = "V3-body"; // use default body if the team doesn't have a special one
+
+            LoadAsync<Texture>(name, tex => YAJF_BodyTextures[index] = tex);
         }
 
         LoadAsync<Texture>("V3-hand", tex => HandTextures[1] = tex);

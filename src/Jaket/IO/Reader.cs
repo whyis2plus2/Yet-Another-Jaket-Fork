@@ -101,8 +101,8 @@ public class Reader
         int value = Marshal.ReadInt32(mem, Inc(3)) >> 8;
 
         weapon = (byte)(value >> 18 & 0b111111);
-        team = (Team)(value >> 11 & 0b1111111);
-        emoji = (byte)(value >> 5 & 0b111111);
+        team = (Team)(value >> 7 & 0b11111111111);
+        emoji = (byte)(value >> 3 & 0b1111);
         rps = (byte)(value >> 1 & 0b11);
         typing = (value & 1) != 0;
 
