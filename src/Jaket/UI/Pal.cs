@@ -27,7 +27,7 @@ public static class Pal
     public static Color pink = new(1f, .4f, .8f);
     public static Color grey = new(.73f, .73f, .73f);
     public static Color coral = new(1f, .5f, .31f);
-    // public static Color discord = new(.345f, .396f, .949f);
+    public static Color discord = new(.345f, .396f, .949f);
     public static Color YAJF_discord = new(.314f, .251f, .376f);
     public static Color YAJF_yellow = new Color32(0xfc, 0xe1, 0x32, 0xff);
     
