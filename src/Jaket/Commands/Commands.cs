@@ -209,6 +209,7 @@ public class Commands
 
         YAJF_Handler.Register("difficulty", "\\[value]", "get/set the difficulty, setting the difficulty restarts the level", args =>
         {
+            if (!LobbyController.IsOwner) chat.Receive("[#FF341C]Only the host can do this");
             if (args.Length == 0)
             {
                 chat.Receive($"Current difficulty is {YAJF.Prefs.difficulty}");
