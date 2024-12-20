@@ -250,12 +250,12 @@ public class UIB
     /// <summary> Adds a button corresponding to the Discord style and opening a link to our server. </summary>
     public static Button DiscordButton(string name, Transform parent)
     {
-        var img = Image(name, parent, Btn(0f), discord);
+        var img = Image(name, parent, Btn(0f), YAJF_discord);
         Text(name, img.transform, Huge, size: 240).transform.localScale /= 10f;
         return Component<Button>(img.gameObject, button =>
         {
             button.targetGraphic = img;
-            button.onClick.AddListener(() => Application.OpenURL("https://discord.gg/USpt3hCBgn"));
+            button.onClick.AddListener(() => Application.OpenURL("https://discord.gg/ANMa6psnwh"));
         });
     }
 

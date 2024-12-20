@@ -14,7 +14,7 @@ using HarmonyLib;
 /// <summary> Lobby controller with several useful methods and properties. </summary>
 public class LobbyController
 {
-    const string YAJF_Id = "YAJF-0.2.0";
+    const string YAJF_Id = $"YAJF-{Jaket.Version.CURRENT}";
 
     /// <summary> toggle whether or not a lobby is modded-only </summary>
     public static void YAJF_ToggleModded()

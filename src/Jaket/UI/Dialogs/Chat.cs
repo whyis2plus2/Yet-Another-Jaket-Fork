@@ -258,8 +258,8 @@ public class Chat : CanvasSingleton<Chat>
         // if the last owner of the lobby is not equal to 0, then the lobby is not created for the first time
         if (LobbyController.LastOwner != 0L && !force) return;
 
-        void Msg(string msg) => Receive("0096FF", BOT_PREFIX + "xzxADIxzx", msg);
-        void Tip(string tip) => Msg($"[14]* {tip}[]");
+        void Msg(string msg, string name = "xzxADIxzx", string color = "0096FF") => Receive(color, BOT_PREFIX + name, msg);
+        void Tip(string tip, string name = "xzxADIxzx", string color = "0096FF") => Msg($"[14]* {tip}[]", name, color);
 
         Msg("Hello, it's me, the main developer of Jaket.");
         Msg("I just wanted to give you some tips:");
@@ -267,7 +267,11 @@ public class Chat : CanvasSingleton<Chat>
         Tip($"Hold [#FFA500]{Settings.EmojiWheel}[] to open the emote wheel");
         Tip("Try typing [#FFA500]/help[] in the chat");
         Tip("Take a look at the bestiary, there's a [#FF66CC]surprise[] :3");
-        Tip("If you have an issue, tell us in our [#5865F2]Discord[] server");
+
+        Tip($"If you have an issue, tell us in the [{YAJF_Discord}]<i>Modded Jaket</i> Discord[] server", "whyis2plus2", "FFFFFF");
+        Tip($"You can join it through the terminal", "whyis2plus2", "FFFFFF");
+        Tip("I added custom commands, do !help or /yajf to see what they are!", "whyis2plus2", "FFFFFF");
+        Tip("Custom teams only work in singleplayer and modded only lobbies, try it out some time!", "whyis2plus2", "FFFFFF");
 
         Msg("Cheers~ ♡");
     }

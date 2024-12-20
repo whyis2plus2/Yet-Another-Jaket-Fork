@@ -270,13 +270,13 @@ public class Commands
             }
         });
 
-        YAJF_Handler.Register("uwu", "Toggle cat ears", args =>
-        {
-            Networking.LocalPlayer.Team ^= Team.YAJF_CatEars_Mask;
+        // YAJF_Handler.Register("uwu", "Toggle cat ears", args =>
+        // {
+        //     Networking.LocalPlayer.Team ^= Team.YAJF_CatEars_Mask;
 
-            if ((Networking.LocalPlayer.Team & Team.YAJF_CatEars_Mask) != 0) chat.Receive("Enabled cat ears");
-            else chat.Receive("Disabled cat ears");
-        });
+        //     if ((Networking.LocalPlayer.Team & Team.YAJF_CatEars_Mask) != 0) chat.Receive("Enabled cat ears");
+        //     else chat.Receive("Disabled cat ears");
+        // });
 #endregion YAJF Commands
     }
 }
