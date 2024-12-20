@@ -112,7 +112,7 @@ public class Settings : CanvasSingleton<Settings>
     private void Start()
     {
         UIB.Shadow(transform);
-        UIB.Table("General", "#settings.general", transform, Tlw(16f + 376f / 2f, 376f), table =>
+        UIB.Table("General", "#settings.general", transform, Tlw(16f + 424f / 2f, 424f), table =>
         {
             UIB.Button("#settings.reset", table, Btn(68f), clicked: ResetGeneral);
 
@@ -143,8 +143,13 @@ public class Settings : CanvasSingleton<Settings>
 
             UIB.Button("#settings.sprays", table, Btn(300f), clicked: SpraySettings.Instance.Toggle);
             UIB.Button("TAG SETTINGS", table, Btn(348f), clicked: TagSettings.Instance.Toggle);
+
+            UIB.Toggle("LABEL SPRAYS", table, Tgl(396f), clicked: _ =>
+            {
+                YAJF.Prefs.labelSprays = _;
+            }).isOn = YAJF.Prefs.labelSprays;
         });
-        UIB.Table("Controls", "#settings.controls", transform, Tlw(392f + 576f / 2f, 576f), table =>
+        UIB.Table("Controls", "#settings.controls", transform, Tlw(440f + 576f / 2f, 576f), table =>
         {
             UIB.Button("#settings.reset", table, Btn(68f), clicked: ResetControls);
 
@@ -229,6 +234,10 @@ public class Settings : CanvasSingleton<Settings>
         pm.DeleteKey("jaket.feed-color");
         pm.DeleteKey("jaket.knkl-color");
         pm.DeleteKey("jaket.disable-freeze");
+
+        pm.DeleteKey("YAJF.tag");
+        pm.DeleteKey("YAJF.tagColor");
+        pm.DeleteKey("YAJF.labelSprays");
 
         Load();
         Rebuild();

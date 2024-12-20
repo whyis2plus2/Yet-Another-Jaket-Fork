@@ -15,6 +15,7 @@ public enum Team
     /// <summary> this marks the start of values reserved for bitmasks that add extra properties to teams </summary>
     YAJF_MaskReserved = 0b100000000, 
 
+    /// <summary> this mask adds cat ears to players of any team :3 </summary>
     YAJF_CatEars_Mask = 0b100000000,
 }
 
