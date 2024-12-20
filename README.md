@@ -7,9 +7,6 @@
 # Join and kill 'em together
 This modification made by [me](https://github.com/xzxADIxzx) and my team adds support for multiplayer via Steamworks to ULTRAKILL. The idea to create this project came to me immediately after completing the game in a week, and since MULTIKILL is still in development, nothing stopped me from speedrunning programming.
 
-# NOTE: INSTALLS OF YAJF ARE CURRENTLY PAUSED
-### PLEASE JOIN THE [DISCORD](https://discord.gg/ANMa6psnwh) FOR UPDATES
-
 ## Features
 * Integration with Steam
    * Public, friends only and private lobbies
