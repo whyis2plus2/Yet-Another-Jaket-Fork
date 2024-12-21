@@ -76,6 +76,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
             {
                 PPP.text = $"{(int)((LobbyController.PPP = value / 8f) * 100)}PPP";
                 LobbyController.Lobby?.SetData("ppp", LobbyController.PPP.ToString());
+                Rebuild();
             });
 
             bosses = UIB.Toggle("#lobby-tab.heal-bosses", table, Tgl(398f), 20, allow => LobbyController.Lobby?.SetData("heal-bosses", allow.ToString()));
@@ -95,6 +96,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
                 var lobby = LobbyController.Lobby.Value;
                 lobby.MaxMembers = (value != 16)? (value + 1) * 2 : 250;
                 maxPlayers.text = (value == 16)? "UNLIMITED" : lobby.MaxMembers.ToString();
+                Rebuild();
             }).value = 3; // setting the value to 3 makes the ui consistent
         });
 
