@@ -8,8 +8,7 @@ using UnityEngine;
 
 using Jaket.Assets;
 using Jaket.IO;
-using BepInEx;
-using HarmonyLib;
+using Jaket.Content;
 
 /// <summary> Lobby controller with several useful methods and properties. </summary>
 public class LobbyController
@@ -23,6 +22,10 @@ public class LobbyController
 
         if (YAJF_IsModdedLobby(Lobby.Value))
         {
+            // prevent any player from having an invalid team
+            Networking.EachPlayer(con => con.Team = (con.Team > Team.Pink)? Team.Yellow : con.Team);
+            if (Networking.LocalPlayer.Team > Team.Pink) Networking.LocalPlayer.Team = Team.Yellow;
+
             Lobby?.DeleteData(YAJF_Id);
             Lobby?.DeleteData("mk_lobby");
             return;
@@ -73,6 +76,9 @@ public class LobbyController
         // get the owner id when entering the lobby
         SteamMatchmaking.OnLobbyEntered += lobby =>
         {
+            // prevent invalid teams from joining lobbies
+            if (Networking.LocalPlayer.Team > Team.Pink) Networking.LocalPlayer.Team = Team.Yellow;
+
             if (lobby.Owner.Id != 0L) LastOwner = lobby.Owner.Id;
 
             if (lobby.GetData("banned").Contains(Tools.AccId.ToString()))
