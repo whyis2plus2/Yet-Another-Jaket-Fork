@@ -154,8 +154,10 @@ public class Doll : MonoBehaviour
         if (WingLight) WingLight.color = team.Color();
 
         // TODO make it part of customization
-        if (LobbyController.YAJF_Modded || LobbyController.Offline) Suits.GetChild(0).gameObject.SetActive((team & Team.YAJF_CatEars_Mask) != 0);
-        else Suits.GetChild(0).gameObject.SetActive(team == Team.Pink);
+        // if (LobbyController.YAJF_Modded || LobbyController.Offline) Suits.GetChild(0).gameObject.SetActive((team & Team.YAJF_CatEars_Mask) != 0);
+        // else Suits.GetChild(0).gameObject.SetActive(team == Team.Pink);
+
+        Suits.GetChild(0).gameObject.SetActive(team == Team.Pink);
     }
 
     public void ApplySuit()
