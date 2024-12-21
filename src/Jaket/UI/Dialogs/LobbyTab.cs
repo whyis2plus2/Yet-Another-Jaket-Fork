@@ -95,7 +95,7 @@ public class LobbyTab : CanvasSingleton<LobbyTab>
                 var lobby = LobbyController.Lobby.Value;
                 lobby.MaxMembers = (value != 16)? (value + 1) * 2 : 250;
                 maxPlayers.text = (value == 16)? "UNLIMITED" : lobby.MaxMembers.ToString();
-            });
+            }).value = 3; // setting the value to 3 makes the ui consistent
         });
 
         Version.Label(transform);

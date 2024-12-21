@@ -93,6 +93,15 @@ public class Plugin : MonoBehaviour
         // check if there is any incompatible mods
         HasIncompatibility = Chainloader.PluginInfos.Values.Any(info => !Compatible.Contains(info.Metadata.Name));
 
+        // init tags
+        // i don't know if i need this, but this was my first attempt to fix a bug, and im afraid it'll show up again if i remove this
+        // even though this isnt what fixed it
+        if (YAJF.Prefs.tag == null || YAJF.Prefs.tagColor == null)
+        {
+            YAJF.Prefs.tag = "";
+            YAJF.Prefs.tagColor = "#FFFFFF";
+        }
+
         // mark the plugin as initialized and log a message about it
         Initialized = true;
         Log.Info("Jaket initialized!");

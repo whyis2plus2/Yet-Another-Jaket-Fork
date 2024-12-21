@@ -22,12 +22,7 @@ public static class Prefs
 
     public static string tag
     {
-        get 
-        {
-            string value = pm.GetString("YAJF.tag");
-            value = value.Length > MAX_TAG_LEN? value.Substring(0, MAX_TAG_LEN) : value;
-            return value;
-        }
+        get => pm.GetString("YAJF.tag");
         set 
         {
             value = value.Length > MAX_TAG_LEN? value.Substring(0, MAX_TAG_LEN) : value;

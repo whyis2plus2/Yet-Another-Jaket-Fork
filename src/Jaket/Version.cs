@@ -56,6 +56,6 @@ public class Version
     public static void Label(Transform parent)
     {
         var r = Blw(36f, 40f);
-        UIB.Table("Version", parent, r, table => UIB.Text($"Jaket version is {CURRENT}", table, r.Text, Color.grey));
+        UIB.Table("Version", parent, r, table => UIB.Text($"YAJF version is {CURRENT}", table, r.Text, Color.grey));
     }
 }

@@ -174,38 +174,38 @@ public class Commands
             }
         });
 
-        YAJF_Handler.Register("whisper", "<player> <message>", "send a message to ONLY the specified player", args =>
-        {
-            if (!LobbyController.YAJF_Modded) 
-            {
-                chat.Receive("[#FF341C]This command can only be ran in a modded-only lobby");
-                return;
-            }
+        // YAJF_Handler.Register("whisper", "<player> <message>", "send a message to ONLY the specified player", args =>
+        // {
+        //     if (!LobbyController.YAJF_Modded) 
+        //     {
+        //         chat.Receive("[#FF341C]This command can only be ran in a modded-only lobby");
+        //         return;
+        //     }
 
-            var player = args[0];
-            var message = Regex.Replace(string.Join(" ", args.Skip(1)), "<*.?>", "").Replace("[", "\\[");
-            uint id = 0;
+        //     var player = args[0];
+        //     var message = Regex.Replace(string.Join(" ", args.Skip(1)), "<*.?>", "").Replace("[", "\\[");
+        //     uint id = 0;
 
-            if (args.Length < 2)
-            {
-                chat.Receive("[#FF341C]This command requires at least 2 args: <player> <message>");
-                return;
-            }
+        //     if (args.Length < 2)
+        //     {
+        //         chat.Receive("[#FF341C]This command requires at least 2 args: <player> <message>");
+        //         return;
+        //     }
 
-            if (Tools.Name(Tools.AccId).StartsWith(player)) id = Tools.AccId;
-            else Networking.EachPlayer(con =>
-            {
-                if (con.name.StartsWith(player)) id = con.Id;
-            });
+        //     if (Tools.Name(Tools.AccId).StartsWith(player)) id = Tools.AccId;
+        //     else Networking.EachPlayer(con =>
+        //     {
+        //         if (con.name.StartsWith(player)) id = con.Id;
+        //     });
 
-            if (id == 0)
-            {
-                chat.Receive($"[#FF341C]\"{player}\" is not a valid user");
-                return;
-            }
+        //     if (id == 0)
+        //     {
+        //         chat.Receive($"[#FF341C]\"{player}\" is not a valid user");
+        //         return;
+        //     }
 
-            LobbyController.Lobby?.SendChatString($"#/w{id} {message}");
-        });
+        //     LobbyController.Lobby?.SendChatString($"#/w{id} {message}");
+        // });
 
         YAJF_Handler.Register("difficulty", "\\[value]", "get/set the difficulty, setting the difficulty restarts the level", args =>
         {
