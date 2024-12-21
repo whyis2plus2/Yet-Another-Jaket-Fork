@@ -85,7 +85,8 @@ public class Networking
 
         SteamMatchmaking.OnLobbyMemberJoined += (lobby, member) =>
         {
-            if (!Administration.Banned.Contains(member.Id.AccountId) && Administration.YAJF_LastKicked != member.Id.AccountId)
+            if (Administration.YAJF_LastKicked == member.Id.AccountId) Administration.YAJF_LastKicked = 0; // reset last kicked player when they re-join
+            if (!Administration.Banned.Contains(member.Id.AccountId))
                 Bundle.Msg("player.joined", member.Name);
         };
 

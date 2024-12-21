@@ -9,6 +9,7 @@ using UnityEngine;
 using Jaket.Assets;
 using Jaket.IO;
 using Jaket.Content;
+using Jaket.UI.Dialogs;
 
 /// <summary> Lobby controller with several useful methods and properties. </summary>
 public class LobbyController
@@ -18,6 +19,8 @@ public class LobbyController
     /// <summary> toggle whether or not a lobby is modded-only </summary>
     public static void YAJF_ToggleModded()
     {
+        Chat chat = Chat.Instance;
+
         if (Offline) return;
 
         if (YAJF_IsModdedLobby(Lobby.Value))
@@ -33,6 +36,11 @@ public class LobbyController
 
         Lobby?.SetData(YAJF_Id, "true");
         Lobby?.SetData("mk_lobby", "true");
+
+        chat.Send($"[14]{Chat.BOT_PREFIX}The lobby has been set to Modded-Only[]");
+        chat.Send($"[14]{Chat.BOT_PREFIX}As such, all players are getting kicked to prevent netcode bugs[]");
+        chat.Send($"[14]{Chat.BOT_PREFIX}Players who use YAJF will still be able to rejoin the lobby[]");
+        Networking.EachPlayer(con => Administration.YAJF_Kick(con.Id));
     }
 
     /// <summary> The current lobby the player is connected to. Null if the player is not connected to any lobby. </summary>
